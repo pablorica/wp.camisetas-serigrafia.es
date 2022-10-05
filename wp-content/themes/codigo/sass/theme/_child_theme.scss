@@ -1,0 +1,13 @@
+article.card {
+	// before css
+
+	opacity: 0;
+	transform: translateY(40px);
+	transition: all ease 1s;
+	&.visible {
+		// after css
+
+		transform: translateY(0px);
+		opacity: 1;
+	}
+}
