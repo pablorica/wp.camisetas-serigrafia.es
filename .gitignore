@@ -104,13 +104,11 @@ package-lock.json
 !site.webmanifest
 
 
-# track these mu-plugins, plugins, and themes
-#!wp-content/mu-plugins/wp-migrate-db-pro-compatibility.php
+# track these mu-plugins and/or plugins
+#!wp-content/plugins/theme-customisations-master
+#!wp-content/plugins/cg-woo-grid
 
-#!wp-content/plugins/advanced-custom-fields-pro
-#!wp-content/plugins/wp-migrate-db-pro
-#!wp-content/plugins/wp-migrate-db-pro-media-files
-
+# track these themes
 !wp-content/themes/codigo/
 
 # Ignore build folders of theme
