@@ -47,16 +47,15 @@ import consoleHello from './modules/consoleHello';
     const CDG = {
 
         onreadyFunctions: function() {
-            //sayHello('JS is ready');
+            //sayHello('cg-woo-grid is ready');
             consoleHello('cg-woo-grid is ready');
 
             $(window).on('resize',function() {
-                //CDG.addMSGonResize();
+                //
             });
         },
 
         onloadFunctions: function() {
-            //CDG.addMSGonLoad();
             consoleHello('cg-woo-grid is loaded');
         }
     };
