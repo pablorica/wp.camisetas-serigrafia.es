@@ -25,8 +25,9 @@ class Cg_Woo_Grid
         $this->version = '1.0.0';
 
         //set the variable for the example endpoint. you can use a option plugin to store it and change it later in the admin page
-        $this->css_filepath = 'public/css/style.css';
-        $this->js_filepath = 'public/js/cg-woo-grid.min.js';
+        $this->css_filepath = 'public/css/cg-woo-grid.min.css';
+        $this->js_filepath = 'public/js/cg-woo-grid.js';
+        //$this->js_filepath = 'public/js/cg-woo-grid.min.js';
     }
 
     //The run method starts the execution of the plugin. Usually, calls all the following methods needed.
