@@ -12,7 +12,10 @@
     "js-minify": "terser --config-file src/build/terser.config.json --output public/js/cg-woo-grid.min.js public/js/cg-woo-grid.js",
     "watch": "npm-run-all --parallel watch-run-*",
     "watch-run-css": "nodemon --watch src/sass/ --ext scss --exec \"npm-run-all css\"",
-    "watch-run-js": "nodemon --watch src/js/ --ext js --exec \"npm-run-all js\""
+    "watch-run-js": "nodemon --watch src/js/ --ext js --exec \"npm-run-all js\"",
+    "dist": "npm-run-all dist-clean dist-build",
+    "dist-build": "node src/build/dist-build.js",
+    "dist-clean": "node src/build/dist-clean.js"
   },
   "engines": {
     "node": ">=14"
@@ -33,8 +36,10 @@
     "@rollup/plugin-commonjs": "^21.0.0",
     "@rollup/plugin-node-resolve": "^13.0.6",
     "clean-css-cli": "^5.6.1",
+    "del": "^6.0.0",
     "nodemon": "^2.0.20",
     "npm-run-all": "^4.1.5",
+    "replace-in-file": "^6.3.5",
     "rollup": "^2.79.1",
     "sass": "^1.55.0",
     "terser": "^5.15.1"

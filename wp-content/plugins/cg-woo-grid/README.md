@@ -27,12 +27,19 @@ We also recommend using [NVM - Node Version Manager](https://github.com/nvm-sh/n
 
 ### Running
 
-To work and compile your Sass files on the fly start:
+To work and compile your Sass and JS files on the fly start:
 
 ```
 npm run watch
 ```
 
+### Distribution
+
+Once the plugin changes are ready, rub this command to create the final distribution
+
+```
+npm run dist
+```
 
 ## Required Plugins
 * [WooCommerce](https://woocommerce.com/)
