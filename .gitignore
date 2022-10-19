@@ -105,27 +105,8 @@ package-lock.json
 
 
 # track these mu-plugins and/or plugins
-#!wp-content/plugins/theme-customisations-master
+!wp-content/plugins/theme-customisations-master
 #!wp-content/plugins/cg-woo-grid
 
 # track these themes
-!wp-content/themes/codigo/
-
-# Ignore build folders of theme
-wp-content/themes/codigo/.gitignore
-wp-content/themes/codigo/.sass-cache
-wp-content/themes/codigo/bower_components
-wp-content/themes/codigo/node_modules
-wp-content/themes/codigo/*.zip
-wp-content/themes/codigo/dist
-wp-content/themes/codigo/dist-product
-wp-content/themes/codigo/npm-debug.log
-wp-content/themes/codigo/vendor/
-
-# Ignore compiled files
-wp-content/themes/codigo/js/child-theme.*
-wp-content/themes/codigo/css/child-theme.*
-wp-content/themes/codigo/css/custom-editor-style.*
-
-# Ignore potentially dangerous files (dependabot alerts)
-wp-content/themes/codigo/yarn.lock 
+#!wp-content/themes/codigo/
