@@ -165,9 +165,14 @@
                     <span class="uds"><?php _e("UDS.","cg-woo-grid");?></span>
                 </div>
             </div>
-            <?php
 
-            foreach ($attributes as $key => $value) { ?>
+            <!-- Vue -->
+            <div id="appMatrix">
+                <attributes-matrix></attributes-matrix>
+            </div>
+            <!-- / Vue  -->
+            <div id="phpMatrix">
+            <?php foreach ($matrix as $key => $value) { ?>
                 <div class="cdg_product" 
                     data-color="<?php echo strtolower($value['y']); ?>"
                 >
@@ -179,31 +184,22 @@
                     </span>
                     <div>
                         <div>
-                            <?php
-                            foreach ($value['x'] as $keyX => $valueX) {
-                                $vslug = '';
-                                foreach ($variations as $keyVar => $variation) {
-                                    if ($variation->attributes[$taxonomy_y] == $value['y'] 
-                                        && $variation->attributes[$taxonomy_x] == $valueX
-                                    ) {
-                                            $vslug = $variation->slug;
-                                    }
-                                } ?>
-                                <span data-talla="<?php echo strtoupper($valueX); ?>">
-                                    <?php echo strtoupper($valueX); ?><br>
+                            <?php foreach ($value['x'] as $keyX => $valueX) { ?>
+                                <span data-talla="<?=$valueX->name?>">
+                                    <?=$valueX->name?><br>
                                     <input type="number" 
-                                        name="<?php echo $vslug; ?>" 
+                                        name="<?=$valueX->slug?>" 
                                         value="0" 
                                         min="0" 
                                         max="500"
                                     >
                                 </span>
-                            <?php
-                            } ?>
+                            <?php } ?>
                         </div>
                     </div>
                 </div>
             <?php } ?>
+            </div>
         </div>
     </div>
     <p>&nbsp;</p>

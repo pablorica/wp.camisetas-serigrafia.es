@@ -59,11 +59,11 @@ class Cg_Woo_Grid_Public {
         if(CG_WOOGRID_STATUS == 'development'){
             //https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.45/vue.global.js
             //$this->vue_filepath = CG_WOOGRID_URL.'vue/js/vue.js';
-            $this->vue_filepath = 'https://unpkg.com/vue@next';
+            $this->vue_filepath = 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.45/vue.global.js';
         }
         if(CG_WOOGRID_STATUS == 'production'){
-            //https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.45/vue.global.prod.min.js
-            $this->vue_filepath = CG_WOOGRID_URL.'vue/js/vue.global.prod.min.js';
+            $this->vue_filepath = 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.45/vue.global.prod.min.js';
+            //$this->vue_filepath = CG_WOOGRID_URL.'vue/js/vue.global.prod.min.js';
         }
         $this->vue_version = '3.2.45';
 	}
@@ -121,11 +121,11 @@ class Cg_Woo_Grid_Public {
      */
     function custom_constants_js() {
         echo '
-    <script>
-        const REST_POSTS_URL = "'.esc_url_raw( rest_url( $this->restapinamespace ) ).'";
-        const REST_NONCE     = "'.wp_create_nonce( 'wp_rest' ).'";
-        const LOADING_GIF    = "'.CG_WOOGRID_URL.'/vue/img/loading.gif";
-    </script>';
+        <script>
+            const REST_POSTS_URL = "'.esc_url_raw( rest_url( $this->restapinamespace ) ).'";
+            const REST_NONCE     = "'.wp_create_nonce( 'wp_rest' ).'";
+            const LOADING_GIF    = "'.CG_WOOGRID_URL.'/vue/img/loading.gif";
+        </script>';
     }
 
     
@@ -169,10 +169,10 @@ class Cg_Woo_Grid_Public {
         $return     = new stdClass();
         $_children  = $product->get_children();
         $matrix     = array();
-        $variations = array();
+        //$variations = array();
         foreach ($_children as $value) {
             $single_variation = new WC_Product_Variation($value);
-            $variations[]     = $single_variation;
+            //$variations[]     = $single_variation;
             //$varAttributes    = $single_variation->attributes;
             $varAttributes    = $single_variation->get_attributes();
 
@@ -192,14 +192,16 @@ class Cg_Woo_Grid_Public {
                 end($matrix);
                 $currentKey = key($matrix);
             }
-            $matrix[$currentKey]['x'][] = $varAttributes[$taxonomy_x];
+            
+            $valueX = new stdClass();
+            $valueX->name = strtoupper($varAttributes[$taxonomy_x]);
+            $valueX->slug = $single_variation->get_slug();
+
+            $matrix[$currentKey]['x'][] = $valueX;
+            //error_log(print_r($matrix[$currentKey], true));
         }
 
-        $return->variations = $variations;
-        $return->matrix     = $matrix;
-
-        return $return;
-
+        return $matrix;
     }
 
     /**
@@ -267,12 +269,9 @@ class Cg_Woo_Grid_Public {
         $args['taxonomy_y'] = 'pa_color';
         $args['taxonomy_x'] = 'pa_tamano';
 
-        if($res = $this->build_product_matrix($args)) {
+        if($matrix = $this->build_product_matrix($args)) {
 
             $minimum    = 0;
-            $attributes = $res->matrix;
-            $variations = $res->variations;
-    
             include_once 'partials/class-cg-woo-grid-public-display.php'; 
         } 
 
