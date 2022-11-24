@@ -1,5 +1,11 @@
-#pp_sizes {
-    .pp_cbar {
+#cdg_sizes {
+    @media (min-width: 992px) {
+        width: 58.33333333%;
+    }
+    @media (min-width: 1200px) {
+        width: 66.66666667%;
+    }
+    .cdg_cbar {
         border: solid 1px gray;
         font-weight: bold;
         margin: 0 15px 30px;
@@ -23,7 +29,7 @@
             }
         }
     }
-    .pp_product {
+    .cdg_product {
         padding-bottom: 15px;
 
         & > span {

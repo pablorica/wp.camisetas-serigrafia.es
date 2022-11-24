@@ -3,7 +3,7 @@
  * Plugin Name:       Theme Customisations
  * Description:       A handy little plugin to contain your theme customisation snippets.
  * Plugin URI:        http://github.com/woothemes/theme-customisations
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            WooThemes
  * Author URI:        https://www.woocommerce.com/
  * Requires at least: 3.0.0
@@ -25,6 +25,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @package	Theme_Customisations
  */
 final class Theme_Customisations {
+
+    
+    public function version() {
+        return get_file_data(__FILE__, array('Version'), 'plugin')[0];
+    }
 
 	/**
 	 * Set up the plugin
@@ -50,7 +55,7 @@ final class Theme_Customisations {
 	 * @return void
 	 */
 	public function theme_customisations_css() {
-		wp_enqueue_style( 'custom-css', plugins_url( '/custom/style.css', __FILE__ ) );
+		wp_enqueue_style( 'custom-css', plugins_url( '/custom/style.css', __FILE__ ), array(), $this->version() );
 	}
 
 	/**
@@ -59,7 +64,7 @@ final class Theme_Customisations {
 	 * @return void
 	 */
 	public function theme_customisations_js() {
-		wp_enqueue_script( 'custom-js', plugins_url( '/custom/custom.js', __FILE__ ), array( 'jquery' ) );
+		wp_enqueue_script( 'custom-js', plugins_url( '/custom/custom.js', __FILE__ ), array( 'jquery' ), $this->version() );
 	}
 
 	/**
