@@ -20,7 +20,9 @@
 </div>
 <!-- / Vue  -->
 
-<div id="cdg_popup" style="display: none;">
+<div id="cdg_popup" 
+    style="display: none;"
+>
     <div class="white">
         <h3 class="text-center"></h3>
         <p class="text-center"></p>
@@ -38,7 +40,10 @@
     </div>
 </div>
 
-<form id="cdg_form" class="cdg_box">
+<form id="cdg_form" 
+    class="cdg_box"
+    data-currentproduct = "<?php echo get_queried_object_id() ?>"
+>
 
     <h3><?php _e("Elige colores y tallas para hacer tu presupuesto","cg-woo-grid");?></h3>
 

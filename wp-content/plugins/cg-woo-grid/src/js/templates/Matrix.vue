@@ -70,8 +70,7 @@ export default {
                 product_id:     null,
                 taxonomy_y:     null,
                 taxonomy_x:     null,
-                matrix: 	    [],
-                variations: 	[]
+                matrix: 	    []
             }
         },
         mounted: function () {
@@ -85,47 +84,62 @@ export default {
             buildMatrix: function () {
 
                 var self = this;
-                if(self.product_id === null) {
-                    self.product_id = '6016'
-                }
-                if(self.taxonomy_y === null) {
-                    self.taxonomy_y = 'pa_color'
-                }
-                if(self.taxonomy_x === null) {
-                    self.taxonomy_x = 'pa_tamano'
-                }
-	            
-	            var getURL = config.api.index + '/attmatrix/product_id='+self.product_id+'/taxonomy_y='+self.taxonomy_y+'/taxonomy_x='+self.taxonomy_x;
+                self.empty   = true;
 
-	            self.loading = true;
-	            console.log('loading '+ getURL);
                 (function($){
-                    //$('#phpMatrix').addClass('loading');
 
-                    $.get( getURL , function( r ){
-                        self.loading  = false;
-                        self.matrix = r;
+                    //self.product_id = 6016
+                    if( $("#cdg_form").length
+                        && self.product_id === null
+                    ){
+                        self.product_id = $("#cdg_form").data('currentproduct')
+                        //console.log('self.product_id: ' +self.product_id);
+                    }
+                    
+                    
+                    if(self.product_id !== null) {
 
-                        //console.log(r);
-                        self.matrix.map((attribute, key) => { 
-                            attribute.yslug = attribute.y.toLowerCase();
+                        self.empty = false;
+
+                        if(self.taxonomy_y === null) {
+                            self.taxonomy_y = 'pa_color'
+                        }
+                        if(self.taxonomy_x === null) {
+                            self.taxonomy_x = 'pa_tamano'
+                        }
+                        
+                        var getURL = config.api.index + '/attmatrix/product_id='+self.product_id+'/taxonomy_y='+self.taxonomy_y+'/taxonomy_x='+self.taxonomy_x;
+
+                        self.loading = true;
+                        console.log('loading '+ getURL);
+                    
+                        //$('#phpMatrix').addClass('loading');
+
+                        $.get( getURL , function( r ){
+                            self.loading  = false;
+                            self.matrix = r;
+
+                            //console.log(r);
+                            self.matrix.map((attribute, key) => { 
+                                attribute.yslug = attribute.y.toLowerCase();
+                            });
+                            
+                        }).done(function() {
+                            
+                            setTimeout(() => {
+                                $('#phpMatrix').addClass('hide');
+                            }, 250)
+                            setTimeout(() => {
+                                $('#matrixGrid').removeClass('loading');
+                            }, 500)
+                            
+                        }).fail(function() {
+                            //console.log('woops');
+                            self.loading = false;
+                            self.matrix   = [];
+                            self.empty   = true;
                         });
-                        
-                    }).done(function() {
-                        
-                        setTimeout(() => {
-                            $('#phpMatrix').addClass('hide');
-                        }, 250)
-                        setTimeout(() => {
-                            $('#matrixGrid').removeClass('loading');
-                        }, 500)
-                        
-                    }).fail(function() {
-                        //console.log('woops');
-                        self.loading = false;
-                        self.posts   = [];
-                        self.empty   = true;
-                    });
+                    }
                 })( jQuery );
                 
 
