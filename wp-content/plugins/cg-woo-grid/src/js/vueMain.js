@@ -1,6 +1,7 @@
 import Vue from 'vue'
-import App from './templates/Test.vue';
+import Test from './templates/Test.vue';
 import Matrix from './templates/Matrix.vue';
+import TotalBox from './templates/TotalBox.vue';
 import Emitter from 'tiny-emitter';
 
 console.log('VUE Main loaded')
@@ -19,7 +20,12 @@ export const config = {
     $(window).on('load', function() {
         if($("#appTest").length){
             console.log('Loading VUE Test')
-            const app = Vue.createApp(App).mount('#appTest')
+            //const app = Vue.createApp(Test).mount('#appTest')
+        }
+
+        if($("#appTotalBox").length){
+            console.log('Loading VUE TotalBox')
+            const app = Vue.createApp(TotalBox).mount('#appTotalBox')
         }
 
         if($("#appMatrix").length){

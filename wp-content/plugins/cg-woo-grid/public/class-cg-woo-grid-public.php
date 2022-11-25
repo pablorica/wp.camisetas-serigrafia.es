@@ -82,6 +82,12 @@ class Cg_Woo_Grid_Public {
             $this->version, 
             'all' 
         );
+        wp_enqueue_style(
+            $this->plugin_name.'_fontawesome',	
+            'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css', 
+            array(), 
+            '4.7.1'
+        );
 	}
 
 	/**
@@ -136,6 +142,247 @@ class Cg_Woo_Grid_Public {
      */
     function at_rest_testing_endpoint() {
         return new WP_REST_Response('Howdy!!');
+    }
+
+    /**
+     * Update cart with the selected products
+     * 
+     * @param object $request_data
+     * 
+     * @return array || WP_Error
+     */
+    public function build_total_box($request_data) {
+
+        global $post;
+        $parameters = $request_data->get_params();
+        //error_log('l.158 - build_total_box: '.print_r($parameters,true));
+        $return = new stdClass();
+
+        $return->product_id = null;
+        if( isset($parameters['product_id']) ) {
+            $return->product_id = $parameters['product_id'];
+        } elseif( isset($post->ID) ) {
+            $return->product_id = $post->ID;
+        } elseif(get_queried_object_id()) {
+            $return->product_id = get_queried_object_id();
+        }
+        
+        if(!$return->product_id) {
+            return new WP_Error( 
+                'product_invalid', 
+                esc_html__( 'No results.', 'codigo' ), 
+                array( 'status' => 404 ) 
+            );
+        }
+
+
+        $return->boxtitle        = __("Tu presupuesto","cg-woo-grid");
+        $return->unitpricetitle  = __("Precio unitario","cg-woo-grid");
+        $return->unitpricevalue  = strip_tags(wc_price(0));
+        $return->pricetitle      = __("Precio","cg-woo-grid");
+        $return->unitstitle      = __("Unidades","cg-woo-grid");
+        $return->amountitle      = __("Importe","cg-woo-grid");
+        $return->subtotal        = __("Subotal","cg-woo-grid");
+        $return->vat             = __("IVA","cg-woo-grid");
+        $return->total           = __("Total","cg-woo-grid");
+        $return->addtocart       = __("Añadir a la cesta","cg-woo-grid");
+        $return->formatzeroprice = wc_price(0);
+
+        $return->taxonomy_y = 'pa_color';
+        $return->taxonomy_y_name = 'Color';
+        $return->taxonomy_x = 'pa_tamano';
+        $return->taxonomy_x_name = 'Talla';
+
+        return rest_ensure_response($return);
+    }
+
+
+     /**
+     * Get the prices
+     * 
+     * @param array $args
+     * 
+     * @return object || WP_Error
+     */
+    function get_prices($args)
+    {
+
+        $_product = $args['product'];
+
+        if(!$_product instanceof WC_Product) {
+            return new WP_Error( 
+                'rest_api_sad', 
+                esc_html__( 'Something went wrong.', 'codigo' ), 
+                array( 'status' => 500 ) 
+            );
+        }
+
+        $colores = array();
+        $description = '';
+
+        $total = 0;
+        $price = 0;
+        $rowPrices = array();
+
+
+        if($_product->is_type('variable')){
+
+            $variations=$_product->get_children();
+            foreach ($variations as $value) {
+                $single_variation = new WC_Product_Variation($value);
+                /*
+                echo '<option  value="'.$value.'">'.implode(" / ", $single_variation->get_variation_attributes()).'-'.get_woocommerce_currency_symbol().$single_variation->price.'</option>';
+                */
+                $variation_slug = $single_variation->get_slug();
+                $variation_id   = $single_variation->get_id();
+
+                if (isset($args['quantities'][$variation_slug])) {
+
+                    error_log('l.241 -> get_prices() - product:  '.$variation_slug);
+
+                    $quantity   = (int) $args['quantities'][$variation_slug];
+                    $rowPrice   = array();
+                    $nk    		= false;
+                    $attr 		= $single_variation->get_variation_attributes();
+
+                    foreach ($colores as $k => $vc) {
+                        if ($vc['color'] == $vc['pa_color']) $nk = $k;
+                    }
+                    if ($nk === false) {
+                        $colores[] = array(
+                            'color'	=> $attr['attribute_pa_color'],
+                            'sizes'	=> array()
+                        );
+                        end($colores);
+                        $nk = key($colores);
+                    }
+                    $colores[$nk]['sizes'][] = array($attr['attribute_pa_tamano'], $quantity);
+                    //$attr['attribute_pa_color'];
+                    $miprecio = (float) $single_variation->get_price();
+                    $total += $quantity;
+
+                    $uprice = (float) $single_variation->get_regular_price();
+
+                    $price  += $quantity * $uprice;
+
+                    
+                    $rowPrice["tp_uprecio_base"] = $uprice;
+                    $rowPrice["tp_color"]    = $attr['attribute_pa_color'];
+                    $rowPrice["tp_tamano"]   = $attr['attribute_pa_tamano'];
+                    $rowPrice["tp_cant"]     = $quantity;				
+
+                    //error_log(print_r($rowPrices, true));
+                    $rowPrices[] = $rowPrice;
+                }
+            }
+
+
+        }
+
+        $description .= $total . ' productos. ';
+        foreach ($colores as $k => $v) {
+            $description .= ($k != 0 ? ' - ' : '') . ucfirst($v['color']) . ': ';
+            foreach ($v['sizes'] as $k2 => $v2) {
+                $description .= ($k2 != 0 ? ', ' : '') . strtoupper($v2[0]) . ' (' . $v2[1] . ')';
+            }
+        }
+
+
+        $html = '';
+        foreach($rowPrices as $rowPrice) {
+
+            $nuprecio = $rowPrice["tp_uprecio_base"];
+            $nqprecio = $nuprecio * $rowPrice["tp_cant"];
+
+            $html .= '
+            <tr>
+                <td class="tp_color">'.ucfirst($rowPrice["tp_color"]).'</td>
+                <td class="tp_tamano">'.strtoupper($rowPrice["tp_tamano"]).'</td>
+                <td class="tp_uprecio">'.wc_price($nuprecio).'</td>
+                <td class="tp_cant">'.$rowPrice["tp_cant"].'</td>
+                <td class="text-right tp_subtotal">'.wc_price($nqprecio).'</td>
+            </tr>';
+            
+        }
+
+
+        //Taxes
+        $tax_p = 0;
+        $tax_rates = WC_Tax::get_rates($_product->get_tax_class());
+        if (!empty($tax_rates)) {
+            $tax_rate = reset($tax_rates);
+            $tax_p = sprintf(_x('%.2f', '', 'wptheme.foundation'), $tax_rate['rate']);
+        }
+
+        $taxes  	  = $price / 100 * $tax_p;
+        $priceTax     = $price + $taxes;
+        $unitPrice    = $price / $total;
+        $unitPriceTax = $priceTax / $total;
+
+        $return = new stdClass();
+        $return->total          = $total;
+        $return->unitpricetax   = strip_tags(html_entity_decode(wc_price($unitPriceTax)));
+        $return->unitprice      = strip_tags(html_entity_decode(wc_price($unitPrice)));
+        $return->price          = $price;
+        $return->formatPrice    = wc_price($price);
+        $return->formatpricetax = wc_price($priceTax);
+        $return->formattaxes    = wc_price($taxes);
+        $return->description    = $description;
+        $return->html           = $html;
+
+        /*
+        $returnb = $total . '---' . strip_tags(html_entity_decode(wc_price($unitPriceTax))) . '---' . wc_price($price) . '---' . wc_price($priceTax) . '---' . $price . '---' . $description .  '---'  .$html. '---' .wc_price($taxes). '---' .strip_tags(html_entity_decode(wc_price($unitPrice)));
+        */
+
+        return $return;
+
+        //wp_die();
+    }
+
+    /**
+     * Update cart with the selected products
+     * 
+     * @param object $request_data
+     * 
+     * @return array || WP_Error
+     */
+    public function update_total_box($request_data) {
+
+        //error_log('get_product_matrix');
+
+        $parameters = $request_data->get_params();
+        //error_log(print_r($parameters,true));
+        $args = array();
+        
+        if( isset($parameters['product_id']) ) {
+            $args['product'] = wc_get_product($parameters['product_id']);
+        } else {
+            return new WP_Error( 
+                'product_invalid', 
+                esc_html__( 'No results.', 'codigo' ), 
+                array( 'status' => 404 ) 
+            );
+        }
+
+        $args['taxonomy_y'] = 'pa_color';
+        if( isset($parameters['taxonomy_y']) ) {
+            $args['taxonomy_y'] = $parameters['taxonomy_y'];
+        }
+
+        $args['taxonomy_x'] = 'pa_tamano';
+        if( isset($parameters['taxonomy_x']) ) {
+            $args['taxonomy_x'] = $parameters['taxonomy_x'];
+        }
+
+        $args['quantities'] = null;
+        if( isset($parameters['quantities']) ) {
+            $args['quantities'] = $parameters['quantities'];
+        }
+
+        return rest_ensure_response(
+            $this->get_prices($args)
+        );
+        
     }
 
 
@@ -303,6 +550,35 @@ class Cg_Woo_Grid_Public {
                 'callback'  => array( $this, 'at_rest_testing_endpoint' ),
             )
         );
+
+        /*
+        * Total box
+        */
+        register_rest_route( 
+            $this->restapinamespace, 
+            'totalbox/product_id=(?P<product_id>\d+)', 
+            array(
+                // By using this constant we ensure that when the WP_REST_Server changes our readable endpoints will work as intended.
+                'methods'  => WP_REST_Server::READABLE,
+                'callback' => array( $this, 'build_total_box')
+            )
+        ); 
+        //https://local.camisetas-serigrafia.wp.es/wp-json/cg-woo-grid/v1/totalbox/product_id=6016
+
+
+        /*
+        * Update Total box
+        */
+        register_rest_route( 
+            $this->restapinamespace, 
+            'updatetotalbox', 
+            array(
+                // By using this constant we ensure that when the WP_REST_Server changes our readable endpoints will work as intended.
+                'methods'  => WP_REST_Server::CREATABLE,
+                'callback' => array( $this, 'update_total_box')
+            )
+        ); 
+        //https://local.camisetas-serigrafia.wp.es/wp-json/cg-woo-grid/v1/updatetotalbox
 
         /*
         * Attributtes matrix

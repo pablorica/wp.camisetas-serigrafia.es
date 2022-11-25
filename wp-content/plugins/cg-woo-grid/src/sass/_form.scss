@@ -2,6 +2,10 @@ body.single-product #page {
     overflow-x: initial; /* This is needed to make .cdg_total  sticky work */
 }
 
+.hide {
+    display: none !important;
+}
+
 #cdg_form {
 	position: relative;
 
@@ -84,7 +88,7 @@ body.single-product #page {
 	.sidebar_configurator {
 		position: relative;
 	}
-	.cdg_total {
+	#appTotalBox {
 		position: relative;
         float: right;
         @media screen and (min-width: 768px) {
@@ -98,35 +102,37 @@ body.single-product #page {
         @media (min-width: 1200px) {
             width: 33.33333333%;
         }
-	
-		& > div {
-			border: 1px solid gray;
-		
-			h3 {
-				border-bottom: 1px solid gray;
-				margin: 0;
-				padding: 15px;
-				text-align: center;
-			}
+        
+    }
+    .cdg_total {
+        & > div {
+            border: 1px solid gray;
+        
+            h3 {
+                border-bottom: 1px solid gray;
+                margin: 0;
+                padding: 15px;
+                text-align: center;
+            }
         }
-		.units {
-			border-bottom: 1px solid gray;
-			padding: 15px;
-		
-			& > div {
-				clear: both;
-				text-transform: uppercase;
-			}
-			input {
-				background: transparent;
-				border: none;
-				float: right;
-				text-align: right;
-				width: 80px;
-			}
-		    &#cdg_units {
-			 display:none;
-		    }
+        .units {
+            border-bottom: 1px solid gray;
+            padding: 15px;
+        
+            & > div {
+                clear: both;
+                text-transform: uppercase;
+            }
+            input {
+                background: transparent;
+                border: none;
+                float: right;
+                text-align: right;
+                width: 80px;
+            }
+            &#cdg_units {
+            display:none;
+            }
             #prizes_table {
                 width: 100%;
                 th, td {
@@ -135,16 +141,16 @@ body.single-product #page {
                 }
             }
         }
-		.total {
-			padding: 15px 15px 10px;
-			text-align: right;
-		}
-		.btn {
-			background-color: #c9302c;
-			border-color: #ac2925;
-			display: block;
-			margin-top: 15px;
-			width: 100%;
-		}
+        .total {
+            padding: 15px 15px 10px;
+            text-align: right;
+        }
+        .btn {
+            background-color: #c9302c;
+            border-color: #ac2925;
+            display: block;
+            margin-top: 15px;
+            width: 100%;
+        }
     }
 }

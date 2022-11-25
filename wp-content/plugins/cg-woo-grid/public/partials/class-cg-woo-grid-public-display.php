@@ -48,7 +48,16 @@
     <h3><?php _e("Elige colores y tallas para hacer tu presupuesto","cg-woo-grid");?></h3>
 
     <div class="row sidebar_configurator">
-        <div class="cdg_total">
+
+        <!-- Vue -->
+        <div id="appTotalBox">
+            <total-box></total-box>
+        </div>
+        <!-- / Vue  -->
+
+        <div id="phpBoxTotal"
+            class="cdg_total"
+        >
             <div class="loading" 
                 style="display: none;"
             >
@@ -59,24 +68,6 @@
                 <div id="cdg_units" 
                     class="units"
                 >
-                    <div>
-                        <?php _e("Unidades blancas:","cg-woo-grid");?> 
-                        <input id="cdg_total_b" 
-                            type="text" 
-                            name="total_b" 
-                            value="0 uds." 
-                            disabled
-                        >
-                    </div>
-                    <div>
-                        <?php _e("Unidades de color:","cg-woo-grid");?> 
-                        <input id="cdg_total_c" 
-                            type="text" 
-                            name="total_c" 
-                            value="0 uds." 
-                            disabled
-                        >
-                    </div>
                     <div style="margin-bottom: 15px;text-transform: none;">
                         <?php _e("Precio unitario:","cg-woo-grid");?> 
                         <input id="cdg_price_u" 
@@ -176,6 +167,7 @@
                 <attributes-matrix></attributes-matrix>
             </div>
             <!-- / Vue  -->
+
             <div id="phpMatrix">
             <?php foreach ($matrix as $key => $value) { ?>
                 <div class="cdg_product" 
