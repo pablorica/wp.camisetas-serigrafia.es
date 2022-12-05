@@ -348,12 +348,11 @@ class Rest_Api {
         $matrix     = array();
         //$variations = array();
         foreach ($_children as $value) {
+            
             $single_variation = new \WC_Product_Variation($value);
-            //$variations[]     = $single_variation;
-            //$varAttributes    = $single_variation->attributes;
-            $varAttributes    = $single_variation->get_attributes();
 
-            $currentKey = false;
+            $varAttributes = $single_variation->get_attributes();
+            $currentKey    = false;
             foreach ($matrix as $key => $attribute) {
                 if ($attribute['y'] == $varAttributes[$taxonomy_y]) {
                     $currentKey = $key;
@@ -371,8 +370,9 @@ class Rest_Api {
             }
             
             $valueX = new \stdClass();
-            $valueX->name = strtoupper($varAttributes[$taxonomy_x]);
-            $valueX->slug = $single_variation->get_slug();
+            $valueX->name  = strtoupper($varAttributes[$taxonomy_x]);
+            $valueX->slug  = $single_variation->get_slug();
+            $valueX->stock = $single_variation->get_stock_quantity();
 
             $matrix[$currentKey]['x'][] = $valueX;
             //error_log(print_r($matrix[$currentKey], true));

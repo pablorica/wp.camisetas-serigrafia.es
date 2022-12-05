@@ -50,6 +50,10 @@
                             v-model="quantities[valueX.slug]"
                             @change="updateTotal"
                         >
+                        <br/>
+                        <i>
+                            <small v-html="valueX.stock"></small>
+                        </i>
                     </span>
                 </div>
             </div>
