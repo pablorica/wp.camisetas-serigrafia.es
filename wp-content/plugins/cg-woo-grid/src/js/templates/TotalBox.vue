@@ -33,10 +33,10 @@
                 >
                     <div style="margin-bottom: 15px;text-transform: none;">
                         <span v-html="results.unitpricetitle"></span>:
-                        <input id="cdg_price_u" 
+                        <input id="cdg_unitprice" 
                             type="text" 
-                            name="price_u" 
-                            v-bind:value="results.unitpricevalue" 
+                            name="unitprice" 
+                            v-bind:value="results.unitprice" 
                             disabled
                         >
                     </div>
@@ -57,63 +57,47 @@
                                 ></th>
                             </tr>
                         </thead>
-                        <tbody></tbody>
+                        <tbody v-html="results.html">
+                        </tbody>
                     </table>
                 </div>
                 <div class="total">
                     <h5 style="margin-bottom: 15px;">
                         ( 
                         <small v-html="results.unitpricetitle + ' :'"></small> 
-                        <span id="span_price_u" 
-                            v-html="results.formatzeroprice"
+                        <span id="span_unitpricetax" 
+                            v-html="results.unitpricetax"
                         ></span> 
                         )
                     </h5>
                     <h5>
-                        <small v-html="results.subtotal + ' :'"></small> 
-                        <span id="TotalPrice"
-                            v-html="results.formatzeroprice"
+                        <small v-html="results.subtotaltitle + ' :'"></small> 
+                        <span id="subtotal"
+                            v-html="results.subtotalformatted"
                         ></span>
                     </h5>
                     <h5>
-                        <small v-html="results.vat + ' :'"></small> 
-                        <span id="taxesRow"
-                            v-html="results.formatzeroprice"
+                        <small v-html="results.vattitle + ' :'"></small> 
+                        <span id="taxes"
+                            v-html="results.taxesformatted"
                         ></span>
                     </h5>
                     <h4>
-                        <small v-html="results.total + ' :'"></small> 
-                        <span id="TotalPriceIVA"
-                            v-html="results.formatzeroprice"
+                        <small v-html="results.totaltitle + ' :'"></small> 
+                        <span id="total"
+                            v-html="results.totalformatted"
                         ></span>
                     </h4>
                 </div>
             </div>
             <button id="cdg_add_products" 
                 class="btn btn-primary text-uppercase text-center"
-                disabled 
-                v-html="results.addtocart"
+                v-bind:disabled="(addcartenabled === false)"
+                v-html="results.addtocarttitle"
+                @click="addtocart"
             >
             </button>
             <p>&nbsp;</p>
-            <input type="hidden" 
-                name="add-to-cart" 
-                v-bind:value="results.product_id"
-            >
-            <input type="hidden" 
-                name="product_id" 
-                v-bind:value="results.product_id"
-            >
-            <input id="cdg_description" 
-                type="hidden" 
-                name="custom_options[description]" 
-                value=""
-            ><br>
-            <input id="cdg_price" 
-                type="hidden" 
-                name="custom_options[custom_price]" 
-                value="0"
-            ><br>
         </div>
   </template>
 
@@ -130,7 +114,10 @@ export default {
             	noresults:      config.noresults,
             	empty: 		    false,
                 product_id:     null,
-                results: 	    []
+                addcartenabled: false,
+                addurl:         null,
+                results: 	    [],
+                fixed: 	        []
             }
         },
         mounted: function () {
@@ -142,6 +129,10 @@ export default {
             
             emitter.on('firePopulateBox', ($response) => {
                 this.populateBox($response);
+            });
+
+            emitter.on('hideTotalBox', () => {
+                this.loading = true;
             });
         },
         methods: {
@@ -158,7 +149,7 @@ export default {
                     ){
                         self.product_id = $('#cdg_form').data('currentproduct')
                     }
-                    console.log('self.product_id: ' +self.product_id);
+                    //console.log('self.product_id: ' +self.product_id);
                     
                     
                     if(self.product_id !== null) {
@@ -169,16 +160,27 @@ export default {
                         '/totalbox/product_id='+self.product_id;
 
                         self.loading = true;
-                        console.log('buildTotalBox loading '+ getURL);
+                        //console.log('buildTotalBox loading '+ getURL);
 
                         $.get( getURL , function( r ){
                             self.loading  = false;
                             self.results = r;                            
                         }).done(function() {
+                            //console.log(self.results);
+
+                            self.fixed = self.results
+
+                            self.results.html              = ''
+                            self.results.unitprice         = self.results.zeroprice
+                            self.results.unitpricetax      = self.results.formatzeroprice
+                            self.results.subtotalformatted = self.results.formatzeroprice
+                            self.results.taxesformatted    = self.results.formatzeroprice
+                            self.results.totalformatted    = self.results.formatzeroprice
+
                             
-                            setTimeout(() => {
-                                $('#phpBoxTotal').addClass('hide');
-                            }, 250)
+                            // setTimeout(() => {
+                            //     $('#phpBoxTotal').addClass('hide');
+                            // }, 250)
                             
                         }).fail(function() {
                             //console.log('woops');
@@ -191,34 +193,54 @@ export default {
                 
 
 	        },
-            populateBox: function ($response) {
+            populateBox: function (response) {
 
-                var self = this;
-                self.empty   = true;
+                var self            = this;
+                self.loading        = false;
+                self.addcartenabled = true;
 
-                console.log('populateBox');
-                console.log($response)
+                self.results = { ...self.fixed, ...response } 
+                self.addurl  = self.results.addurl
 
-                /*
-                $('#cdg_total').html(r[0]);
-                $('#cdg_description').val(r[7]);
-                $('#TotalPriceIVA').html(r[5]);
-                $('#TotalPrice').html(r[4]);
-                $('#cdg_price_u').val(r[3]);
-                $('#cdg_price').val(r[6]);
-                
-                $('#tabla_precios tbody').html(r[13]);
-                $('#taxesRow').html(r[14]);
-                $('#span_price_u').html(r[15]);
-                $('button#cdg_add_products').prop("disabled",false);
-                */
+                // console.log('populateBox');
+                // console.log(response)
+                // for(var rkey in response){
+                //     console.log('response key: ',rkey);
+                //     console.log('input value: ',response[rkey]);
+                // }
 
+                //console.log('addurl', self.addurl);
+            },
+            addtocart: function() {
+                var self      = this;
+                self.loading  = true;
+                (function($){
+                    //console.log('addurl', self.addurl);
+                    if(self.addurl) {
+                        var getURL = window.location.href + 
+                        '?add-to-cart='+
+                        self.addurl;
 
-                },
+                        self.loading = true;
+                        console.log('adding to cart: ', getURL);
+
+                        $.get( getURL , function( r ){
+                            //self.loading  = false;
+                        }).done(function() {
+                            console.log('Added to cart');
+                            self.loading  = false;
+                        }).fail(function() {
+                            //console.log('woops');
+                            self.loading = false;
+                        });
+                    }
+                })( jQuery );
+
+            },
             resetAll: function(){
                 console.log('Reset');
                 this.empty = false;
-                this.buildBox();
+                this.buildTotalBox();
             }
         }
     }

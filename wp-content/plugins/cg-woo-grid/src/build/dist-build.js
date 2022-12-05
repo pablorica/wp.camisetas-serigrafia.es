@@ -28,7 +28,8 @@ async function copyDir(src, dest) {
 		'package.json',
 		'package-lock.json',
 		'phpcs.xml.dist',
-		'readme.txt'
+		'readme.txt',
+        '.orig'
 	];
 
 
@@ -54,9 +55,9 @@ copyDir('./', './dist')
         console.log('dist folder ready');
         //updating links to get the minified files
         const options = {
-            files: './dist/includes/class-helper.php',
-            from: /cg-woo-grid\.js/g,
-            to: 'cg-woo-grid.min.js',
+            files: './dist/public/class-cg-woo-grid-public.php',
+            from:  [/cg-woo-grid\.js/g, /cg-woo-grid\.css/g],
+            to: ['cg-woo-grid.min.js', 'cg-woo-grid.min.css'] ,
         };
         
         replace(options)

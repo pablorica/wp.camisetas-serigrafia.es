@@ -11,7 +11,10 @@
  * @subpackage cg-woo-grid/includes
  * @author     Pablo Rica <pablo@codigo.co.uk>
  */
-class Cg_Woo_Grid_Public {
+
+namespace Cg_Woo_Grid_Public;
+
+class Functions {
 
 	/**
 	 * The ID of this plugin.
@@ -35,7 +38,6 @@ class Cg_Woo_Grid_Public {
 
     protected $css_filepath;
     protected $js_filepath;
-    protected $restapinamespace;
     protected $vue_filepath;
     protected $vue_version;
 
@@ -54,7 +56,6 @@ class Cg_Woo_Grid_Public {
         //set the variable for the example endpoint. you can use a option plugin to store it and change it later in the admin page
         $this->css_filepath = CG_WOOGRID_URL.'public/css/cg-woo-grid.css';
         $this->js_filepath = CG_WOOGRID_URL.'public/js/cg-woo-grid.js';
-        $this->restapinamespace = 'cg-woo-grid/v1';
 
         if(CG_WOOGRID_STATUS == 'development'){
             //https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.45/vue.global.js
@@ -116,381 +117,9 @@ class Cg_Woo_Grid_Public {
             $this->version, 
             true 
         );
-
-        
 	}
 
-    /**
-     * Define JS constants
-     *
-     * @return void
-     */
-    function custom_constants_js() {
-        echo '
-        <script>
-            const REST_POSTS_URL = "'.esc_url_raw( rest_url( $this->restapinamespace ) ).'";
-            const REST_NONCE     = "'.wp_create_nonce( 'wp_rest' ).'";
-            const LOADING_GIF    = "'.CG_WOOGRID_URL.'/vue/img/loading.gif";
-        </script>';
-    }
 
-    
-    /**
-     * REST API endpoint test
-     * 
-     * @return WP_REST_Response
-     */
-    function at_rest_testing_endpoint() {
-        return new WP_REST_Response('Howdy!!');
-    }
-
-    /**
-     * Update cart with the selected products
-     * 
-     * @param object $request_data
-     * 
-     * @return array || WP_Error
-     */
-    public function build_total_box($request_data) {
-
-        global $post;
-        $parameters = $request_data->get_params();
-        //error_log('l.158 - build_total_box: '.print_r($parameters,true));
-        $return = new stdClass();
-
-        $return->product_id = null;
-        if( isset($parameters['product_id']) ) {
-            $return->product_id = $parameters['product_id'];
-        } elseif( isset($post->ID) ) {
-            $return->product_id = $post->ID;
-        } elseif(get_queried_object_id()) {
-            $return->product_id = get_queried_object_id();
-        }
-        
-        if(!$return->product_id) {
-            return new WP_Error( 
-                'product_invalid', 
-                esc_html__( 'No results.', 'codigo' ), 
-                array( 'status' => 404 ) 
-            );
-        }
-
-
-        $return->boxtitle        = __("Tu presupuesto","cg-woo-grid");
-        $return->unitpricetitle  = __("Precio unitario","cg-woo-grid");
-        $return->unitpricevalue  = strip_tags(wc_price(0));
-        $return->pricetitle      = __("Precio","cg-woo-grid");
-        $return->unitstitle      = __("Unidades","cg-woo-grid");
-        $return->amountitle      = __("Importe","cg-woo-grid");
-        $return->subtotal        = __("Subotal","cg-woo-grid");
-        $return->vat             = __("IVA","cg-woo-grid");
-        $return->total           = __("Total","cg-woo-grid");
-        $return->addtocart       = __("Añadir a la cesta","cg-woo-grid");
-        $return->formatzeroprice = wc_price(0);
-
-        $return->taxonomy_y = 'pa_color';
-        $return->taxonomy_y_name = 'Color';
-        $return->taxonomy_x = 'pa_tamano';
-        $return->taxonomy_x_name = 'Talla';
-
-        return rest_ensure_response($return);
-    }
-
-
-     /**
-     * Get the prices
-     * 
-     * @param array $args
-     * 
-     * @return object || WP_Error
-     */
-    function get_prices($args)
-    {
-
-        $_product = $args['product'];
-
-        if(!$_product instanceof WC_Product) {
-            return new WP_Error( 
-                'rest_api_sad', 
-                esc_html__( 'Something went wrong.', 'codigo' ), 
-                array( 'status' => 500 ) 
-            );
-        }
-
-        $colores = array();
-        $description = '';
-
-        $total = 0;
-        $price = 0;
-        $rowPrices = array();
-
-
-        if($_product->is_type('variable')){
-
-            $variations=$_product->get_children();
-            foreach ($variations as $value) {
-                $single_variation = new WC_Product_Variation($value);
-                /*
-                echo '<option  value="'.$value.'">'.implode(" / ", $single_variation->get_variation_attributes()).'-'.get_woocommerce_currency_symbol().$single_variation->price.'</option>';
-                */
-                $variation_slug = $single_variation->get_slug();
-                $variation_id   = $single_variation->get_id();
-
-                if (isset($args['quantities'][$variation_slug])) {
-
-                    error_log('l.241 -> get_prices() - product:  '.$variation_slug);
-
-                    $quantity   = (int) $args['quantities'][$variation_slug];
-                    $rowPrice   = array();
-                    $nk    		= false;
-                    $attr 		= $single_variation->get_variation_attributes();
-
-                    foreach ($colores as $k => $vc) {
-                        if ($vc['color'] == $vc['pa_color']) $nk = $k;
-                    }
-                    if ($nk === false) {
-                        $colores[] = array(
-                            'color'	=> $attr['attribute_pa_color'],
-                            'sizes'	=> array()
-                        );
-                        end($colores);
-                        $nk = key($colores);
-                    }
-                    $colores[$nk]['sizes'][] = array($attr['attribute_pa_tamano'], $quantity);
-                    //$attr['attribute_pa_color'];
-                    $miprecio = (float) $single_variation->get_price();
-                    $total += $quantity;
-
-                    $uprice = (float) $single_variation->get_regular_price();
-
-                    $price  += $quantity * $uprice;
-
-                    
-                    $rowPrice["tp_uprecio_base"] = $uprice;
-                    $rowPrice["tp_color"]    = $attr['attribute_pa_color'];
-                    $rowPrice["tp_tamano"]   = $attr['attribute_pa_tamano'];
-                    $rowPrice["tp_cant"]     = $quantity;				
-
-                    //error_log(print_r($rowPrices, true));
-                    $rowPrices[] = $rowPrice;
-                }
-            }
-
-
-        }
-
-        $description .= $total . ' productos. ';
-        foreach ($colores as $k => $v) {
-            $description .= ($k != 0 ? ' - ' : '') . ucfirst($v['color']) . ': ';
-            foreach ($v['sizes'] as $k2 => $v2) {
-                $description .= ($k2 != 0 ? ', ' : '') . strtoupper($v2[0]) . ' (' . $v2[1] . ')';
-            }
-        }
-
-
-        $html = '';
-        foreach($rowPrices as $rowPrice) {
-
-            $nuprecio = $rowPrice["tp_uprecio_base"];
-            $nqprecio = $nuprecio * $rowPrice["tp_cant"];
-
-            $html .= '
-            <tr>
-                <td class="tp_color">'.ucfirst($rowPrice["tp_color"]).'</td>
-                <td class="tp_tamano">'.strtoupper($rowPrice["tp_tamano"]).'</td>
-                <td class="tp_uprecio">'.wc_price($nuprecio).'</td>
-                <td class="tp_cant">'.$rowPrice["tp_cant"].'</td>
-                <td class="text-right tp_subtotal">'.wc_price($nqprecio).'</td>
-            </tr>';
-            
-        }
-
-
-        //Taxes
-        $tax_p = 0;
-        $tax_rates = WC_Tax::get_rates($_product->get_tax_class());
-        if (!empty($tax_rates)) {
-            $tax_rate = reset($tax_rates);
-            $tax_p = sprintf(_x('%.2f', '', 'wptheme.foundation'), $tax_rate['rate']);
-        }
-
-        $taxes  	  = $price / 100 * $tax_p;
-        $priceTax     = $price + $taxes;
-        $unitPrice    = $price / $total;
-        $unitPriceTax = $priceTax / $total;
-
-        $return = new stdClass();
-        $return->total          = $total;
-        $return->unitpricetax   = strip_tags(html_entity_decode(wc_price($unitPriceTax)));
-        $return->unitprice      = strip_tags(html_entity_decode(wc_price($unitPrice)));
-        $return->price          = $price;
-        $return->formatPrice    = wc_price($price);
-        $return->formatpricetax = wc_price($priceTax);
-        $return->formattaxes    = wc_price($taxes);
-        $return->description    = $description;
-        $return->html           = $html;
-
-        /*
-        $returnb = $total . '---' . strip_tags(html_entity_decode(wc_price($unitPriceTax))) . '---' . wc_price($price) . '---' . wc_price($priceTax) . '---' . $price . '---' . $description .  '---'  .$html. '---' .wc_price($taxes). '---' .strip_tags(html_entity_decode(wc_price($unitPrice)));
-        */
-
-        return $return;
-
-        //wp_die();
-    }
-
-    /**
-     * Update cart with the selected products
-     * 
-     * @param object $request_data
-     * 
-     * @return array || WP_Error
-     */
-    public function update_total_box($request_data) {
-
-        //error_log('get_product_matrix');
-
-        $parameters = $request_data->get_params();
-        //error_log(print_r($parameters,true));
-        $args = array();
-        
-        if( isset($parameters['product_id']) ) {
-            $args['product'] = wc_get_product($parameters['product_id']);
-        } else {
-            return new WP_Error( 
-                'product_invalid', 
-                esc_html__( 'No results.', 'codigo' ), 
-                array( 'status' => 404 ) 
-            );
-        }
-
-        $args['taxonomy_y'] = 'pa_color';
-        if( isset($parameters['taxonomy_y']) ) {
-            $args['taxonomy_y'] = $parameters['taxonomy_y'];
-        }
-
-        $args['taxonomy_x'] = 'pa_tamano';
-        if( isset($parameters['taxonomy_x']) ) {
-            $args['taxonomy_x'] = $parameters['taxonomy_x'];
-        }
-
-        $args['quantities'] = null;
-        if( isset($parameters['quantities']) ) {
-            $args['quantities'] = $parameters['quantities'];
-        }
-
-        return rest_ensure_response(
-            $this->get_prices($args)
-        );
-        
-    }
-
-
-    /**
-     * Get the matrix of attributes of one product defined in $args
-     * 
-     * @param array $args
-     * 
-     * @return array || WP_Error
-     */
-    public function build_product_matrix($args) {
-
-        extract(wp_parse_args(
-            $args,
-            array(
-                'product' => null,
-                'taxonomy_y' => null,
-                'taxonomy_x' => null,
-            )
-        ));
-
-        if(!$product instanceof WC_Product) {
-            // If the code somehow executes to here something bad happened return a 500.
-            return new WP_Error( 
-                'rest_api_sad', 
-                esc_html__( 'Something went wrong.', 'codigo' ), 
-                array( 'status' => 500 ) 
-            );
-        }
-
-        $return     = new stdClass();
-        $_children  = $product->get_children();
-        $matrix     = array();
-        //$variations = array();
-        foreach ($_children as $value) {
-            $single_variation = new WC_Product_Variation($value);
-            //$variations[]     = $single_variation;
-            //$varAttributes    = $single_variation->attributes;
-            $varAttributes    = $single_variation->get_attributes();
-
-            $currentKey = false;
-            foreach ($matrix as $key => $attribute) {
-                if ($attribute['y'] == $varAttributes[$taxonomy_y]) {
-                    $currentKey = $key;
-                }
-            }
-            if ($currentKey === false) {
-                //$image_variation_url = wp_get_attachment_url($single_variation->get_image_id());
-                $matrix[] = array(
-                    'image'	=> $single_variation->get_image(),
-                    'y'	    => $varAttributes[$taxonomy_y],
-                    'x'	    => array()
-                );
-                end($matrix);
-                $currentKey = key($matrix);
-            }
-            
-            $valueX = new stdClass();
-            $valueX->name = strtoupper($varAttributes[$taxonomy_x]);
-            $valueX->slug = $single_variation->get_slug();
-
-            $matrix[$currentKey]['x'][] = $valueX;
-            //error_log(print_r($matrix[$currentKey], true));
-        }
-
-        return $matrix;
-    }
-
-    /**
-     * Get the matrix of attributes of one product defined in $request_data
-     * 
-     * @param object $request_data
-     * 
-     * @return array || WP_Error
-     */
-    public function get_product_matrix($request_data) {
-
-        //error_log('get_product_matrix');
-
-        $parameters = $request_data->get_params();
-        //error_log(print_r($parameters,true));
-        $args = array();
-        
-        if( isset($parameters['product_id']) ) {
-            $args['product'] = wc_get_product($parameters['product_id']);
-        } else {
-            return new WP_Error( 
-                'product_invalid', 
-                esc_html__( 'No results.', 'codigo' ), 
-                array( 'status' => 404 ) 
-            );
-        }
-
-        $args['taxonomy_y'] = 'pa_color';
-        if( isset($parameters['taxonomy_y']) ) {
-            $args['taxonomy_y'] = $parameters['taxonomy_y'];
-        }
-
-        $args['taxonomy_x'] = 'pa_tamano';
-        if( isset($parameters['taxonomy_x']) ) {
-            $args['taxonomy_x'] = $parameters['taxonomy_x'];
-        }
-
-        return rest_ensure_response(
-            $this->build_product_matrix($args)
-        );
-        
-    }
 
     /**
 	 * Build the products attributes grig
@@ -500,13 +129,14 @@ class Cg_Woo_Grid_Public {
      * @return void || WP_Error
 	 */
     function codigo_products_grid() {
+        $rest_api = new Rest_Api();
         $args = array();
         
         if( null !== get_queried_object_id()) {
             $args['product'] = wc_get_product(get_queried_object_id());
         } else {
             // If the code somehow executes to here something bad happened return a 500.
-            return new WP_Error( 
+            return new \WP_Error( 
                 'rest_api_sad', 
                 esc_html__( 'Something went wrong.', 'codigo' ), 
                 array( 'status' => 500 ) 
@@ -516,15 +146,14 @@ class Cg_Woo_Grid_Public {
         $args['taxonomy_y'] = 'pa_color';
         $args['taxonomy_x'] = 'pa_tamano';
 
-        if($matrix = $this->build_product_matrix($args)) {
-
+        if($matrix = $rest_api->build_product_matrix($args)) {
             $minimum    = 0;
             include_once 'partials/class-cg-woo-grid-public-display.php'; 
         } 
 
         else {
             // Return a WP_Error because the request product was not found. In this case we return a 404 because the main resource was not found.
-            return new WP_Error( 
+            return new \WP_Error( 
                 'product_invalid', 
                 esc_html__( 'No results.', 'codigo' ), 
                 array( 'status' => 404 ) 
@@ -532,67 +161,142 @@ class Cg_Woo_Grid_Public {
         }
     }
 
+    //https://www.webroomtech.com/woocommerce-add-multiple-products-to-cart-via-url/
+    //https://avada.io/woocommerce/docs/select-multiple-variations.html
+    //https://stackoverflow.com/questions/51606535/how-to-add-multiple-variable-products-to-the-cart-via-the-add-to-cart-query-stri
     /**
-	 * Add custom routes to REST API
-	 *
-	 * @since    1.0.0
-	 */
-    function add_routes_api(){
+     * Add multiple product variations to cart
+     *
+     * @param boolean $url
+     * @return void
+     */
+    function cdg_add_multiple_variations_to_cart( 
+        $url = false 
+    ) {
+        //error_log('l.184:wp-content/plugins/cg-woo-grid/public/class-cg-woo-grid-public.php -> cdg_add_multiple_variations_to_cart');
 
-        /*
-        * Test: Hello World
-        */
-        register_rest_route(
-            $this->restapinamespace, 
-            'testing', 
-            array(
-                'methods'   => WP_REST_Server::READABLE,
-                'callback'  => array( $this, 'at_rest_testing_endpoint' ),
-            )
+        // Make sure WC is installed, and add-to-cart query arg exists, and contains at least one comma.
+        if ( ! class_exists( 'WC_Form_Handler' ) 
+            || empty( $_REQUEST['add-to-cart'] ) 
+            || false === strpos( $_REQUEST['add-to-cart'], ',' ) 
+        ) {
+            return;
+        }
+
+        //error_log('l.184:wp-content/plugins/cg-woo-grid/public/class-cg-woo-grid-public.php -> reading REQUEST');
+    
+        // Remove WooCommerce's hook, as it's useless (doesn't handle multiple products).
+        remove_action( 
+            'wp_loaded', 
+            array( 'WC_Form_Handler', 'add_to_cart_action' ), 
+            20 
         );
-
-        /*
-        * Total box
-        */
-        register_rest_route( 
-            $this->restapinamespace, 
-            'totalbox/product_id=(?P<product_id>\d+)', 
-            array(
-                // By using this constant we ensure that when the WP_REST_Server changes our readable endpoints will work as intended.
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => array( $this, 'build_total_box')
-            )
-        ); 
-        //https://local.camisetas-serigrafia.wp.es/wp-json/cg-woo-grid/v1/totalbox/product_id=6016
-
-
-        /*
-        * Update Total box
-        */
-        register_rest_route( 
-            $this->restapinamespace, 
-            'updatetotalbox', 
-            array(
-                // By using this constant we ensure that when the WP_REST_Server changes our readable endpoints will work as intended.
-                'methods'  => WP_REST_Server::CREATABLE,
-                'callback' => array( $this, 'update_total_box')
-            )
-        ); 
-        //https://local.camisetas-serigrafia.wp.es/wp-json/cg-woo-grid/v1/updatetotalbox
-
-        /*
-        * Attributtes matrix
-        */
-        register_rest_route( 
-            $this->restapinamespace, 
-            'attmatrix/product_id=(?P<product_id>\d+)/taxonomy_y=(?P<taxonomy_y>[\,a-zA-Z0-9-_]+)/taxonomy_x=(?P<taxonomy_x>[\,a-zA-Z0-9-_]+)', 
-            array(
-                // By using this constant we ensure that when the WP_REST_Server changes our readable endpoints will work as intended.
-                'methods'  => WP_REST_Server::READABLE,
-                'callback' => array( $this, 'get_product_matrix')
-            )
-        ); 
-        //https://local.camisetas-serigrafia.wp.es/wp-json/cg-woo-grid/v1/attmatrix/product_id=6016/taxonomy_y=pa_color/taxonomy_x=pa_tamano
-
+    
+        $product_ids = explode( ',', $_REQUEST['add-to-cart'] );
+        $count       = count( $product_ids );
+        $number      = 0;
+    
+        foreach ( $product_ids as $id_and_quantity ) {
+            // Check for quantities defined in curie notation (<product_id>:<product_quantity>)
+            
+            $id_and_quantity = explode( ':', $id_and_quantity );
+            $product_id = $id_and_quantity[0];
+    
+            $_REQUEST['quantity'] = ! empty( $id_and_quantity[1] ) ? absint( $id_and_quantity[1] ) : 1;
+    
+            if ( ++$number === $count ) {
+                // Ok, final item, let's send it back to woocommerce's add_to_cart_action method for handling.
+                $_REQUEST['add-to-cart'] = $product_id;
+                return \WC_Form_Handler::add_to_cart_action( $url );
+            }
+    
+            $product_id = apply_filters( 
+                'woocommerce_add_to_cart_product_id', 
+                absint( $product_id ) 
+            );
+            //$was_added_to_cart = false;
+            $adding_to_cart = wc_get_product( $product_id );
+    
+            if ( ! $adding_to_cart ) {
+                continue;
+            }
+    
+            $add_to_cart_handler = apply_filters( 
+                'woocommerce_add_to_cart_handler', 
+                $adding_to_cart->get_type(), 
+                $adding_to_cart 
+            );
+    
+            // Variable product handling
+            if ( 'variable' === $add_to_cart_handler ) {
+                $this->woo_hack_invoke_private_method( 
+                    'WC_Form_Handler', 
+                    'add_to_cart_handler_variable', 
+                    $product_id 
+                );
+    
+            // Grouped Products
+            } elseif ( 'grouped' === $add_to_cart_handler ) {
+                $this->woo_hack_invoke_private_method( 
+                    'WC_Form_Handler', 
+                    'add_to_cart_handler_grouped', 
+                    $product_id 
+                );
+    
+            // Custom Handler
+            } elseif (
+                 has_action( 'woocommerce_add_to_cart_handler_' . $add_to_cart_handler ) 
+            ){
+                do_action( 
+                    'woocommerce_add_to_cart_handler_' . $add_to_cart_handler, 
+                    $url 
+                );
+    
+            // Simple Products
+            } else {
+                $this->woo_hack_invoke_private_method( 
+                    'WC_Form_Handler', 
+                    'add_to_cart_handler_simple', 
+                    $product_id 
+                );
+            }
+        }
     }
+    
+    // Fire before the WC_Form_Handler::add_to_cart_action callback.
+    //add_action( 'wp_loaded', 'cdg_add_multiple_variations_to_cart', 15 );
+    
+    
+    /**
+     * Invoke class private method
+     *
+     * @since   0.1.0
+     *
+     * @param   string $class_name
+     * @param   string $methodName
+     *
+     * @return  mixed
+     */
+    function woo_hack_invoke_private_method( 
+        $class_name, 
+        $methodName 
+    ) {
+        if ( version_compare( phpversion(), '5.3', '<' ) ) {
+            throw new \Exception( 'PHP version does not support ReflectionClass::setAccessible()', __LINE__ );
+        }
+    
+        $args = func_get_args();
+        unset( $args[0], $args[1] );
+        $reflection = new \ReflectionClass( $class_name );
+        $method = $reflection->getMethod( $methodName );
+        $method->setAccessible( true );
+    
+        //$args = array_merge( array( $class_name ), $args );
+        $args = array_merge( array( $reflection ), $args );
+        return call_user_func_array( 
+                    array( $method, 'invoke' ), 
+                    $args 
+                );
+    }
+
 }

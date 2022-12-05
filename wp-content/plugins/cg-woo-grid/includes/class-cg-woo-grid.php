@@ -16,6 +16,7 @@
  * @author     Pablo Rica <pablo@codigo.co.uk>
  */
 
+
 class Cg_Woo_Grid
 {
     /**** Plugin properties ****/
@@ -48,10 +49,6 @@ class Cg_Woo_Grid
 	 * @var      string    $version    The current version of the plugin.
 	 */
 	protected $version;
-
-
-    
-
 
     /**
 	 * Define the core functionality of the plugin.
@@ -124,7 +121,9 @@ class Cg_Woo_Grid
 		 * side of the site.
 		 */
 		//require_once CG_WOOGRID_PATH . 'public/class-cg-woo-grid-public.php';
-        require_once  CG_WOOGRID_PATH.'/public/class-cg-woo-grid-public.php';
+        require_once CG_WOOGRID_PATH . '/public/class-cg-woo-grid-public.php';
+        require_once CG_WOOGRID_PATH . '/public/class-cg-woo-grid-public-rest-api.php';
+        
 
 		$this->loader = new Cg_Woo_Grid_Loader();
 
@@ -172,7 +171,7 @@ class Cg_Woo_Grid
 	 */
 	private function define_public_hooks() {
 
-		$plugin_public = new Cg_Woo_Grid_Public( 
+		$plugin_public = new Cg_Woo_Grid_Public\Functions( 
             $this->get_plugin_name(), 
             $this->get_version() 
         );
@@ -193,14 +192,26 @@ class Cg_Woo_Grid
             $plugin_public, 
             'codigo_products_grid' 
         );
+
+		//add_action( 'wp_loaded', 'cdg_add_multiple_variations_to_cart', 15 );
+		$this->loader->add_action( 
+            'wp_loaded', 
+            $plugin_public, 
+            'cdg_add_multiple_variations_to_cart',
+			15
+        );
+
+
+        $plugin_public_restapi = new Cg_Woo_Grid_Public\Rest_Api();
+
         $this->loader->add_action( 
             'rest_api_init', 
-            $plugin_public, 
+            $plugin_public_restapi, 
             'add_routes_api'
         );
         $this->loader->add_action( 
             'wp_head', 
-            $plugin_public, 
+            $plugin_public_restapi, 
             'custom_constants_js',
             '1'
         );

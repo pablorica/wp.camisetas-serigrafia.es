@@ -48,7 +48,7 @@ body.single-product #page {
 			vertical-align: middle;
 			span {
 				align-items: center;
-				background-color: #c9302c;
+				background-color: $red;
 				border-radius: 100%;
 				color: white;
 				display: inline-flex;
@@ -146,11 +146,21 @@ body.single-product #page {
             text-align: right;
         }
         .btn {
-            background-color: #c9302c;
-            border-color: #ac2925;
+            background-color: $red;
+            border-color: $darkred;
+			color:white;
             display: block;
             margin-top: 15px;
             width: 100%;
         }
+		.loading {
+			left: 0;
+			right:0;
+			.fa {
+				position: absolute;
+				top: 50%;
+				left: calc(50% - 20px);
+			}
+		}
     }
 }

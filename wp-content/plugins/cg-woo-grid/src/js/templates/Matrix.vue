@@ -146,6 +146,7 @@ export default {
             updateTotal: function(){
 
                 var self = this;
+                
 
                 (function($){
 
@@ -162,15 +163,14 @@ export default {
                     _data['product_id'] = self.product_id;
                     _data['taxonomy_y'] = self.taxonomy_y;
                     _data['taxonomy_x'] = self.taxonomy_x;
-                    _data['quantities'] = self.quantities;
-                    /*
-                    $('#cdg_sizes input').each(function(){
-                        if($(this).val() != 0){
-                            _data[$(this).attr('name')] = $(this).val();
-                            purchaseAmount += parseInt($(this).val());
-                        }
-                    });
-                    */
+                    _data['quantities'] = Object.assign({}, self.quantities);
+
+                    console.log('quantities: ');
+                    for(var ikey in _data['quantities']){
+                        console.log('input slug: ',ikey);
+                        console.log('input value: ',_data['quantities'][ikey]);
+                        purchaseAmount += parseInt(_data['quantities'][ikey]);
+                    }
 
                     if(_letSend !== false)	{
                         _letSend.abort();
@@ -178,82 +178,58 @@ export default {
 
                     var postURL = config.api.index + '/updatetotalbox';
 
-                    console.log('updateTotal');
-                    console.log(postURL);
-                    console.log(_data);
+                    //console.log('updateTotal');
+                    //console.log(postURL);
+                    //console.log(_data);
 
-                    _letSend = $.post({
-                        url: postURL,
-                        data: _data,
-                        beforeSend: function() {
+                    let barWidth = (purchaseAmount * 100 / self.min_quantity)                    
+                    if(purchaseAmount >= self.min_quantity){
+                        //$('.cdg_total').css('display', 'block');
+                        emitter.emit('hideTotalBox');
+                        barWidth = 100;
+                        $('.cdg_cbar > .bar > span').css({'background-color': 'green'});
+                        $('.cdg_cbar .pull-right__header').css({'color': 'green'});
+                        $('.cdg_cbar .pull-right__header').text('Ya puedes hacer tu pedido | ');
+                        $('.cdg_cbar .pull-right__slash, .cdg_cbar #cdg_total50').hide();
 
-                            let barWidth = (purchaseAmount * 100 / (purchaseAmount > self.min_quantity ? purchaseAmount : self.min_quantity))
-                            $('.cdg_cbar > .bar > span').width( barWidth+'%' );
-                            $('#cdg_total').html(purchaseAmount);	
-                            $('#cdg_form .cdg_total .loading').stop(true).fadeIn(500);
-                            if(purchaseAmount >= self.min_quantity){
-                                //$('.cdg_total').css('display', 'block');
-                                
-                                $('.cdg_cbar > .bar > span').css({'background-color': 'green'});
-                                $('.cdg_cbar .pull-right__header').css({'color': 'green'});
-                                $('.cdg_cbar .pull-right__header').text('Ya puedes hacer tu pedido | ');
-                                $('.cdg_cbar .pull-right__slash, .cdg_cbar #cdg_total50').hide();
+                    } else {
+                        //$('.cdg_total').css('display', 'none');
+                        
+                        $('.cdg_cbar > .bar > span').css({'background-color': 'red'});
+                        $('.cdg_cbar .pull-right__header').css({'color': 'red'});
+                        $('.cdg_cbar .pull-right__header').text('Cantidad mínima de pedido | ');
+                        $('.cdg_cbar .pull-right__slash, .cdg_cbar #cdg_total50').show();
+                    }
 
-                            } else {
-                                //$('.cdg_total').css('display', 'none');
-
-                                $('.cdg_cbar > .bar > span').css({'background-color': 'red'});
-                                $('.cdg_cbar .pull-right__header').css({'color': 'red'});
-                                $('.cdg_cbar .pull-right__header').text('Cantidad mínima de pedido | ');
-                                $('.cdg_cbar .pull-right__slash, .cdg_cbar #cdg_total50').show();
-                            }
-                        },
-                        success: function( response ) {
-                            //var r = response.split('---');
-                            $('#cdg_form .cdg_total .loading').stop(true).fadeOut(0);
-
+                    $('.cdg_cbar > .bar > span').width( barWidth+'%' );
+                    
+                    _letSend = $.post( 
+                        postURL,
+                        _data
+                    )
+                    .done(function( response ) {
+                        //$('#cdg_form .cdg_total .loading').stop(true).fadeOut(0);
+                            //console.log('firePopulateBox');
                             if(purchaseAmount >= self.min_quantity){	
-
+                                //console.log('firePopulateBox', response);
                                 emitter.emit('firePopulateBox', response );
-                                /*
-                                $('#cdg_total').html(r[0]);
-                                $('#cdg_description').val(r[7]);
-                                $('#TotalPriceIVA').html(r[5]);
-                                $('#TotalPrice').html(r[4]);
-                                $('#cdg_price_u').val(r[3]);
-                                $('#cdg_price').val(r[6]);
-                                
-                                $('#tabla_precios tbody').html(r[13]);
-                                $('#taxesRow').html(r[14]);
-                                $('#span_price_u').html(r[15]);
-                                $('button#cdg_add_products').prop("disabled",false);
-                                */
-
-
                             } else {
-
+                                console.log('firePopulateBox: false');
                                 emitter.emit('firePopulateBox', false );
-                                /*
-                                $('.cdg_total').css('display', 'none');
-                                $('#cdg_description').val('');
-                                $('#TotalPriceIVA').html(0);
-                                $('#TotalPrice').html('<span class="woocommerce-Price-amount amount">0.00&nbsp;<span class="woocommerce-Price-currencySymbol">€</span></span>');
-                                $('#cdg_price_u').val(0);
-                                $('#cdg_total_b').val(0);
-                                $('#cdg_total_c').val(0);
-                                $('#cdg_price').val(0);
-                                
-                                $('#tabla_precios tbody').html('');
-                                $('#taxesRow').html('<span class="woocommerce-Price-amount amount">0.00&nbsp;<span class="woocommerce-Price-currencySymbol">€</span></span>');
-                                $('#span_price_u').html('<span class="woocommerce-Price-amount amount">0.00&nbsp;<span class="woocommerce-Price-currencySymbol">€</span></span>');
-                                $('button#cdg_add_products').prop("disabled",true);
-                                */
                             }
 
                             //total = r[0];
-                            
-                            _letSend = false;
-                        }
+                    })
+                    .fail(function() {
+                        console.log('woops');
+                        self.loading = false;
+                        self.matrix     = [];
+                        self.quantities = {};
+                        self.empty      = true;
+                    })
+                    .always(function() {
+                        console.log('updateTotal POST finished');
+                        _letSend = false;
                     });
 
                 })( jQuery );
