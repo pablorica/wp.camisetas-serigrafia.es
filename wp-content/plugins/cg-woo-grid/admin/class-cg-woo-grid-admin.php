@@ -200,12 +200,9 @@ class Cg_Woo_Grid_Admin {
         // ID used to identify this section and with which to register options
         $settings_section_id = $this->plugin_name.'_general_section';
         // Title to be displayed on the administration page
-        $settings_title = '';  
+        $settings_title = '';
         // Callback that echos out any content at the top of the section (between heading and fields).
-        $settings_callback = array( 
-            $this, 
-            'display_description' 
-        ); 
+        $settings_callback = null; 
         //The slug-name of the settings page on which to show the section.
         $settings_page = $this->plugin_name.'_general_settings';
 
@@ -236,7 +233,8 @@ class Cg_Woo_Grid_Admin {
             'required'         => 'required="required"',
             'get_options_list' => '',
             'value_type'       => 'normal',
-            'wp_data'          => 'option'
+            'wp_data'          => 'option',
+            'class'            => 'alternate',
         );
         $fields[] = $field;
 
@@ -262,6 +260,7 @@ class Cg_Woo_Grid_Admin {
             'get_options_list' => $option_lists,
             'value_type'       => 'normal',
             'wp_data'          => 'option',
+            'class'            => '',
             'onchange'         => 'changeTextValue(\''.$field['id'].'\')'
         );
         $fields[] = $field;
@@ -278,6 +277,7 @@ class Cg_Woo_Grid_Admin {
             'get_options_list' => '',
             'value_type'       => 'normal',
             'wp_data'          => 'option',
+            'class'            => '',
             
         );
         $fields[] = $field;
@@ -294,6 +294,7 @@ class Cg_Woo_Grid_Admin {
             'get_options_list' => $option_lists,
             'value_type'       => 'normal',
             'wp_data'          => 'option',
+            'class'            => 'alternate',
             'onchange'         => 'changeTextValue(\''.$field['id'].'\')'
         );
         $fields[] = $field;
@@ -310,10 +311,149 @@ class Cg_Woo_Grid_Admin {
             'get_options_list' => '',
             'value_type'       => 'normal',
             'wp_data'          => 'option',
+            'class'            => 'alternate',
             
         );
         $fields[] = $field;
 
+
+
+        $fields[] = array(
+            'id'    => $this->plugin_name.'_bar_message',
+            'title' => __("Bar message","cg-woo-grid").":",
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'text',
+                'id'               => $field['id'],
+                'name'             => $field['id'],
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'placeholder'      => esc_html__("Minimum amount to order","cg-woo-grid"),
+                'class'            => '',
+            )
+        );
+
+        $fields[] = array(
+            'id'    => $this->plugin_name.'_bar_success',
+            'title' => __("Bar success","cg-woo-grid").":",
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'text',
+                'id'               => $field['id'],
+                'name'             => $field['id'],
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'placeholder'      => esc_html__("You can now place your order","cg-woo-grid"),
+                'class'            => '',
+            )
+        );
+
+        $field_id = $this->plugin_name.'_popup_message1';
+        $fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Pop Up Message 1","cg-woo-grid").":",
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'text',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'placeholder'      => esc_html__("Continue the purchase","cg-woo-grid"),
+                'class'            => 'alternate',
+            )
+        );
+        $field_id = $this->plugin_name.'_popup_message2';
+        $fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Pop Up Message 2","cg-woo-grid").":",
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'text',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'placeholder'      => esc_html__("Go to cart","cg-woo-grid"),
+                'class'            => 'alternate',
+            )
+        );
+        $field_id = $this->plugin_name.'_popup_success_title';
+        $fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Pop Up Success Title","cg-woo-grid").":",
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'text',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'placeholder'      => esc_html__("Shopping cart","cg-woo-grid"),
+                'class'            => 'alternate',
+            )
+        );
+        $field_id = $this->plugin_name.'_popup_success_message';
+        $fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Pop Up Success Message","cg-woo-grid").":",
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'text',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'placeholder'      => esc_html__("The cart has been successfully updated.","cg-woo-grid"),
+                'class'            => 'alternate',
+            )
+        );
+        $field_id = $this->plugin_name.'_popup_error_title';
+        $fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Pop Up Error Title","cg-woo-grid").":",
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'text',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'placeholder'      => esc_html__("Insufficient items","cg-woo-grid"),
+                'class'            => 'alternate',
+            )
+        );
+        $field_id = $this->plugin_name.'_popup_error_message';
+        $fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Pop Up Error Message","cg-woo-grid").":",
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'text',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'placeholder'      => esc_html__("There must be a minimum of %1 products","cg-woo-grid"),
+                'class'            => 'alternate',
+            )
+        );
 
         foreach($fields as $field) {
             $this->buildFields(
@@ -325,23 +465,6 @@ class Cg_Woo_Grid_Admin {
                 $field['args']
             );
         }
-    }
-
-
-
-    /**
-     * Display administration message
-     *
-     * @return void
-     */
-    public function display_description() {
-        
-        echo '<p>'. 
-            esc_html__( 
-                'These settings apply to all Attribute Grid functionality.', 
-                'codigo' 
-            ).
-            '</p>';
     }
     
     /**
@@ -402,12 +525,14 @@ class Cg_Woo_Grid_Admin {
                         $prependEnd   = '</div>';
                     }
                     
-                    $step       = (isset($args['step'])) ? 'step="'.$args['step'].'"' : '';
-                    $min        = (isset($args['min'])) ? 'min="'.$args['min'].'"' : '';
-                    $max        = (isset($args['max'])) ? 'max="'.$args['max'].'"' : '';
+                    $step        = (isset($args['step'])) ? 'step="'.$args['step'].'"' : '';
+                    $min         = (isset($args['min'])) ? 'min="'.$args['min'].'"' : '';
+                    $max         = (isset($args['max'])) ? 'max="'.$args['max'].'"' : '';
+                    $placeholder = (isset($args['placeholder'])) ? 'placeholder="'.$args['placeholder'].'"' : '';
                     $inputAttr  = $step.' 
                                 '.$max.' 
                                 '.$min.' 
+                                '.$placeholder.' 
                                 size="40" 
                                 value="' . esc_attr($value) . '"';
                     
@@ -517,8 +642,5 @@ class Cg_Woo_Grid_Admin {
             break;
         }
     }
-
-
-	
 
 }

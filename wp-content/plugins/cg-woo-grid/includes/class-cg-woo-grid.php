@@ -209,7 +209,7 @@ class Cg_Woo_Grid
         $this->loader->add_action( 
             'woocommerce_after_single_product_summary', 
             $plugin_public, 
-            'codigo_products_grid' 
+            'cdg_products_grid' 
         );
 
 		//add_action( 'wp_loaded', 'cdg_add_multiple_variations_to_cart', 15 );
@@ -227,6 +227,15 @@ class Cg_Woo_Grid
             'cdg_woo_overwrite_template',
             1,
             3
+        );
+
+
+        $this->loader->add_filter( 
+            'woocommerce_add_to_cart_redirect',
+            $plugin_public, 
+            'cdg_updated_cart',
+            20,
+            2
         );
 
 

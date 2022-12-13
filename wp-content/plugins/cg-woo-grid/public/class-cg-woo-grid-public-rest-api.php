@@ -51,7 +51,20 @@ class Rest_Api {
             const MINIMUM_QUANTITY = "'.get_option($this->plugin_name.'_minimum_setting').'";
             const TAXONOMY_X       = "'.get_option($this->plugin_name.'_taxonomy_x_setting').'";
             const TAXONOMY_Y       = "'.get_option($this->plugin_name.'_taxonomy_y_setting').'";
+
+            const BAR_MESSAGE    = "'.get_option($this->plugin_name.'_bar_message').'";
+            const BAR_SUCCESS    = "'.get_option($this->plugin_name.'_bar_success').'";
+            const BAR_ITEMSTITLE = "'.esc_html__("ITEMS","cg-woo-grid").'";
+
+            const POPUP_MESSAGE1       = "'.get_option($this->plugin_name.'_popup_message1').'";
+            const POPUP_MESSAGE2       = "'.get_option($this->plugin_name.'_popup_message2').'";
+            const POPUP_CLOSE          = "'.esc_html__("Close","cg-woo-grid").'";
+            const POPUP_SUCESS_TITLE   = "'.get_option($this->plugin_name.'_popup_success_title').'";
+            const POPUP_SUCESS_MESSAGE = "'.get_option($this->plugin_name.'_popup_success_message').'";
+            const POPUP_ERROR_TITLE    = "'.get_option($this->plugin_name.'_popup_error_title').'";
+            const POPUP_ERROR_MESSAGE  = "'.get_option($this->plugin_name.'_popup_error_message').'";
             
+            const CART_URL       = "'.get_permalink(wc_get_page_id('cart')).'";
             const REST_POSTS_URL = "'.esc_url_raw( rest_url( $this->restapinamespace ) ).'";
             const REST_NONCE     = "'.wp_create_nonce( 'wp_rest' ).'";
             const LOADING_GIF    = "'.CG_WOOGRID_URL.'/vue/img/loading.gif";
@@ -94,7 +107,7 @@ class Rest_Api {
         if(!$return->product_id) {
             return new \WP_Error( 
                 'product_invalid', 
-                esc_html__( 'No results.', 'codigo' ), 
+                esc_html__( 'No results.', 'cg-woo-grid' ), 
                 array( 'status' => 404 ) 
             );
         }
@@ -143,10 +156,12 @@ class Rest_Api {
         if(!$_product instanceof \WC_Product) {
             return new \WP_Error( 
                 'rest_api_sad', 
-                esc_html__( 'Something went wrong.', 'codigo' ), 
+                esc_html__( 'Something went wrong.', 'cg-woo-grid' ), 
                 array( 'status' => 500 ) 
             );
         }
+
+        $nameproduct = $_product->get_name();
 
         $gridattributes = array();
         $description = '';
@@ -159,9 +174,7 @@ class Rest_Api {
         if($_product->is_type('variable')){
 
             $tax_y_slug = get_option($this->plugin_name.'_taxonomy_y_setting');
-            error_log('tax_y_slug '.$tax_y_slug);
             $tax_x_slug = get_option($this->plugin_name.'_taxonomy_x_setting');
-            error_log('tax_x_slug '.$tax_x_slug);
 
             $variations = $_product->get_children();
             foreach ($variations as $value) {
@@ -174,25 +187,23 @@ class Rest_Api {
 
                 if (isset($args['quantities'][$variation_slug])) {
 
-                    //error_log('l.241 -> get_prices() - product:  '.$variation_slug);
-
                     $quantity   = (int) $args['quantities'][$variation_slug];
                     $rowPrice   = array();
                     $nk    		= false;
                     $attr 		= $single_variation->get_variation_attributes();
 
                     foreach ($gridattributes as $gakey => $gavalue) {
-                        if ($gavalue['color'] == $gavalue[$tax_y_slug]) $nk = $gakey;
+                        if ($gavalue['y'] == $gavalue[$tax_y_slug]) $nk = $gakey;
                     }
                     if ($nk === false) {
                         $gridattributes[] = array(
-                            'color'	=> $attr['attribute_'.$tax_y_slug],
-                            'sizes'	=> array()
+                            'y'	=> $attr['attribute_'.$tax_y_slug],
+                            'x'	=> array()
                         );
                         end($gridattributes);
                         $nk = key($gridattributes);
                     }
-                    $gridattributes[$nk]['sizes'][] = array($attr['attribute_'.$tax_x_slug], $quantity);
+                    $gridattributes[$nk]['x'][] = array($attr['attribute_'.$tax_x_slug], $quantity);
     
                     $miprecio = (float) $single_variation->get_price();
                     $numberofprods += $quantity;
@@ -202,9 +213,9 @@ class Rest_Api {
                     $price  += $quantity * $uprice;
 
                     
-                    $rowPrice["tp_ubase_price"] = $uprice;
-                    $rowPrice["tp_color"]        = $attr['attribute_'.$tax_y_slug];
-                    $rowPrice["tp_tamano"]       = $attr['attribute_'.$tax_x_slug];
+                    $rowPrice["tp_ubase_price"]  = $uprice;
+                    $rowPrice["tp_y"]            = $attr['attribute_'.$tax_y_slug];
+                    $rowPrice["tp_x"]            = $attr['attribute_'.$tax_x_slug];
                     $rowPrice["tp_qant"]         = $quantity;	
                     $rowPrice["tp_addurl"]       = $variation_id.':'.$quantity.',';				
 
@@ -216,13 +227,15 @@ class Rest_Api {
 
         }
 
-        $description .= $numberofprods ." ".__("products","cg-woo-grid");
+        $description .= $nameproduct.": ".$numberofprods ." ".__("products","cg-woo-grid")."-> ";
         foreach ($gridattributes as $k => $v) {
-            $description .= ($k != 0 ? ' - ' : '') . ucfirst($v['color']) . ': ';
-            foreach ($v['sizes'] as $k2 => $v2) {
-                $description .= ($k2 != 0 ? ', ' : '') . strtoupper($v2[0]) . ' (' . $v2[1] . ')';
+            $description .= ($k != 0 ? ' - ' : '') . ucfirst($v['y']) . ': ';
+            foreach ($v['x'] as $kx => $vx) {
+                $description .= ($kx != 0 ? ', ' : '') . strtoupper($vx[0]) . ' (' . $vx[1] . ')';
             }
         }
+
+        //error_log('l:216 -> public/class-cg-woo-grid-public-rest-api.php - $description: '.$description);
 
 
         $html = '';
@@ -234,8 +247,8 @@ class Rest_Api {
 
             $html .= '
             <tr>
-                <td class="tp_color">'.ucfirst($rowPrice["tp_color"]).'</td>
-                <td class="tp_tamano">'.strtoupper($rowPrice["tp_tamano"]).'</td>
+                <td class="tp_y">'.ucfirst($rowPrice["tp_y"]).'</td>
+                <td class="tp_x">'.strtoupper($rowPrice["tp_x"]).'</td>
                 <td class="tp_uprice">'.wc_price($nuprice).'</td>
                 <td class="tp_qant">'.$rowPrice["tp_qant"].'</td>
                 <td class="text-right tp_subtotal">'.wc_price($nqprice).'</td>
@@ -311,17 +324,20 @@ class Rest_Api {
         } else {
             return new \WP_Error( 
                 'product_invalid', 
-                esc_html__( 'No results.', 'codigo' ), 
+                esc_html__( 'No results.', 'cg-woo-grid' ), 
                 array( 'status' => 404 ) 
             );
         }
 
-        $args['taxonomy_y'] = 'pa_color';
+        $args['taxonomy_y'] = get_option($this->plugin_name.'_taxonomy_y_setting');
+        $args['taxonomy_x'] = get_option($this->plugin_name.'_taxonomy_x_setting');
+
+        //$args['taxonomy_y'] = 'pa_color';
         if( isset($parameters['taxonomy_y']) ) {
             $args['taxonomy_y'] = $parameters['taxonomy_y'];
         }
 
-        $args['taxonomy_x'] = 'pa_tamano';
+        //$args['taxonomy_x'] = 'pa_tamano';
         if( isset($parameters['taxonomy_x']) ) {
             $args['taxonomy_x'] = $parameters['taxonomy_x'];
         }
@@ -360,7 +376,7 @@ class Rest_Api {
             // If the code somehow executes to here something bad happened return a 500.
             return new \WP_Error( 
                 'rest_api_sad', 
-                esc_html__( 'Something went wrong.', 'codigo' ), 
+                esc_html__( 'Something went wrong.', 'cg-woo-grid' ), 
                 array( 'status' => 500 ) 
             );
         }
@@ -422,17 +438,20 @@ class Rest_Api {
         } else {
             return new \WP_Error( 
                 'product_invalid', 
-                esc_html__( 'No results.', 'codigo' ), 
+                esc_html__( 'No results.', 'cg-woo-grid' ), 
                 array( 'status' => 404 ) 
             );
         }
 
-        $args['taxonomy_y'] = 'pa_color';
+        $args['taxonomy_y'] = get_option($this->plugin_name.'_taxonomy_y_setting');
+        $args['taxonomy_x'] = get_option($this->plugin_name.'_taxonomy_x_setting');
+
+        //$args['taxonomy_y'] = 'pa_color';
         if( isset($parameters['taxonomy_y']) ) {
             $args['taxonomy_y'] = $parameters['taxonomy_y'];
         }
 
-        $args['taxonomy_x'] = 'pa_tamano';
+        //$args['taxonomy_x'] = 'pa_tamano';
         if( isset($parameters['taxonomy_x']) ) {
             $args['taxonomy_x'] = $parameters['taxonomy_x'];
         }

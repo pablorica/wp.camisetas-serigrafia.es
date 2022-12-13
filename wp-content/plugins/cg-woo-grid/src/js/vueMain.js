@@ -2,6 +2,9 @@ import Vue from 'vue'
 import Test from './templates/Test.vue';
 import Matrix from './templates/Matrix.vue';
 import TotalBox from './templates/TotalBox.vue';
+import ItemsBar from './templates/ItemsBar.vue';
+import PopUp from './templates/PopUp.vue';
+
 import Emitter from 'tiny-emitter';
 
 console.log('VUE Main loaded')
@@ -12,10 +15,20 @@ export const config = {
         index: REST_POSTS_URL
     },
     min_quantity: MINIMUM_QUANTITY,
-    taxonomy_x: TAXONOMY_X,
-    taxonomy_y: TAXONOMY_Y,
-    nonce: REST_NONCE,
-    loadingif: LOADING_GIF,
+    taxonomy_x:   TAXONOMY_X,
+    taxonomy_y:   TAXONOMY_Y,
+
+    bar_message:    BAR_MESSAGE,
+    bar_success:    BAR_SUCCESS,
+    bar_itemstitle: BAR_ITEMSTITLE,
+
+    popup_message1: POPUP_MESSAGE1,
+    popup_message2: POPUP_MESSAGE2,
+    popup_close:    POPUP_CLOSE,
+
+    cartPermalink: CART_URL,
+    nonce:         REST_NONCE,
+    loadingif:     LOADING_GIF,
 };
 
 
@@ -34,6 +47,16 @@ export const config = {
         if($("#appMatrix").length){
             console.log('Loading VUE Matrix')
             const app = Vue.createApp(Matrix).mount('#appMatrix')
+        }
+
+        if($("#appBar").length){
+            console.log('Loading VUE ItemsBar')
+            const app = Vue.createApp(ItemsBar).mount('#appBar')
+        }
+
+        if($("#appPopUp").length){
+            console.log('Loading VUE PopUp')
+            const app = Vue.createApp(PopUp).mount('#appPopUp')
         }
 
 

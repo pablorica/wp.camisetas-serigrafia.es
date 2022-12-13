@@ -11,16 +11,9 @@
  * @author     Pablo Rica <pablo@codigo.co.uk>
  */
 
-?>
 
-
-<!-- Vue -->
-<div id="appTest">
-    <counter></counter>
-</div>
-<!-- / Vue  -->
-
-<div id="cdg_popup" 
+ /*
+ <div id="cdg_popup" 
     style="display: none;"
 >
     <div class="white">
@@ -39,6 +32,14 @@
         </div>
     </div>
 </div>
+*/
+?>
+
+<!-- Vue -->
+<div id="appPopUp">
+    <pop-up></pop-up>
+</div>
+<!-- / Vue  -->
 
 <div id="cdg_form" 
     class="cdg_box"
@@ -59,23 +60,11 @@
         <div id="cdg_sizes" 
             class="sw_prize"
         >
-            <!-- <div class="cdg_cbar">
-                <div><span style="color: red">Cantidad mínima de pedido <?=$minimum . ' UDS'; ?></div>
-            </div> -->
-
-            <div class="cdg_cbar">
-                <span class="bar"><span></span></span>
-                0
-                <div class="pull-right">
-                    <span class="pull-right__header" 
-                        style="color: red"
-                    ><?php _e("Cantidad mínima de pedido","cg-woo-grid");?> | </span>
-                    <span id="cdg_total">0</span>
-                    <span class="pull-right__slash">/</span>
-                    <span id="cdg_total50"><?php echo (int) $minimum > 0 ? (int) $minimum : 50; ?></span> 
-                    <span class="uds"><?php _e("UDS.","cg-woo-grid");?></span>
-                </div>
+            <!-- Vue -->
+            <div id="appBar">
+                <items-bar></items-bar>
             </div>
+            <!-- / Vue  -->
 
             <!-- Vue -->
             <div id="appMatrix">

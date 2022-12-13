@@ -226,6 +226,12 @@ export default {
 
                         $.get( getURL , function( r ){
                             //self.loading  = false;
+                            //console.log('results: ' + r);
+                            if(r.startsWith("<success>1</success>"))
+                            {
+                                console.log('Updated!!! ');
+                                emitter.emit('showPopUp');
+                            }
                         }).done(function() {
                             console.log('Added to cart');
                             self.loading  = false;

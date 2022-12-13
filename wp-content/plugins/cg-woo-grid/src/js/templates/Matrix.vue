@@ -25,8 +25,7 @@
             <i class="fa fa-refresh fa-spin"></i>
         </div>
         <div class="cdg_product" 
-            v-for="(attribute, key) in matrix"  
-            v-bind:data-color="attribute.yslug" 
+            v-for="(attribute, key) in matrix"
         >
             <span>
                 <div>
@@ -38,9 +37,7 @@
             </span>
             <div>
                 <div>
-                    <span v-for="(valueX, keyX) in attribute.x" 
-                        v-bind:data-talla="valueX.name" 
-                    >
+                    <span v-for="(valueX, keyX) in attribute.x">
                         {{valueX.name}}
                         <br>
                         <input type="number" 
@@ -185,27 +182,12 @@ export default {
                     //console.log('updateTotal');
                     //console.log(postURL);
                     //console.log(_data);
-
-                    let barWidth = (purchaseAmount * 100 / self.min_quantity)                    
+                 
                     if(purchaseAmount >= self.min_quantity){
                         //$('.cdg_total').css('display', 'block');
                         emitter.emit('hideTotalBox');
-                        barWidth = 100;
-                        $('.cdg_cbar > .bar > span').css({'background-color': 'green'});
-                        $('.cdg_cbar .pull-right__header').css({'color': 'green'});
-                        $('.cdg_cbar .pull-right__header').text('Ya puedes hacer tu pedido | ');
-                        $('.cdg_cbar .pull-right__slash, .cdg_cbar #cdg_total50').hide();
-
-                    } else {
-                        //$('.cdg_total').css('display', 'none');
-                        
-                        $('.cdg_cbar > .bar > span').css({'background-color': 'red'});
-                        $('.cdg_cbar .pull-right__header').css({'color': 'red'});
-                        $('.cdg_cbar .pull-right__header').text('Cantidad mínima de pedido | ');
-                        $('.cdg_cbar .pull-right__slash, .cdg_cbar #cdg_total50').show();
-                    }
-
-                    $('.cdg_cbar > .bar > span').width( barWidth+'%' );
+                    } 
+                    emitter.emit('fireUpdateBar', purchaseAmount );
                     
                     _letSend = $.post( 
                         postURL,

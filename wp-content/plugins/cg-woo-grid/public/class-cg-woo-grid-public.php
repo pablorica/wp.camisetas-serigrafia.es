@@ -123,64 +123,34 @@ class Functions {
         );
 	}
 
-
-
     /**
-	 * Build the products attributes grig
-	 *
-	 * @since    1.0.0
-     * 
-     * @return void || WP_Error
-	 */
-    function codigo_products_grid() {
-        $rest_api = new Rest_Api( 
-            $this->plugin_name, 
-            $this->version
-        );
-        $args = array();
-        
-        if( null !== get_queried_object_id()) {
-            $args['product'] = wc_get_product(get_queried_object_id());
-        } else {
-            // If the code somehow executes to here something bad happened return a 500.
-            return new \WP_Error( 
-                'rest_api_sad', 
-                esc_html__( 'Something went wrong.', 'codigo' ), 
-                array( 'status' => 500 ) 
-            );
+     * Checks if cart has been updated
+     *
+     * @param  bool             $url
+     * @param  null|WC_Product  $adding_to_cart
+     * @return bool
+     */
+    public function cdg_updated_cart(
+        $url, 
+        $adding_to_cart 
+    ) {
+        if($adding_to_cart instanceof \WC_Product) {
+            echo "<success>1</success>";
         }
-
-        $args['taxonomy_y'] = 'pa_color';
-        $args['taxonomy_x'] = 'pa_tamano';
-
-        if($matrix = $rest_api->build_product_matrix($args)) {
-            $minimum    = 0;
-            include_once 'partials/'.$this->plugin_name.'-public-display.php'; 
-        } 
-
-        else {
-            // Return a WP_Error because the request product was not found. In this case we return a 404 because the main resource was not found.
-            return new \WP_Error( 
-                'product_invalid', 
-                esc_html__( 'No results.', 'codigo' ), 
-                array( 'status' => 404 ) 
-            );
-        }
+        return $url;
     }
 
-    //https://www.webroomtech.com/woocommerce-add-multiple-products-to-cart-via-url/
-    //https://avada.io/woocommerce/docs/select-multiple-variations.html
-    //https://stackoverflow.com/questions/51606535/how-to-add-multiple-variable-products-to-the-cart-via-the-add-to-cart-query-stri
+
+    
     /**
      * Add multiple product variations to cart
      *
      * @param boolean $url
      * @return void
      */
-    function cdg_add_multiple_variations_to_cart( 
+    public function cdg_add_multiple_variations_to_cart( 
         $url = false 
     ) {
-        //error_log('l.184:wp-content/plugins/cg-woo-grid/public/class-cg-woo-grid-public.php -> cdg_add_multiple_variations_to_cart');
 
         // Make sure WC is installed, and add-to-cart query arg exists, and contains at least one comma.
         if ( ! class_exists( 'WC_Form_Handler' ) 
@@ -189,8 +159,6 @@ class Functions {
         ) {
             return;
         }
-
-        //error_log('l.184:wp-content/plugins/cg-woo-grid/public/class-cg-woo-grid-public.php -> reading REQUEST');
     
         // Remove WooCommerce's hook, as it's useless (doesn't handle multiple products).
         remove_action( 
@@ -198,7 +166,7 @@ class Functions {
             array( 'WC_Form_Handler', 'add_to_cart_action' ), 
             20 
         );
-    
+
         $product_ids = explode( ',', $_REQUEST['add-to-cart'] );
         $count       = count( $product_ids );
         $number      = 0;
@@ -215,6 +183,7 @@ class Functions {
                 // Ok, final item, let's send it back to woocommerce's add_to_cart_action method for handling.
                 $_REQUEST['add-to-cart'] = $product_id;
                 return \WC_Form_Handler::add_to_cart_action( $url );
+                //$url = apply_filters( 'woocommerce_add_to_cart_redirect', $url, $adding_to_cart );
             }
     
             $product_id = apply_filters( 
@@ -270,8 +239,6 @@ class Functions {
         }
     }
     
-    // Fire before the WC_Form_Handler::add_to_cart_action callback.
-    //add_action( 'wp_loaded', 'cdg_add_multiple_variations_to_cart', 15 );
     
     
     /**
@@ -284,7 +251,7 @@ class Functions {
      *
      * @return  mixed
      */
-    function woo_hack_invoke_private_method( 
+    public function woo_hack_invoke_private_method( 
         $class_name, 
         $methodName 
     ) {
@@ -350,5 +317,56 @@ class Functions {
         return $template;
     }
 
+
+
+    /**
+	 * Build the products attributes grid
+	 *
+	 * @since    1.0.0
+     * 
+     * @return void || WP_Error
+	 */
+    function cdg_products_grid() {
+        $rest_api = new Rest_Api( 
+            $this->plugin_name, 
+            $this->version
+        );
+        $args = array();
+        
+        if( null !== get_queried_object_id()) {
+            $args['product'] = wc_get_product(get_queried_object_id());
+        } else {
+            // If the code somehow executes to here something bad happened return a 500.
+            return new \WP_Error( 
+                'rest_api_sad', 
+                esc_html__( 'Something went wrong.', "cg-woo-grid" ), 
+                array( 'status' => 500 ) 
+            );
+        }
+
+        //$args['taxonomy_y'] = 'pa_color';
+        //$args['taxonomy_x'] = 'pa_tamano';
+        $args['taxonomy_y'] = get_option($this->plugin_name.'_taxonomy_y_setting');
+        $args['taxonomy_x'] = get_option($this->plugin_name.'_taxonomy_x_setting');
+        
+
+        if($matrix = $rest_api->build_product_matrix($args)) {
+            $minimum    = 0;
+            include_once 'partials/'.$this->plugin_name.'-public-display.php'; 
+        } 
+
+        else {
+            // Return a WP_Error because the request product was not found. In this case we return a 404 because the main resource was not found.
+            return new \WP_Error( 
+                'product_invalid', 
+                esc_html__( 'No results.', "cg-woo-grid" ), 
+                array( 'status' => 404 ) 
+            );
+        }
+    }
+
+    //https://www.webroomtech.com/woocommerce-add-multiple-products-to-cart-via-url/
+    //https://avada.io/woocommerce/docs/select-multiple-variations.html
+    //https://stackoverflow.com/questions/51606535/how-to-add-multiple-variable-products-to-the-cart-via-the-add-to-cart-query-stri
 
 }
