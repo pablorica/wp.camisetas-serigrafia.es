@@ -11,6 +11,9 @@ export const config = {
     api: {
         index: REST_POSTS_URL
     },
+    min_quantity: MINIMUM_QUANTITY,
+    taxonomy_x: TAXONOMY_X,
+    taxonomy_y: TAXONOMY_Y,
     nonce: REST_NONCE,
     loadingif: LOADING_GIF,
 };

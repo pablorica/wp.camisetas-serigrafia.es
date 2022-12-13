@@ -1,0 +1,524 @@
+<?php
+/**
+ * The admin-specific functionality of the plugin.
+ *
+ * Defines the plugin name, version, and two examples hooks for how to
+ * enqueue the admin-specific stylesheet and JavaScript.
+ *
+ * @package    cg-woo-grid
+ * @subpackage cg-woo-grid/admin
+ * @author     Pablo Rica <pablo@codigo.co.uk>
+ */
+class Cg_Woo_Grid_Admin {
+
+	/**
+	 * The ID of this plugin.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      string    $plugin_name    The ID of this plugin.
+	 */
+	private $plugin_name;
+
+	/**
+	 * The version of this plugin.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      string    $version    The current version of this plugin.
+	 */
+	private $version;
+
+    /**** Custom Plugin Properties ****/
+
+    protected $js_filepath;
+
+	/**
+	 * Initialize the class and set its properties.
+	 *
+	 * @since    1.0.0
+	 * @param      string    $Cg_Woo_Grid       The name of this plugin.
+	 * @param      string    $version    The version of this plugin.
+	 */
+	public function __construct( 
+        $plugin_name, 
+        $version 
+    ) {
+
+		$this->plugin_name = $plugin_name;
+		$this->version = $version;
+
+        $this->js_filepath = CG_WOOGRID_URL.'admin/js/cg-woo-grid-admin.js';
+
+	}
+
+    /**
+	 * Register the JavaScript for the admin area.
+	 *
+	 * @since    1.0.0
+	 */
+	public function enqueue_scripts() {
+
+		/**
+		 * This function is provided for demonstration purposes only.
+		 *
+		 * An instance of this class should be passed to the run() function
+		 * defined in Cg_Woo_Grid_Loader as all of the hooks are defined
+		 * in that particular class.
+		 *
+		 * The Cg_Woo_Grid_Loader will then create the relationship
+		 * between the defined hooks and the functions defined in this
+		 * class.
+		 */
+
+		wp_enqueue_script( 
+            $this->plugin_name, 
+            $this->js_filepath,
+            array( 'jquery' ), 
+            $this->version, 
+            false 
+        );
+
+	}
+
+
+
+    /**
+     * Add menu to administration area
+     *
+     * @return void
+     */
+    public function addAdminMenu() {
+        //add_menu_page( $page_title, $menu_title, $capability, $menu_slug, $function, $icon_url, $position );
+        add_menu_page(  
+            $this->plugin_name, 
+            'Attribute Grid', 
+            'administrator', 
+            $this->plugin_name, 
+            array( 
+                $this, 
+                'displayAdminDashboard' 
+            ), 
+            'dashicons-grid-view', 
+            26 
+        );
+    }
+
+    /**
+     * Build the admin page
+     *
+     * @return void
+     */
+    public function displayAdminDashboard() {
+        // set this var to be used in the display view
+        $active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'general';
+
+        if(isset($_GET['error_message'])){
+            add_action(
+                'admin_notices', 
+                array(
+                    $this,
+                    'adminMessages'
+                )
+            );
+            do_action( 
+                'admin_notices', 
+                $_GET['error_message'] 
+            );
+        }
+		require_once 'partials/'.$this->plugin_name.'-admin-display.php';
+    }
+
+    /**
+     * Administration messages
+     *
+     * @param string $error_message
+     * @return void
+     */
+    public function adminMessages($error_message){
+        switch ($error_message) {
+            case '1':
+                $message = __( 'There was an error adding this setting. Please try again.  If this persists, shoot us an email.', 'codigo' );                 
+                $err_code = esc_attr( 'cg-woo-grid_error_setting' );                 
+                $setting_field = 'cg-woo-grid_error_setting';                 
+            break;
+        }
+        $type = 'error';
+        add_settings_error(
+            $setting_field,
+            $err_code,
+            $message,
+            $type
+        );
+    }
+
+    /**
+     * Build administration field
+     *
+     * @param string   $settings_page
+     * @param string   $field_id
+     * @param string   $field_title
+     * @param callable $callback
+     * @param string   $section_id
+     * @param array    $field_args
+     * @return void
+     */
+    public function buildFields(
+        string $settings_page,
+        string $field_id, 
+        string $field_title, 
+        callable $callback, 
+        string $section_id = 'default', 
+        array $field_args = array()
+    ) {
+   
+        add_settings_field(
+            $field_id,
+            $field_title,
+            $callback,
+            $settings_page,
+            $section_id,
+            $field_args
+        );
+
+        register_setting(
+            $settings_page,
+            $field_id
+        );
+    }
+    /**
+     * Build administration fields
+     * 
+     * 1 add_settings_section. This is necessary since all future settings must belong to one.
+     * 2 add_settings_field
+     * 3 register_setting
+     *
+     * @return void
+     */
+    public function registerAndBuildFields() {
+        
+        // ID used to identify this section and with which to register options
+        $settings_section_id = $this->plugin_name.'_general_section';
+        // Title to be displayed on the administration page
+        $settings_title = '';  
+        // Callback that echos out any content at the top of the section (between heading and fields).
+        $settings_callback = array( 
+            $this, 
+            'display_description' 
+        ); 
+        //The slug-name of the settings page on which to show the section.
+        $settings_page = $this->plugin_name.'_general_settings';
+
+        //Function that fills each field with the desired form inputs. The function should echo its output.
+        $field_callback = array( 
+            $this, 
+            'render_settings_field' 
+        );
+
+        add_settings_section(
+            $settings_section_id, 
+            $settings_title,  
+            $settings_callback,    
+            $settings_page                 
+        );
+
+        $fields = array();
+
+        $field = array();
+        $field['id']    = $this->plugin_name.'_minimum_setting';
+        $field['title'] = __('Minimum amount','cg-woo-grid');
+        $field['args']  = array (
+            'type'             => 'input',
+            'subtype'          => 'number',
+            'id'               => $field['id'],
+            'name'             => $field['id'],
+            'min'              => 10, 
+            'required'         => 'required="required"',
+            'get_options_list' => '',
+            'value_type'       => 'normal',
+            'wp_data'          => 'option'
+        );
+        $fields[] = $field;
+
+        
+        //error_log( print_r(wc_get_attribute_taxonomies(),true));
+        $option_lists = array();
+        if($attr_tax = wc_get_attribute_taxonomies()) {
+            foreach( $attr_tax as $tax ) {
+                $option_lists['pa_'.$tax->attribute_name] = $tax->attribute_label;
+            }
+        }
+        
+
+        $field = array();
+        $field['id']    = $this->plugin_name.'_taxonomy_x_setting';
+        $field['title'] = __("Taxonomy X","cg-woo-grid");
+        $field['args']  = array (
+            'type'             => 'select',
+            'subtype'          => '',
+            'id'               => $field['id'],
+            'name'             => $field['id'],
+            'required'         => 'required="required"',
+            'get_options_list' => $option_lists,
+            'value_type'       => 'normal',
+            'wp_data'          => 'option',
+            'onchange'         => 'changeTextValue(\''.$field['id'].'\')'
+        );
+        $fields[] = $field;
+
+        $field = array();
+        $field['id']    = $this->plugin_name.'_taxonomy_x_setting_title';
+        $field['title'] = __("Rename","cg-woo-grid").":";
+        $field['args']  = array (
+            'type'             => 'input',
+            'subtype'          => 'text',
+            'id'               => $field['id'],
+            'name'             => $field['id'],
+            'required'         => '',
+            'get_options_list' => '',
+            'value_type'       => 'normal',
+            'wp_data'          => 'option',
+            
+        );
+        $fields[] = $field;
+
+        $field = array();
+        $field['id']    = $this->plugin_name.'_taxonomy_y_setting';
+        $field['title'] = __("Taxonomy Y","cg-woo-grid");
+        $field['args']  = array (
+            'type'             => 'select',
+            'subtype'          => '',
+            'id'               => $field['id'],
+            'name'             => $field['id'],
+            'required'         => 'required="required"',
+            'get_options_list' => $option_lists,
+            'value_type'       => 'normal',
+            'wp_data'          => 'option',
+            'onchange'         => 'changeTextValue(\''.$field['id'].'\')'
+        );
+        $fields[] = $field;
+
+        $field = array();
+        $field['id']    = $this->plugin_name.'_taxonomy_y_setting_title';
+        $field['title'] = __("Rename","cg-woo-grid").":";
+        $field['args']  = array (
+            'type'             => 'input',
+            'subtype'          => 'text',
+            'id'               => $field['id'],
+            'name'             => $field['id'],
+            'required'         => '',
+            'get_options_list' => '',
+            'value_type'       => 'normal',
+            'wp_data'          => 'option',
+            
+        );
+        $fields[] = $field;
+
+
+        foreach($fields as $field) {
+            $this->buildFields(
+                $settings_page,
+                $field['id'], 
+                $field['title'], 
+                $field_callback, 
+                $settings_section_id, 
+                $field['args']
+            );
+        }
+    }
+
+
+
+    /**
+     * Display administration message
+     *
+     * @return void
+     */
+    public function display_description() {
+        
+        echo '<p>'. 
+            esc_html__( 
+                'These settings apply to all Attribute Grid functionality.', 
+                'codigo' 
+            ).
+            '</p>';
+    }
+    
+    /**
+     * Administration fields rendering
+     *
+     * @param [type] $args
+     * @return void
+     */
+    public function render_settings_field($args) {
+        /* EXAMPLE INPUT
+            'type'            => 'input',
+            'subtype'         => '',
+            'id'              => $this->plugin_name.'_example_setting',
+            'name'            => $this->plugin_name.'_example_setting',
+            'required'        => 'required="required"',
+            'get_option_list' => "",
+            'value_type'      => serialized OR normal,
+            'wp_data'         => (option or post_meta),
+            'post_id'         =>
+        */   
+
+        if($args['wp_data'] == 'option'){
+
+            $wp_data_value = get_option($args['name']);
+
+        } elseif($args['wp_data'] == 'post_meta'){
+
+            $wp_data_value = get_post_meta( 
+                $args['post_id'], 
+                $args['name'], 
+                true 
+            );
+        }
+
+        switch ($args['type']) {
+
+            case 'input':
+                $value = $wp_data_value;
+                if($args['value_type'] == 'serialized')  {
+                    $value = serialize($wp_data_value);
+                }
+
+                $after = $args['after'] ?? '';
+
+                if($args['subtype'] != 'checkbox'){
+
+                    $prependStart = $prependEnd = null;
+                    if(isset($args['prepend_value'])) {
+                        $prependStart = '<div class="input-prepend"> 
+                                            <span class="add-on">'.
+                                                $args['prepend_value'].
+                                            '</span>';
+                        $prependEnd   = '</div>';
+                    }
+                    if(isset($args['after'])) {
+                        $prependStart = $args['after'].
+                                            '</span>';
+                        $prependEnd   = '</div>';
+                    }
+                    
+                    $step       = (isset($args['step'])) ? 'step="'.$args['step'].'"' : '';
+                    $min        = (isset($args['min'])) ? 'min="'.$args['min'].'"' : '';
+                    $max        = (isset($args['max'])) ? 'max="'.$args['max'].'"' : '';
+                    $inputAttr  = $step.' 
+                                '.$max.' 
+                                '.$min.' 
+                                size="40" 
+                                value="' . esc_attr($value) . '"';
+                    
+
+
+                    if(isset($args['disabled'])){
+                        // hide the actual input bc if it was just a disabled input the information saved in the database would be wrong - bc it would pass empty values and wipe the actual information
+                        echo $prependStart.
+                            '<input type="'.$args['subtype'].'" 
+                                id="'.$args['id'].'_disabled" 
+                                name="'.$args['name'].'_disabled" 
+                                disabled 
+                                '.$inputAttr.' 
+                            />
+                            <input type="hidden" 
+                                id="'.$args['id'].'" 
+                                name="'.$args['name'].'" 
+                                '.$inputAttr.' 
+                            />'.
+                            $prependEnd.
+                            $after;
+                    } else {
+                        echo $prependStart.
+                            '<input type="'.$args['subtype'].'" 
+                                    id="'.$args['id'].'" 
+                                    name="'.$args['name'].'" 
+                                    '.$args['required'].'
+                                    '.$inputAttr.' 
+                                />'.
+                                $prependEnd.
+                                $after;
+                    }
+                    /*<input required="required" '.$disabled.' type="number" step="any" id="'.$this->plugin_name.'_cost2" name="'.$this->plugin_name.'_cost2" value="' . esc_attr( $cost ) . '" size="25" /><input type="hidden" id="'.$this->plugin_name.'_cost" step="any" name="'.$this->plugin_name.'_cost" value="' . esc_attr( $cost ) . '" />*/
+
+                } else {
+                    $checked = ($value) ? 'checked' : '';
+                    echo '<input type="'.$args['subtype'].'" 
+                            id="'.$args['id'].'" 
+                            "'.$args['required'].'" 
+                            name="'.$args['name'].'" 
+                            size="40" 
+                            value="1" 
+                            '.$checked.' 
+                        />'.
+                        $after;
+                }
+            break;
+
+            case 'select':
+                
+                $after    = $args['after'] ?? '';
+                $options  = '<option disabled selected value> -- select an option -- </option>';
+                $selected = get_option($args['name']);
+                foreach($args['get_options_list'] as $value => $title) {
+                    if($args['value_type'] == 'serialized')  {
+                        $serialized = array(
+                            'value' => $value,
+                            'title' => $title
+                        );
+                        $value = serialize($serialized);
+                    }
+                    $options.= "
+                    <option value='".$value."' 
+                        ".selected( 
+                            $selected, 
+                            $value,
+                            false
+                        )."
+                    >".$title."</option>";
+                }
+
+                $prependStart = $prependEnd = null;
+                if(isset($args['prepend_value'])) {
+                    $prependStart = '<div class="input-prepend"> 
+                                        <span class="add-on">'.
+                                            $args['prepend_value'].
+                                        '</span>';
+                    $prependEnd   = '</div>';
+                }
+                $onchange = (isset($args['onchange'])) ? 'onchange="'.$args['onchange'].'"' : '';
+                
+                if(isset($args['disabled'])){
+                    // hide the actual input bc if it was just a disabled input the information saved in the database would be wrong - bc it would pass empty values and wipe the actual information
+                    echo $prependStart.
+                        '<input type="text" 
+                            id="'.$args['id'].'_disabled" 
+                            name="'.$args['name'].'_disabled" 
+                            disabled 
+                        />'.
+                        $prependEnd.
+                        $after;
+                } else {
+                    echo $prependStart.
+                        '<select id="'.$args['id'].'" 
+                            name="'.$args['name'].'" 
+                            '.$args['required'].' 
+                            '.$onchange.'
+                        >'.$options.'
+                        </select>'.
+                        $prependEnd.
+                        $after;
+                }
+            break;
+
+            default:
+                # code...
+            break;
+        }
+    }
+
+
+	
+
+}

@@ -74,9 +74,9 @@ export default {
             	noresults:      config.noresults,
             	empty: 		    false,
                 product_id:     null,
-                taxonomy_y:     'pa_color',
-                taxonomy_x:     'pa_tamano',
-                min_quantity:   50,
+                taxonomy_y:     config.taxonomy_y,
+                taxonomy_x:     config.taxonomy_x,
+                min_quantity:   config.min_quantity,
                 matrix: 	    [],
                 quantities: 	{}
             }
@@ -169,10 +169,10 @@ export default {
                     _data['taxonomy_x'] = self.taxonomy_x;
                     _data['quantities'] = Object.assign({}, self.quantities);
 
-                    console.log('quantities: ');
+                    //console.log('quantities: ');
                     for(var ikey in _data['quantities']){
-                        console.log('input slug: ',ikey);
-                        console.log('input value: ',_data['quantities'][ikey]);
+                        //console.log('input slug: ',ikey);
+                        //console.log('input value: ',_data['quantities'][ikey]);
                         purchaseAmount += parseInt(_data['quantities'][ikey]);
                     }
 

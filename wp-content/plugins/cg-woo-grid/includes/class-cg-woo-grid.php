@@ -77,7 +77,7 @@ class Cg_Woo_Grid
 
 		$this->load_dependencies();
 		$this->set_locale();
-		//$this->define_admin_hooks();
+		$this->define_admin_hooks();
 		$this->define_public_hooks();
     }
 
@@ -114,7 +114,7 @@ class Cg_Woo_Grid
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
-		//require_once CG_WOOGRID_PATH . '/admin/class-cg-woo-grid-admin.php';
+		require_once CG_WOOGRID_PATH . '/admin/class-cg-woo-grid-admin.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
@@ -151,16 +151,35 @@ class Cg_Woo_Grid
 	 *
 	 * @since    1.0.0
 	 * @access   private
-	 *
+	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Cg_Woo_Grid_Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_admin = new Cg_Woo_Grid_Admin( 
+            $this->get_plugin_name(), 
+            $this->get_version() 
+        );
 
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+        $this->loader->add_action(
+            'admin_menu',
+            $plugin_admin, 
+            'addAdminMenu',
+            9
+        );   
+        
+        $this->loader->add_action(
+            'admin_init', 
+            $plugin_admin, 
+            'registerAndBuildFields'
+        );
+
+
+		$this->loader->add_action( 
+            'admin_enqueue_scripts', 
+            $plugin_admin, 
+            'enqueue_scripts' 
+        );
 
 	}
-    */
 
 	/**
 	 * Register all of the hooks related to the public-facing functionality
@@ -201,8 +220,21 @@ class Cg_Woo_Grid
 			15
         );
 
+       //add_filter( 'woocommerce_locate_template', 'cdg_woo_overwrite_template', 1, 3 );
+        $this->loader->add_filter( 
+            'woocommerce_locate_template',
+            $plugin_public, 
+            'cdg_woo_overwrite_template',
+            1,
+            3
+        );
 
-        $plugin_public_restapi = new Cg_Woo_Grid_Public\Rest_Api();
+
+
+        $plugin_public_restapi = new Cg_Woo_Grid_Public\Rest_Api( 
+            $this->get_plugin_name(), 
+            $this->get_version() 
+        );
 
         $this->loader->add_action( 
             'rest_api_init', 

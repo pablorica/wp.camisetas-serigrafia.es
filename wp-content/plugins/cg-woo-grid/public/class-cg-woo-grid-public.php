@@ -8,7 +8,7 @@
  *
  * @since      1.0.0
  * @package    cg-woo-grid
- * @subpackage cg-woo-grid/includes
+ * @subpackage cg-woo-grid/public
  * @author     Pablo Rica <pablo@codigo.co.uk>
  */
 
@@ -38,6 +38,7 @@ class Functions {
 
     protected $css_filepath;
     protected $js_filepath;
+    protected $template_filepath;
     protected $vue_filepath;
     protected $vue_version;
 
@@ -48,14 +49,17 @@ class Functions {
 	 * @param      string    $plugin_name       The name of the plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
-	public function __construct( $plugin_name, $version ) {
+	public function __construct( 
+        $plugin_name, 
+        $version 
+    ) {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
         //set the variable for the example endpoint. you can use a option plugin to store it and change it later in the admin page
-        $this->css_filepath = CG_WOOGRID_URL.'public/css/cg-woo-grid.css';
-        $this->js_filepath = CG_WOOGRID_URL.'public/js/cg-woo-grid.js';
+        $this->css_filepath      = CG_WOOGRID_URL.'public/css/cg-woo-grid.css';
+        $this->js_filepath       = CG_WOOGRID_URL.'public/js/cg-woo-grid.js';
 
         if(CG_WOOGRID_STATUS == 'development'){
             //https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.45/vue.global.js
@@ -129,7 +133,10 @@ class Functions {
      * @return void || WP_Error
 	 */
     function codigo_products_grid() {
-        $rest_api = new Rest_Api();
+        $rest_api = new Rest_Api( 
+            $this->plugin_name, 
+            $this->version
+        );
         $args = array();
         
         if( null !== get_queried_object_id()) {
@@ -148,7 +155,7 @@ class Functions {
 
         if($matrix = $rest_api->build_product_matrix($args)) {
             $minimum    = 0;
-            include_once 'partials/class-cg-woo-grid-public-display.php'; 
+            include_once 'partials/'.$this->plugin_name.'-public-display.php'; 
         } 
 
         else {
@@ -298,5 +305,50 @@ class Functions {
                     $args 
                 );
     }
+
+
+    /**
+     * Overwrite woocommerce template file
+     *
+     * @param string $template
+     * @param string $template_name
+     * @param string $template_path
+     * @return string
+     */
+    function cdg_woo_overwrite_template( 
+        $template, 
+        $template_name, 
+        $template_path 
+    ) {
+        global $woocommerce;
+
+        $_template = $template;
+        if ( ! $template_path ) {
+            $template_path = $woocommerce->template_url;
+        }
+    
+        $plugin_path  = CG_WOOGRID_PATH.'/public/template/woocommerce/';
+    
+        // Look within passed path within the theme - this is priority
+        $template = locate_template(
+            array(
+                $template_path . $template_name,
+                $template_name
+            )
+        );
+        
+        if( ! $template 
+            && file_exists( $plugin_path . $template_name ) 
+        ){ 
+            $template = $plugin_path . $template_name;
+        }
+        
+        if ( ! $template ) {
+            $template = $_template;
+        }
+
+        return $template;
+    }
+
 
 }

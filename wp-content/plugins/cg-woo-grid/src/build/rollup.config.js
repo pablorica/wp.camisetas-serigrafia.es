@@ -5,7 +5,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import multi from '@rollup/plugin-multi-entry'
 
 
-export default {
+export default  {
     input: ['./src/js/main.js', './src/js/vueMain.js'],
     output: {
         file: './public/js/cg-woo-grid.js',

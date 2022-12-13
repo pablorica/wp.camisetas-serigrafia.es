@@ -15,6 +15,7 @@ namespace Cg_Woo_Grid_Public;
 
 class Rest_Api {
 
+    protected $plugin_name;
 
     /**** Custom Plugin Properties ****/
 
@@ -27,7 +28,12 @@ class Rest_Api {
 	 * @param      string    $plugin_name       The name of the plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
-	public function __construct() {
+	public function __construct( 
+        $plugin_name, 
+        $version 
+    ) {
+        $this->plugin_name = $plugin_name;
+		$this->version = $version;
 
         $this->restapinamespace = 'cg-woo-grid/v1';
 	}
@@ -42,6 +48,10 @@ class Rest_Api {
     function custom_constants_js() {
         echo '
         <script>
+            const MINIMUM_QUANTITY = "'.get_option($this->plugin_name.'_minimum_setting').'";
+            const TAXONOMY_X       = "'.get_option($this->plugin_name.'_taxonomy_x_setting').'";
+            const TAXONOMY_Y       = "'.get_option($this->plugin_name.'_taxonomy_y_setting').'";
+            
             const REST_POSTS_URL = "'.esc_url_raw( rest_url( $this->restapinamespace ) ).'";
             const REST_NONCE     = "'.wp_create_nonce( 'wp_rest' ).'";
             const LOADING_GIF    = "'.CG_WOOGRID_URL.'/vue/img/loading.gif";
@@ -90,23 +100,29 @@ class Rest_Api {
         }
 
 
-        $return->boxtitle        = __("Tu presupuesto","cg-woo-grid");
-        $return->unitpricetitle  = __("Precio unitario","cg-woo-grid");
-        $return->pricetitle      = __("Precio","cg-woo-grid");
-        $return->unitstitle      = __("Unidades","cg-woo-grid");
-        $return->amountitle      = __("Importe","cg-woo-grid");
-        $return->subtotaltitle   = __("Subotal","cg-woo-grid");
-        $return->vattitle        = __("IVA","cg-woo-grid");
+        $return->boxtitle        = __("Your budget","cg-woo-grid");
+        $return->unitpricetitle  = __("Unit price","cg-woo-grid");
+        $return->pricetitle      = __("Price","cg-woo-grid");
+        $return->unitstitle      = __("Items","cg-woo-grid");
+        $return->amountitle      = __("Amount","cg-woo-grid");
+        $return->subtotaltitle   = __("Sub-total","cg-woo-grid");
+        $return->vattitle        = __("VAT","cg-woo-grid");
         $return->totaltitle      = __("Total","cg-woo-grid");
-        $return->addtocarttitle  = __("Añadir a la cesta","cg-woo-grid");
+        $return->addtocarttitle  = __("Add to cart","cg-woo-grid");
 
         $return->zeroprice       = strip_tags(wc_price(0));
         $return->formatzeroprice = wc_price(0);
 
-        $return->taxonomy_y = 'pa_color';
-        $return->taxonomy_y_name = 'Color';
-        $return->taxonomy_x = 'pa_tamano';
-        $return->taxonomy_x_name = 'Talla';
+        //error_log($this->plugin_name.'_taxonomy_y_setting');
+        //error_log(get_option($this->plugin_name.'_taxonomy_y_setting'));
+        //$return->taxonomy_y = 'pa_color'; 
+        $return->taxonomy_y = get_option($this->plugin_name.'_taxonomy_y_setting');
+        //$return->taxonomy_y_name = 'Color';
+        $return->taxonomy_y_name = get_option($this->plugin_name.'_taxonomy_y_setting_title');
+        //$return->taxonomy_x = 'pa_tamano';
+        $return->taxonomy_x = get_option($this->plugin_name.'_taxonomy_x_setting');
+        //$return->taxonomy_x_name = 'Talla';
+        $return->taxonomy_x_name = get_option($this->plugin_name.'_taxonomy_x_setting_title');
 
         return rest_ensure_response($return);
     }
@@ -132,7 +148,7 @@ class Rest_Api {
             );
         }
 
-        $colores = array();
+        $gridattributes = array();
         $description = '';
 
         $numberofprods = 0;
@@ -142,7 +158,12 @@ class Rest_Api {
 
         if($_product->is_type('variable')){
 
-            $variations=$_product->get_children();
+            $tax_y_slug = get_option($this->plugin_name.'_taxonomy_y_setting');
+            error_log('tax_y_slug '.$tax_y_slug);
+            $tax_x_slug = get_option($this->plugin_name.'_taxonomy_x_setting');
+            error_log('tax_x_slug '.$tax_x_slug);
+
+            $variations = $_product->get_children();
             foreach ($variations as $value) {
                 $single_variation = new \WC_Product_Variation($value);
                 /*
@@ -160,19 +181,19 @@ class Rest_Api {
                     $nk    		= false;
                     $attr 		= $single_variation->get_variation_attributes();
 
-                    foreach ($colores as $k => $vc) {
-                        if ($vc['color'] == $vc['pa_color']) $nk = $k;
+                    foreach ($gridattributes as $gakey => $gavalue) {
+                        if ($gavalue['color'] == $gavalue[$tax_y_slug]) $nk = $gakey;
                     }
                     if ($nk === false) {
-                        $colores[] = array(
-                            'color'	=> $attr['attribute_pa_color'],
+                        $gridattributes[] = array(
+                            'color'	=> $attr['attribute_'.$tax_y_slug],
                             'sizes'	=> array()
                         );
-                        end($colores);
-                        $nk = key($colores);
+                        end($gridattributes);
+                        $nk = key($gridattributes);
                     }
-                    $colores[$nk]['sizes'][] = array($attr['attribute_pa_tamano'], $quantity);
-                    //$attr['attribute_pa_color'];
+                    $gridattributes[$nk]['sizes'][] = array($attr['attribute_'.$tax_x_slug], $quantity);
+    
                     $miprecio = (float) $single_variation->get_price();
                     $numberofprods += $quantity;
 
@@ -181,10 +202,10 @@ class Rest_Api {
                     $price  += $quantity * $uprice;
 
                     
-                    $rowPrice["tp_uprecio_base"] = $uprice;
-                    $rowPrice["tp_color"]        = $attr['attribute_pa_color'];
-                    $rowPrice["tp_tamano"]       = $attr['attribute_pa_tamano'];
-                    $rowPrice["tp_cant"]         = $quantity;	
+                    $rowPrice["tp_ubase_price"] = $uprice;
+                    $rowPrice["tp_color"]        = $attr['attribute_'.$tax_y_slug];
+                    $rowPrice["tp_tamano"]       = $attr['attribute_'.$tax_x_slug];
+                    $rowPrice["tp_qant"]         = $quantity;	
                     $rowPrice["tp_addurl"]       = $variation_id.':'.$quantity.',';				
 
                     //error_log(print_r($rowPrices, true));
@@ -195,8 +216,8 @@ class Rest_Api {
 
         }
 
-        $description .= $numberofprods . ' productos. ';
-        foreach ($colores as $k => $v) {
+        $description .= $numberofprods ." ".__("products","cg-woo-grid");
+        foreach ($gridattributes as $k => $v) {
             $description .= ($k != 0 ? ' - ' : '') . ucfirst($v['color']) . ': ';
             foreach ($v['sizes'] as $k2 => $v2) {
                 $description .= ($k2 != 0 ? ', ' : '') . strtoupper($v2[0]) . ' (' . $v2[1] . ')';
@@ -208,16 +229,16 @@ class Rest_Api {
         $addurl = '';
         foreach($rowPrices as $rowPrice) {
 
-            $nuprecio = $rowPrice["tp_uprecio_base"];
-            $nqprecio = $nuprecio * $rowPrice["tp_cant"];
+            $nuprice = $rowPrice["tp_ubase_price"];
+            $nqprice = $nuprice * $rowPrice["tp_qant"];
 
             $html .= '
             <tr>
                 <td class="tp_color">'.ucfirst($rowPrice["tp_color"]).'</td>
                 <td class="tp_tamano">'.strtoupper($rowPrice["tp_tamano"]).'</td>
-                <td class="tp_uprecio">'.wc_price($nuprecio).'</td>
-                <td class="tp_cant">'.$rowPrice["tp_cant"].'</td>
-                <td class="text-right tp_subtotal">'.wc_price($nqprecio).'</td>
+                <td class="tp_uprice">'.wc_price($nuprice).'</td>
+                <td class="tp_qant">'.$rowPrice["tp_qant"].'</td>
+                <td class="text-right tp_subtotal">'.wc_price($nqprice).'</td>
             </tr>';
 
             $addurl .= $rowPrice["tp_addurl"];
