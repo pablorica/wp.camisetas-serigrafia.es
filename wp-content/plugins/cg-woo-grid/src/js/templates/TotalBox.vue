@@ -132,7 +132,7 @@ export default {
             });
 
             emitter.on('hideTotalBox', () => {
-                this.loading = true;
+                this.loading = false;
             });
         },
         methods: {
@@ -233,7 +233,7 @@ export default {
                                 emitter.emit('showPopUp');
                             }
                         }).done(function() {
-                            console.log('Added to cart');
+                            //console.log('Added to cart');
                             self.loading  = false;
                         }).fail(function() {
                             //console.log('woops');

@@ -16,4 +16,12 @@
 		padding: 30px;
 		width: 90%;
 	}
+    .text-center {
+        text-align: center;
+    }
+    .wrapper-buttons {
+        display: flex;
+        justify-content: space-between;
+
+    }
 }

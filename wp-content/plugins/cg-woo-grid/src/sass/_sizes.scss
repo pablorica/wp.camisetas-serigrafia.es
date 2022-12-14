@@ -27,10 +27,13 @@ $red: red;
             height: 8px;
         
             span {
-                background-color: $red;
                 display: block;
                 height: 8px;
                 width: 0;
+                transition: all linear 0.25s;
+            }
+            & > span {
+                background-color:$red
             }
         }
 

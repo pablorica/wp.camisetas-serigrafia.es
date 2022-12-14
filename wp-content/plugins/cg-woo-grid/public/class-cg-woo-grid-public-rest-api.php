@@ -58,7 +58,6 @@ class Rest_Api {
 
             const POPUP_MESSAGE1       = "'.get_option($this->plugin_name.'_popup_message1').'";
             const POPUP_MESSAGE2       = "'.get_option($this->plugin_name.'_popup_message2').'";
-            const POPUP_CLOSE          = "'.esc_html__("Close","cg-woo-grid").'";
             const POPUP_SUCESS_TITLE   = "'.get_option($this->plugin_name.'_popup_success_title').'";
             const POPUP_SUCESS_MESSAGE = "'.get_option($this->plugin_name.'_popup_success_message').'";
             const POPUP_ERROR_TITLE    = "'.get_option($this->plugin_name.'_popup_error_title').'";

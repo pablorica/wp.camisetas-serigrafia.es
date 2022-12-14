@@ -22,9 +22,12 @@ export const config = {
     bar_success:    BAR_SUCCESS,
     bar_itemstitle: BAR_ITEMSTITLE,
 
-    popup_message1: POPUP_MESSAGE1,
-    popup_message2: POPUP_MESSAGE2,
-    popup_close:    POPUP_CLOSE,
+    popup_message1:     POPUP_MESSAGE1,
+    popup_message2:     POPUP_MESSAGE2,
+    popup_sucess_title: POPUP_SUCESS_TITLE,
+    popup_sucess_msg:   POPUP_SUCESS_MESSAGE,
+    popup_error_title:  POPUP_ERROR_TITLE,
+    popup_error_msg:    POPUP_ERROR_MESSAGE,
 
     cartPermalink: CART_URL,
     nonce:         REST_NONCE,

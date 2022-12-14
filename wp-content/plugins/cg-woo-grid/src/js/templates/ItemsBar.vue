@@ -52,6 +52,7 @@ export default {
                 var self      = this;
                 self.items    = purchaseAmount  
                 self.barWidth = (purchaseAmount * 100 / self.min_quantity)   
+                self.barClass = '';
 
                 if(purchaseAmount >= self.min_quantity){
                     self.barClass = 'full';

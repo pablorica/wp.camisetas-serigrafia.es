@@ -282,50 +282,52 @@ class Cg_Woo_Grid_Admin {
         );
         $fields[] = $field;
 
-        $field = array();
-        $field['id']    = $this->plugin_name.'_taxonomy_y_setting';
-        $field['title'] = __("Taxonomy Y","cg-woo-grid");
-        $field['args']  = array (
-            'type'             => 'select',
-            'subtype'          => '',
-            'id'               => $field['id'],
-            'name'             => $field['id'],
-            'required'         => 'required="required"',
-            'get_options_list' => $option_lists,
-            'value_type'       => 'normal',
-            'wp_data'          => 'option',
-            'class'            => 'alternate',
-            'onchange'         => 'changeTextValue(\''.$field['id'].'\')'
-        );
-        $fields[] = $field;
-
-        $field = array();
-        $field['id']    = $this->plugin_name.'_taxonomy_y_setting_title';
-        $field['title'] = __("Rename","cg-woo-grid").":";
-        $field['args']  = array (
-            'type'             => 'input',
-            'subtype'          => 'text',
-            'id'               => $field['id'],
-            'name'             => $field['id'],
-            'required'         => '',
-            'get_options_list' => '',
-            'value_type'       => 'normal',
-            'wp_data'          => 'option',
-            'class'            => 'alternate',
-            
-        );
-        $fields[] = $field;
-
-
-
+        $field_id = $this->plugin_name.'_taxonomy_y_setting';
         $fields[] = array(
-            'id'    => $this->plugin_name.'_bar_message',
+            'id'    => $field_id,
+            'title' => __("Taxonomy Y","cg-woo-grid").":",
+            'args'  => array (
+                'type'             => 'select',
+                'subtype'          => '',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => 'required="required"',
+                'get_options_list' => $option_lists,
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'class'            => 'alternate',
+                'onchange'         => 'changeTextValue(\''.$field_id.'\')'
+            )
+        );
+
+        $field_id = $this->plugin_name.'_taxonomy_y_setting_title';
+        $fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Rename","cg-woo-grid").":",
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'text',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'class'            => 'alternate',
+                
+            )
+        );
+
+
+        $field_id = $this->plugin_name.'_bar_message';
+        $fields[] = array(
+            'id'    => $field_id,
             'title' => __("Bar message","cg-woo-grid").":",
             'args'  => array (
                 'type'             => 'input',
                 'subtype'          => 'text',
-                'id'               => $field['id'],
-                'name'             => $field['id'],
+                'id'               => $field_id,
+                'name'             => $field_id,
                 'required'         => '',
                 'get_options_list' => '',
                 'value_type'       => 'normal',
@@ -335,14 +337,15 @@ class Cg_Woo_Grid_Admin {
             )
         );
 
+        $field_id = $this->plugin_name.'_bar_success';
         $fields[] = array(
-            'id'    => $this->plugin_name.'_bar_success',
+            'id'    => $field_id,
             'title' => __("Bar success","cg-woo-grid").":",
             'args'  => array (
                 'type'             => 'input',
                 'subtype'          => 'text',
-                'id'               => $field['id'],
-                'name'             => $field['id'],
+                'id'               => $field_id,
+                'name'             => $field_id,
                 'required'         => '',
                 'get_options_list' => '',
                 'value_type'       => 'normal',
