@@ -145,14 +145,10 @@ body.single-product #page {
             padding: 15px 15px 10px;
             text-align: right;
         }
-        .btn {
-            background-color: $red;
-            border-color: $darkred;
-			color:white;
-            display: block;
-            margin-top: 15px;
+        .add_to_cart_button {
             width: 100%;
-        }
+            margin-top: 15px;
+        } 
 		.loading {
 			left: 0;
 			right:0;

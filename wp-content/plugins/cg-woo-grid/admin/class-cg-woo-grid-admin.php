@@ -60,8 +60,6 @@ class Cg_Woo_Grid_Admin {
 	public function enqueue_scripts() {
 
 		/**
-		 * This function is provided for demonstration purposes only.
-		 *
 		 * An instance of this class should be passed to the run() function
 		 * defined in Cg_Woo_Grid_Loader as all of the hooks are defined
 		 * in that particular class.
@@ -203,87 +201,79 @@ class Cg_Woo_Grid_Admin {
         $settings_title = '';
         // Callback that echos out any content at the top of the section (between heading and fields).
         $settings_callback = null; 
-        //The slug-name of the settings page on which to show the section.
-        $settings_page = $this->plugin_name.'_general_settings';
-
         //Function that fills each field with the desired form inputs. The function should echo its output.
         $field_callback = array( 
             $this, 
             'render_settings_field' 
         );
 
-        add_settings_section(
-            $settings_section_id, 
-            $settings_title,  
-            $settings_callback,    
-            $settings_page                 
-        );
+        $settings_pages = array();
+        $settings_page  = new \stdClass();
 
-        $fields = array();
+        //The slug-name of the settings page on which to show the section.
+        $settings_page->slug   = $this->plugin_name.'_general_settings';
+        $settings_page->fields = array();
 
-        $field = array();
-        $field['id']    = $this->plugin_name.'_minimum_setting';
-        $field['title'] = __('Minimum amount','cg-woo-grid');
-        $field['args']  = array (
-            'type'             => 'input',
-            'subtype'          => 'number',
-            'id'               => $field['id'],
-            'name'             => $field['id'],
-            'min'              => 10, 
-            'required'         => 'required="required"',
-            'get_options_list' => '',
-            'value_type'       => 'normal',
-            'wp_data'          => 'option',
-            'class'            => 'alternate',
-        );
-        $fields[] = $field;
-
-        
-        //error_log( print_r(wc_get_attribute_taxonomies(),true));
         $option_lists = array();
         if($attr_tax = wc_get_attribute_taxonomies()) {
             foreach( $attr_tax as $tax ) {
                 $option_lists['pa_'.$tax->attribute_name] = $tax->attribute_label;
             }
         }
-        
+        //error_log( print_r($option_lists,true));
 
-        $field = array();
-        $field['id']    = $this->plugin_name.'_taxonomy_x_setting';
-        $field['title'] = __("Taxonomy X","cg-woo-grid");
-        $field['args']  = array (
-            'type'             => 'select',
-            'subtype'          => '',
-            'id'               => $field['id'],
-            'name'             => $field['id'],
-            'required'         => 'required="required"',
-            'get_options_list' => $option_lists,
-            'value_type'       => 'normal',
-            'wp_data'          => 'option',
-            'class'            => '',
-            'onchange'         => 'changeTextValue(\''.$field['id'].'\')'
+        $field_id = $this->plugin_name.'_header_setting';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Header","cg-woo-grid").":",
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'text',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'placeholder'      => esc_html__("Choose colors and sizes to make your budget","cg-woo-grid"),
+                'class'            => 'alternate',
+            )
         );
-        $fields[] = $field;
-
-        $field = array();
-        $field['id']    = $this->plugin_name.'_taxonomy_x_setting_title';
-        $field['title'] = __("Rename","cg-woo-grid").":";
-        $field['args']  = array (
-            'type'             => 'input',
-            'subtype'          => 'text',
-            'id'               => $field['id'],
-            'name'             => $field['id'],
-            'required'         => '',
-            'get_options_list' => '',
-            'value_type'       => 'normal',
-            'wp_data'          => 'option',
-            'class'            => '',
-            
+        $field_id = $this->plugin_name.'_taxonomy_x_setting';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Taxonomy X","cg-woo-grid").":",
+            'args'  => array (
+                'type'             => 'select',
+                'subtype'          => '',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => 'required="required"',
+                'get_options_list' => $option_lists,
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'class'            => '',
+                'onchange'         => 'changeTextValue(\''.$field_id.'\')'
+            )
         );
-        $fields[] = $field;
-
+        $field_id = $this->plugin_name.'_taxonomy_x_setting_title';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Rename","cg-woo-grid").":",
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'text',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'class'            => '',
+            )
+        );
         $field_id = $this->plugin_name.'_taxonomy_y_setting';
-        $fields[] = array(
+        $settings_page->fields[] = array(
             'id'    => $field_id,
             'title' => __("Taxonomy Y","cg-woo-grid").":",
             'args'  => array (
@@ -299,9 +289,8 @@ class Cg_Woo_Grid_Admin {
                 'onchange'         => 'changeTextValue(\''.$field_id.'\')'
             )
         );
-
         $field_id = $this->plugin_name.'_taxonomy_y_setting_title';
-        $fields[] = array(
+        $settings_page->fields[] = array(
             'id'    => $field_id,
             'title' => __("Rename","cg-woo-grid").":",
             'args'  => array (
@@ -317,10 +306,33 @@ class Cg_Woo_Grid_Admin {
                 
             )
         );
+        array_push($settings_pages,$settings_page);
 
 
+        /* Minimum amount bar */
+        $settings_page         = new \stdClass();
+        $settings_page->slug   = $this->plugin_name.'_bar_settings';
+        $settings_page->fields = array();
+
+        $field_id = $this->plugin_name.'_minimum_setting';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Minimum amount","cg-woo-grid"),
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'number',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'min'              => 10, 
+                'required'         => 'required="required"',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'class'            => 'alternate'
+            )
+        );
         $field_id = $this->plugin_name.'_bar_message';
-        $fields[] = array(
+        $settings_page->fields[] = array(
             'id'    => $field_id,
             'title' => __("Bar message","cg-woo-grid").":",
             'args'  => array (
@@ -336,9 +348,8 @@ class Cg_Woo_Grid_Admin {
                 'class'            => '',
             )
         );
-
         $field_id = $this->plugin_name.'_bar_success';
-        $fields[] = array(
+        $settings_page->fields[] = array(
             'id'    => $field_id,
             'title' => __("Bar success","cg-woo-grid").":",
             'args'  => array (
@@ -351,12 +362,19 @@ class Cg_Woo_Grid_Admin {
                 'value_type'       => 'normal',
                 'wp_data'          => 'option',
                 'placeholder'      => esc_html__("You can now place your order","cg-woo-grid"),
-                'class'            => '',
+                'class'            => 'alternate',
             )
         );
+        array_push($settings_pages,$settings_page);
+
+
+        /* Pop up */
+        $settings_page         = new \stdClass();
+        $settings_page->slug   = $this->plugin_name.'_popup_settings';
+        $settings_page->fields = array();
 
         $field_id = $this->plugin_name.'_popup_message1';
-        $fields[] = array(
+        $settings_page->fields[] = array(
             'id'    => $field_id,
             'title' => __("Pop Up Message 1","cg-woo-grid").":",
             'args'  => array (
@@ -373,7 +391,7 @@ class Cg_Woo_Grid_Admin {
             )
         );
         $field_id = $this->plugin_name.'_popup_message2';
-        $fields[] = array(
+        $settings_page->fields[] = array(
             'id'    => $field_id,
             'title' => __("Pop Up Message 2","cg-woo-grid").":",
             'args'  => array (
@@ -386,11 +404,11 @@ class Cg_Woo_Grid_Admin {
                 'value_type'       => 'normal',
                 'wp_data'          => 'option',
                 'placeholder'      => esc_html__("Go to cart","cg-woo-grid"),
-                'class'            => 'alternate',
+                'class'            => '',
             )
         );
         $field_id = $this->plugin_name.'_popup_success_title';
-        $fields[] = array(
+        $settings_page->fields[] = array(
             'id'    => $field_id,
             'title' => __("Pop Up Success Title","cg-woo-grid").":",
             'args'  => array (
@@ -407,7 +425,7 @@ class Cg_Woo_Grid_Admin {
             )
         );
         $field_id = $this->plugin_name.'_popup_success_message';
-        $fields[] = array(
+        $settings_page->fields[] = array(
             'id'    => $field_id,
             'title' => __("Pop Up Success Message","cg-woo-grid").":",
             'args'  => array (
@@ -420,11 +438,11 @@ class Cg_Woo_Grid_Admin {
                 'value_type'       => 'normal',
                 'wp_data'          => 'option',
                 'placeholder'      => esc_html__("The cart has been successfully updated.","cg-woo-grid"),
-                'class'            => 'alternate',
+                'class'            => '',
             )
         );
         $field_id = $this->plugin_name.'_popup_error_title';
-        $fields[] = array(
+        $settings_page->fields[] = array(
             'id'    => $field_id,
             'title' => __("Pop Up Error Title","cg-woo-grid").":",
             'args'  => array (
@@ -441,7 +459,7 @@ class Cg_Woo_Grid_Admin {
             )
         );
         $field_id = $this->plugin_name.'_popup_error_message';
-        $fields[] = array(
+        $settings_page->fields[] = array(
             'id'    => $field_id,
             'title' => __("Pop Up Error Message","cg-woo-grid").":",
             'args'  => array (
@@ -454,19 +472,30 @@ class Cg_Woo_Grid_Admin {
                 'value_type'       => 'normal',
                 'wp_data'          => 'option',
                 'placeholder'      => esc_html__("There must be a minimum of %1 products","cg-woo-grid"),
-                'class'            => 'alternate',
+                'class'            => '',
             )
         );
+        array_push($settings_pages,$settings_page);
 
-        foreach($fields as $field) {
-            $this->buildFields(
-                $settings_page,
-                $field['id'], 
-                $field['title'], 
-                $field_callback, 
+
+        /* Build settings page fields */
+        foreach($settings_pages as $settings_page) {
+            add_settings_section(
                 $settings_section_id, 
-                $field['args']
+                $settings_title,  
+                $settings_callback,    
+                $settings_page->slug                
             );
+            foreach($settings_page->fields as $field) {
+                $this->buildFields(
+                    $settings_page->slug,
+                    $field['id'], 
+                    $field['title'], 
+                    $field_callback, 
+                    $settings_section_id, 
+                    $field['args']
+                );
+            }
         }
     }
     

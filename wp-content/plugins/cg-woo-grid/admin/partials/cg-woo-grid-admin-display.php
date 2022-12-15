@@ -22,14 +22,20 @@ $settings = $wp_settings_sections['cg-woo-grid_general_settings']['cg-woo-grid_g
     <?php settings_errors(); ?>  
 
     <div id="poststuff">
-		<div id="post-body" class="metabox-holder columns-2">
-
+        <!-- Main settings -->
+		<div id="post-body" 
+            class="columns-2 metabox-holder"
+        >
 			<!-- main content -->
 			<div id="post-body-content">
 				<div class="meta-box-sortables ui-sortable">
-					<div class="postbox">
+					<div id="settings-main" 
+                        class="postbox"
+                    >
 						<div class="inside">
-                            <form method="POST" action="options.php">  
+                            <form method="POST" 
+                                action="options.php"
+                            >  
                                 <?php 
                                     settings_fields( 'cg-woo-grid_general_settings' );
                                     do_settings_sections( 'cg-woo-grid_general_settings' ); 
@@ -38,11 +44,59 @@ $settings = $wp_settings_sections['cg-woo-grid_general_settings']['cg-woo-grid_g
                             </form> 
 						</div><!-- .inside -->
 					</div><!-- .postbox -->
-				</div><!-- .meta-box-sortables .ui-sortable -->
-			</div><!-- post-body-content -->
 
+                    <div id="settings-bar"
+                        class="postbox"
+                    >
+                        <h2>
+                            <span><?php esc_html_e('Minimum bar','cg-woo-grid'); ?></span>
+                        </h2>
+						<div class="inside">
+                            <p><?php 
+                            esc_html_e( 
+                                'Messages to show in the minimum bar', 
+                                'cg-woo-grid'
+                            ); ?></p>
+                            <form method="POST" action="options.php">  
+                                <?php 
+                                    settings_fields( 'cg-woo-grid_bar_settings' );
+                                    do_settings_sections( 'cg-woo-grid_bar_settings' ); 
+                                ?>       
+                                <?php submit_button(); ?>  
+                            </form> 
+						</div><!-- .inside -->
+					</div><!-- .postbox -->
+
+                    <div id="settings-popup"
+                        class="postbox"
+                    >
+                        <h2>
+                            <span><?php esc_html_e('Pop-up','cg-woo-grid'); ?></span>
+                        </h2>
+						<div class="inside">
+                            <p><?php 
+                            esc_html_e( 
+                                'Messages to show in the pop-up', 
+                                'cg-woo-grid'
+                            ); ?></p>
+                            <form method="POST" 
+                                action="options.php"
+                            >  
+                                <?php 
+                                    settings_fields( 'cg-woo-grid_popup_settings' );
+                                    do_settings_sections( 'cg-woo-grid_popup_settings' ); 
+                                ?>       
+                                <?php submit_button(); ?>  
+                            </form> 
+						</div><!-- .inside -->
+					</div><!-- .postbox -->
+
+				</div><!-- .meta-box-sortables .ui-sortable -->
+			</div><!-- #post-body-content-->
 			<!-- sidebar -->
-			<div id="postbox-container-1" class="postbox-container">
+			<div id="postbox-container-1" 
+                class="postbox-container"
+            >
 				<div class="meta-box-sortables">
 					<div class="postbox">
 						<h2 class="hndle">
@@ -57,10 +111,9 @@ $settings = $wp_settings_sections['cg-woo-grid_general_settings']['cg-woo-grid_g
 						</div><!-- .inside -->
 					</div><!-- .postbox -->
 				</div><!-- .meta-box-sortables -->
-			</div><!-- #postbox-container-1 .postbox-container -->
-
+			</div><!-- #settings-main-postbox.postbox-container -->
 		</div><!-- #post-body .metabox-holder .columns-2 -->
 		<br class="clear">
-	</div><!-- #poststuff -->
+    </div> <!-- #poststuff -->
     
 </div> <!-- .wrap -->

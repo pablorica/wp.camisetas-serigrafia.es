@@ -14,10 +14,10 @@ export const config = {
     api: {
         index: REST_POSTS_URL
     },
-    min_quantity: MINIMUM_QUANTITY,
-    taxonomy_x:   TAXONOMY_X,
-    taxonomy_y:   TAXONOMY_Y,
+    taxonomy_x: TAXONOMY_X,
+    taxonomy_y: TAXONOMY_Y,
 
+    min_quantity:   MINIMUM_QUANTITY,
     bar_message:    BAR_MESSAGE,
     bar_success:    BAR_SUCCESS,
     bar_itemstitle: BAR_ITEMSTITLE,

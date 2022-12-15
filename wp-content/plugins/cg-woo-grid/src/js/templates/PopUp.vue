@@ -21,7 +21,7 @@
 </template>
 
 <script>  
-console.log('VUE PopUp loaded')
+//console.log('VUE PopUp loaded')
 
 import { config, emitter } from '../vueMain.js';
 
@@ -57,6 +57,7 @@ export default {
             closePopUp: function () {
                 var self      = this;
                 self.display  = false;
+                emitter.emit('fireReset');
 
             },
         }

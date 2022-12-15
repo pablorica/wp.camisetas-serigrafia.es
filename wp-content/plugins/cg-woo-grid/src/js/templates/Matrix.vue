@@ -18,7 +18,9 @@
         </div><!-- /.row -->
     </div><!-- /.container -->
 
-    <div id="matrixGrid" >
+    <form id="matrixGrid" 
+        ref="matrixForm"
+    >
         <div class="loading" 
             v-bind:class = "(loading===false)?'hide':''"
         >
@@ -43,7 +45,7 @@
                         <input type="number" 
                             placeholder="0"
                             min="0" 
-                            max="500"
+                            autocomplete="off"
                             v-model="quantities[valueX.slug]"
                             @change="updateTotal"
                         >
@@ -55,11 +57,11 @@
                 </div>
             </div>
         </div>
-    </div>
+    </form>
   </template>
 
 <script>  
-console.log('VUE Matrix loaded')
+//console.log('VUE Matrix loaded')
 
 import { config, emitter } from '../vueMain.js';
 
@@ -79,42 +81,36 @@ export default {
             }
         },
         mounted: function () {
-        	this.buildMatrix(); 
+
+            let element = this.$el;
+            this.product_id = element.parentElement.dataset.currentproduct;
+            //console.log(this.product_id);
             
             emitter.on('fireReset', () => {
                 this.resetAll();
-            });     
+            });  
+
+            this.buildMatrix(); 
         },
         methods: {
             buildMatrix: function () {
 
                 var self = this;
                 self.empty   = true;
-
-                (function($){
-
-                    //self.product_id = 6016
-                    if( $('#cdg_form').length
-                        && self.product_id === null
-                    ){
-                        self.product_id = $('#cdg_form').data('currentproduct')
-                    }
-                    //console.log('self.product_id: ' +self.product_id);
                     
-                    if(self.product_id !== null) {
+                if(self.product_id !== null) {
 
-                        self.empty = false;
-                        
-                        var getURL = config.api.index + 
-                        '/attmatrix/product_id='+self.product_id+
-                        '/taxonomy_y='+self.taxonomy_y+
-                        '/taxonomy_x='+self.taxonomy_x;
-
-                        self.loading = true;
-                        //console.log('loading '+ getURL);
+                    self.empty = false;
                     
-                        //$('#phpMatrix').addClass('loading');
+                    var getURL = config.api.index + 
+                    '/attmatrix/product_id='+self.product_id+
+                    '/taxonomy_y='+self.taxonomy_y+
+                    '/taxonomy_x='+self.taxonomy_x;
 
+                    self.loading = true;
+                    //console.log('loading '+ getURL);
+                    
+                    (function($){
                         $.get( getURL , function( r ){
                             self.loading  = false;
                             self.matrix = r;
@@ -125,12 +121,13 @@ export default {
                             });
                             
                         }).done(function() {
-                            
+                            //setTimeout(() => {
+                                //$('#phpMatrix').addClass('hide');
+                            //}, 250)
                             setTimeout(() => {
-                                $('#phpMatrix').addClass('hide');
-                            }, 250)
-                            setTimeout(() => {
-                                $('#matrixGrid').removeClass('loading');
+                                //$('#matrixGrid').removeClass('loading');
+                                self.$refs.matrixForm.reset();
+                                self.quantities = {};
                             }, 500)
                             
                         }).fail(function() {
@@ -139,56 +136,48 @@ export default {
                             self.matrix   = [];
                             self.empty   = true;
                         });
-                    }
-                })( jQuery );
-                
-
+                    })( jQuery );
+                }
 	        },
             updateTotal: function(){
 
                 var self = this;
+
+                let purchaseAmount = 0, 
+                    _letSend = false,
+                    _data={}
+
+                _data['product_id'] = self.product_id;
+                _data['taxonomy_y'] = self.taxonomy_y;
+                _data['taxonomy_x'] = self.taxonomy_x;
+                let quantities = Object.assign({}, self.quantities);
+                //console.log(quantities)
+                const removeZeros = item => (
+                    Object
+                    .keys(item)
+                    .filter(key => item[key] > 0 )
+                    .reduce((newObj, key) => Object.assign(newObj, {[key]: item[key]}), {})
+                );
+                _data['quantities'] = removeZeros(quantities);
+                //console.log(_data['quantities'])
+
+                for(var ikey in _data['quantities']){
+                    purchaseAmount += parseInt(_data['quantities'][ikey]);
+                }
+
+                if(_letSend !== false)	{
+                    _letSend.abort();
+                }
+
+                var postURL = config.api.index + '/updatetotalbox';
                 
-
+                if(purchaseAmount >= self.min_quantity){
+                    //$('.cdg_total').css('display', 'block');
+                    emitter.emit('hideTotalBox');
+                } 
+                emitter.emit('fireUpdateBar', purchaseAmount );
+                
                 (function($){
-
-                    let purchaseAmount = 0, 
-                        _letSend = false,
-                        _data={}
-
-                    if( $('#cdg_form input[name="product_id"]').length
-                        && self.product_id === null
-                    ){
-                        self.product_id = $('#cdg_form input[name="product_id"]').val()
-                        //console.log('self.product_id: ' +self.product_id);
-                    }
-                    _data['product_id'] = self.product_id;
-                    _data['taxonomy_y'] = self.taxonomy_y;
-                    _data['taxonomy_x'] = self.taxonomy_x;
-                    _data['quantities'] = Object.assign({}, self.quantities);
-
-                    //console.log('quantities: ');
-                    for(var ikey in _data['quantities']){
-                        //console.log('input slug: ',ikey);
-                        //console.log('input value: ',_data['quantities'][ikey]);
-                        purchaseAmount += parseInt(_data['quantities'][ikey]);
-                    }
-
-                    if(_letSend !== false)	{
-                        _letSend.abort();
-                    }
-
-                    var postURL = config.api.index + '/updatetotalbox';
-
-                    //console.log('updateTotal');
-                    //console.log(postURL);
-                    //console.log(_data);
-                 
-                    if(purchaseAmount >= self.min_quantity){
-                        //$('.cdg_total').css('display', 'block');
-                        emitter.emit('hideTotalBox');
-                    } 
-                    emitter.emit('fireUpdateBar', purchaseAmount );
-                    
                     _letSend = $.post( 
                         postURL,
                         _data
@@ -198,11 +187,12 @@ export default {
                             //console.log('firePopulateBox');
                             if(purchaseAmount >= self.min_quantity){	
                                 //console.log('firePopulateBox', response);
-                                emitter.emit('firePopulateBox', response );
+                                response.addcartenabled = true;
                             } else {
-                                console.log('firePopulateBox: false');
-                                emitter.emit('firePopulateBox', false );
+                                //console.log('response.addcartenabled: false');
+                                response.addcartenabled = false;
                             }
+                            emitter.emit('firePopulateBox', response );
 
                             //total = r[0];
                     })
@@ -214,7 +204,7 @@ export default {
                         self.empty      = true;
                     })
                     .always(function() {
-                        console.log('updateTotal POST finished');
+                        //console.log('updateTotal POST finished');
                         _letSend = false;
                     });
 
@@ -223,7 +213,6 @@ export default {
                 
             },
             resetAll: function(){
-                console.log('Reset Posts');
                 this.empty = false;
                 this.buildMatrix();
             }

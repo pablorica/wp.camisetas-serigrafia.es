@@ -210,7 +210,6 @@ class Rest_Api {
                     $uprice = (float) $single_variation->get_regular_price();
 
                     $price  += $quantity * $uprice;
-
                     
                     $rowPrice["tp_ubase_price"]  = $uprice;
                     $rowPrice["tp_y"]            = $attr['attribute_'.$tax_y_slug];
@@ -222,83 +221,80 @@ class Rest_Api {
                     $rowPrices[] = $rowPrice;
                 }
             }
-
-
         }
 
-        $description .= $nameproduct.": ".$numberofprods ." ".__("products","cg-woo-grid")."-> ";
-        foreach ($gridattributes as $k => $v) {
-            $description .= ($k != 0 ? ' - ' : '') . ucfirst($v['y']) . ': ';
-            foreach ($v['x'] as $kx => $vx) {
-                $description .= ($kx != 0 ? ', ' : '') . strtoupper($vx[0]) . ' (' . $vx[1] . ')';
+        if($numberofprods > 0){
+
+            $description .= $nameproduct.": ".$numberofprods ." ".__("products","cg-woo-grid")."-> ";
+            foreach ($gridattributes as $k => $v) {
+                $description .= ($k != 0 ? ' - ' : '') . ucfirst($v['y']) . ': ';
+                foreach ($v['x'] as $kx => $vx) {
+                    $description .= ($kx != 0 ? ', ' : '') . strtoupper($vx[0]) . ' (' . $vx[1] . ')';
+                }
             }
-        }
 
-        //error_log('l:216 -> public/class-cg-woo-grid-public-rest-api.php - $description: '.$description);
-
-
-        $html = '';
-        $addurl = '';
-        foreach($rowPrices as $rowPrice) {
-
-            $nuprice = $rowPrice["tp_ubase_price"];
-            $nqprice = $nuprice * $rowPrice["tp_qant"];
-
-            $html .= '
-            <tr>
-                <td class="tp_y">'.ucfirst($rowPrice["tp_y"]).'</td>
-                <td class="tp_x">'.strtoupper($rowPrice["tp_x"]).'</td>
-                <td class="tp_uprice">'.wc_price($nuprice).'</td>
-                <td class="tp_qant">'.$rowPrice["tp_qant"].'</td>
-                <td class="text-right tp_subtotal">'.wc_price($nqprice).'</td>
-            </tr>';
-
-            $addurl .= $rowPrice["tp_addurl"];
-            
-        }
-        $addurl = rtrim($addurl, ',');
+            //error_log('l:216 -> public/class-cg-woo-grid-public-rest-api.php - $description: '.$description);
 
 
-        //Taxes
-        $tax_p = 0;
-        $tax_rates = \WC_Tax::get_rates($_product->get_tax_class());
-        if (!empty($tax_rates)) {
-            $tax_rate = reset($tax_rates);
-            $tax_p = sprintf(_x('%.2f', '', 'wptheme.foundation'), $tax_rate['rate']);
-        }
+            $html = '';
+            $addurl = '';
+            foreach($rowPrices as $rowPrice) {
 
-        $taxes  	  = $price / 100 * $tax_p;
-        $priceTax     = $price + $taxes;
-        $unitPrice    = $price / $numberofprods;
-        $unitPriceTax = $priceTax / $numberofprods;
+                $nuprice = $rowPrice["tp_ubase_price"];
+                $nqprice = $nuprice * $rowPrice["tp_qant"];
 
-        $return = new \stdClass();
-        $return->numberofprods     = $numberofprods;
-        $return->unitpricetax      = strip_tags(html_entity_decode(wc_price($unitPriceTax)));
-        $return->unitprice         = strip_tags(html_entity_decode(wc_price($unitPrice)));
-        $return->subtotal          = $price;
+                $html .= '
+                <tr>
+                    <td class="tp_y">'.ucfirst($rowPrice["tp_y"]).'</td>
+                    <td class="tp_x">'.strtoupper($rowPrice["tp_x"]).'</td>
+                    <td class="tp_uprice">'.wc_price($nuprice).'</td>
+                    <td class="tp_qant">'.$rowPrice["tp_qant"].'</td>
+                    <td class="text-right tp_subtotal">'.wc_price($nqprice).'</td>
+                </tr>';
 
-        $return->subtotalformatted = wc_price($price);
-        $return->taxesformatted    = wc_price($taxes);
-        $return->totalformatted    = wc_price($priceTax);
-        $return->description       = $description;
-        $return->html              = $html;
-        $return->addurl            = $addurl;
+                $addurl .= $rowPrice["tp_addurl"];
+                
+            }
+            $addurl = rtrim($addurl, ',');
 
-        /*
-        $returnb = 
-        [0] $numberofprods . '---' . 
-        [1] strip_tags(html_entity_decode(wc_price($unitPriceTax))) . '---' . 
-        [2] wc_price($price) . '---' . 
-        [3] wc_price($priceTax) . '---' . 
-        [4] $price . '---' . 
-        [5] $description .  '---'  .
-        [6] html. '---' .
-        [7] wc_price($taxes). '---' .
-        [8] strip_tags(html_entity_decode(wc_price($unitPrice)));
-        */
 
-        return $return;
+            //Taxes
+            $tax_p = 0;
+            $tax_rates = \WC_Tax::get_rates($_product->get_tax_class());
+            if (!empty($tax_rates)) {
+                $tax_rate = reset($tax_rates);
+                $tax_p = sprintf(_x('%.2f', '', 'wptheme.foundation'), $tax_rate['rate']);
+            }
+
+            $taxes  	  = $price / 100 * $tax_p;
+            $priceTax     = $price + $taxes;
+            $unitPrice    = $price / $numberofprods;
+            $unitPriceTax = $priceTax / $numberofprods;
+
+            $return = new \stdClass();
+            $return->numberofprods     = $numberofprods;
+            $return->unitpricetax      = strip_tags(html_entity_decode(wc_price($unitPriceTax)));
+            $return->unitprice         = strip_tags(html_entity_decode(wc_price($unitPrice)));
+            $return->subtotal          = $price;
+
+            $return->subtotalformatted = wc_price($price);
+            $return->taxesformatted    = wc_price($taxes);
+            $return->totalformatted    = wc_price($priceTax);
+            $return->description       = $description;
+            $return->html              = $html;
+            $return->addurl            = $addurl;
+
+            return $return;
+
+        } else {
+
+            return new \WP_Error( 
+                'wrong_products_quantity', 
+                esc_html__( 'Something went wrong.', 'cg-woo-grid' ), 
+                array( 'status' => 500 ) 
+            );
+
+        }       
 
         //wp_die();
     }

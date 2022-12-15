@@ -91,7 +91,7 @@
                 </div>
             </div>
             <button id="cdg_add_products" 
-                class="btn btn-primary text-uppercase text-center"
+                class="button alt add_to_cart_button"
                 v-bind:disabled="(addcartenabled === false)"
                 v-html="results.addtocarttitle"
                 @click="addtocart"
@@ -102,7 +102,7 @@
   </template>
 
 <script>  
-console.log('VUE TotalBox loaded')
+//console.log('VUE TotalBox loaded')
 
 import { config, emitter } from '../vueMain.js';
 
@@ -121,7 +121,11 @@ export default {
             }
         },
         mounted: function () {
-        	this.buildTotalBox(); 
+
+            let element = this.$el;
+            this.product_id = element.parentElement.dataset.currentproduct;
+            //console.log(this.product_id);
+
 
             emitter.on('fireReset', () => {
                 this.resetAll();
@@ -134,39 +138,32 @@ export default {
             emitter.on('hideTotalBox', () => {
                 this.loading = false;
             });
+
+            this.buildTotalBox(); 
         },
         methods: {
             buildTotalBox: function () {
 
-                var self = this;
-                self.empty   = true;
+                var self   = this;
+                self.empty = true;
 
-                (function($){
+                if(self.product_id !== null) {
 
-                    //self.product_id = 6016
-                    if( $('#cdg_form').length
-                        && !self.product_id
-                    ){
-                        self.product_id = $('#cdg_form').data('currentproduct')
-                    }
-                    //console.log('self.product_id: ' +self.product_id);
+                    self.empty = false;
                     
-                    
-                    if(self.product_id !== null) {
+                    var getURL = config.api.index + 
+                    '/totalbox/product_id='+self.product_id;
 
-                        self.empty = false;
-                        
-                        var getURL = config.api.index + 
-                        '/totalbox/product_id='+self.product_id;
-
-                        self.loading = true;
-                        //console.log('buildTotalBox loading '+ getURL);
-
-                        $.get( getURL , function( r ){
-                            self.loading  = false;
-                            self.results = r;                            
-                        }).done(function() {
-                            //console.log(self.results);
+                    self.loading = true;
+                    //console.log('buildTotalBox loading '+ getURL);
+                    (function($){   
+                        $.get( 
+                            getURL , 
+                            function( r ){
+                                self.loading  = false;
+                                self.results = r;
+                            }
+                        ).done(function() {
 
                             self.fixed = self.results
 
@@ -176,11 +173,6 @@ export default {
                             self.results.subtotalformatted = self.results.formatzeroprice
                             self.results.taxesformatted    = self.results.formatzeroprice
                             self.results.totalformatted    = self.results.formatzeroprice
-
-                            
-                            // setTimeout(() => {
-                            //     $('#phpBoxTotal').addClass('hide');
-                            // }, 250)
                             
                         }).fail(function() {
                             //console.log('woops');
@@ -188,22 +180,26 @@ export default {
                             self.matrix   = [];
                             self.empty   = true;
                         });
-                    }
-                })( jQuery );
-                
+                    })( jQuery );
+                }
 
 	        },
             populateBox: function (response) {
 
-                var self            = this;
-                self.loading        = false;
-                self.addcartenabled = true;
+                var self     = this;
+                self.loading = false;
 
-                self.results = { ...self.fixed, ...response } 
-                self.addurl  = self.results.addurl
+                if(response) {
+                    self.results        = { ...self.fixed, ...response } 
+                    self.addurl         = self.results.addurl
+                    self.addcartenabled = response.addcartenabled;  
+                } else {
+                    self.loading = true;
+                }
+                
 
-                // console.log('populateBox');
-                // console.log(response)
+                //console.log('populateBox');
+                //console.log(response)
                 // for(var rkey in response){
                 //     console.log('response key: ',rkey);
                 //     console.log('input value: ',response[rkey]);
@@ -214,22 +210,30 @@ export default {
             addtocart: function() {
                 var self      = this;
                 self.loading  = true;
-                (function($){
-                    //console.log('addurl', self.addurl);
-                    if(self.addurl) {
-                        var getURL = window.location.href + 
-                        '?add-to-cart='+
-                        self.addurl;
+                
+                //console.log('addurl', self.addurl);
+                if(self.addurl) {
 
-                        self.loading = true;
-                        console.log('adding to cart: ', getURL);
+                    let baseURL = window.location.href
+                    if(baseURL.includes('?')) {
+                        baseURL = window.location.href.split('?')[0]
+                    }
 
+                    console.log('baseURL: ', baseURL);
+                    
+                    var getURL = baseURL + 
+                    '?add-to-cart='+
+                    self.addurl;
+
+                    self.loading = true;
+                    //console.log('adding to cart: ', getURL);
+                    (function($){
                         $.get( getURL , function( r ){
                             //self.loading  = false;
                             //console.log('results: ' + r);
                             if(r.startsWith("<success>1</success>"))
                             {
-                                console.log('Updated!!! ');
+                                //console.log('Updated!!! ');
                                 emitter.emit('showPopUp');
                             }
                         }).done(function() {
@@ -237,11 +241,10 @@ export default {
                             self.loading  = false;
                         }).fail(function() {
                             //console.log('woops');
-                            self.loading = false;
+                            self.loading = true;
                         });
-                    }
-                })( jQuery );
-
+                    })( jQuery );
+                }
             },
             resetAll: function(){
                 console.log('Reset');
@@ -252,6 +255,4 @@ export default {
     }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

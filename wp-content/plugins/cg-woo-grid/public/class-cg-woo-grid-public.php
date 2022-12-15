@@ -14,6 +14,8 @@
 
 namespace Cg_Woo_Grid_Public;
 
+use Error;
+
 class Functions {
 
 	/**
@@ -139,6 +141,7 @@ class Functions {
         }
         return $url;
     }
+    //add_filter(  'woocommerce_add_to_cart_redirect',  'cdg_updated_cart' );
 
 
     
@@ -151,11 +154,10 @@ class Functions {
     public function cdg_add_multiple_variations_to_cart( 
         $url = false 
     ) {
-
         // Make sure WC is installed, and add-to-cart query arg exists, and contains at least one comma.
         if ( ! class_exists( 'WC_Form_Handler' ) 
-            || empty( $_REQUEST['add-to-cart'] ) 
-            || false === strpos( $_REQUEST['add-to-cart'], ',' ) 
+            || empty( $_REQUEST['add-to-cart'] )  
+            || false === strpos( $_REQUEST['add-to-cart'], ':' )
         ) {
             return;
         }
@@ -167,74 +169,88 @@ class Functions {
             20 
         );
 
-        $product_ids = explode( ',', $_REQUEST['add-to-cart'] );
-        $count       = count( $product_ids );
-        $number      = 0;
-    
-        foreach ( $product_ids as $id_and_quantity ) {
-            // Check for quantities defined in curie notation (<product_id>:<product_quantity>)
-            
-            $id_and_quantity = explode( ':', $id_and_quantity );
+        //Only one variation has been selected
+        if(false === strpos( $_REQUEST['add-to-cart'], ',' ) ) {
+
+            $id_and_quantity = explode( ':', $_REQUEST['add-to-cart'] );
             $product_id = $id_and_quantity[0];
-    
+
             $_REQUEST['quantity'] = ! empty( $id_and_quantity[1] ) ? absint( $id_and_quantity[1] ) : 1;
-    
-            if ( ++$number === $count ) {
-                // Ok, final item, let's send it back to woocommerce's add_to_cart_action method for handling.
-                $_REQUEST['add-to-cart'] = $product_id;
-                return \WC_Form_Handler::add_to_cart_action( $url );
-                //$url = apply_filters( 'woocommerce_add_to_cart_redirect', $url, $adding_to_cart );
-            }
-    
-            $product_id = apply_filters( 
-                'woocommerce_add_to_cart_product_id', 
-                absint( $product_id ) 
-            );
-            //$was_added_to_cart = false;
-            $adding_to_cart = wc_get_product( $product_id );
-    
-            if ( ! $adding_to_cart ) {
-                continue;
-            }
-    
-            $add_to_cart_handler = apply_filters( 
-                'woocommerce_add_to_cart_handler', 
-                $adding_to_cart->get_type(), 
-                $adding_to_cart 
-            );
-    
-            // Variable product handling
-            if ( 'variable' === $add_to_cart_handler ) {
-                $this->woo_hack_invoke_private_method( 
-                    'WC_Form_Handler', 
-                    'add_to_cart_handler_variable', 
-                    $product_id 
+
+            $_REQUEST['add-to-cart'] = $product_id;
+            return \WC_Form_Handler::add_to_cart_action( $url );
+
+        } else { //Multiple variations
+
+            $product_ids = explode( ',', $_REQUEST['add-to-cart'] );
+            $count       = count( $product_ids );
+            $number      = 0;
+        
+            foreach ( $product_ids as $id_and_quantity ) {
+                // Check for quantities defined in curie notation (<product_id>:<product_quantity>)
+                
+                $id_and_quantity = explode( ':', $id_and_quantity );
+                $product_id = $id_and_quantity[0];
+        
+                $_REQUEST['quantity'] = ! empty( $id_and_quantity[1] ) ? absint( $id_and_quantity[1] ) : 1;
+        
+                if ( ++$number === $count ) {
+                    // Ok, final item, let's send it back to woocommerce's add_to_cart_action method for handling.
+                    $_REQUEST['add-to-cart'] = $product_id;
+                    return \WC_Form_Handler::add_to_cart_action( $url );
+                    //$url = apply_filters( 'woocommerce_add_to_cart_redirect', $url, $adding_to_cart );
+                }
+        
+                $product_id = apply_filters( 
+                    'woocommerce_add_to_cart_product_id', 
+                    absint( $product_id ) 
                 );
-    
-            // Grouped Products
-            } elseif ( 'grouped' === $add_to_cart_handler ) {
-                $this->woo_hack_invoke_private_method( 
-                    'WC_Form_Handler', 
-                    'add_to_cart_handler_grouped', 
-                    $product_id 
+                //$was_added_to_cart = false;
+                $adding_to_cart = wc_get_product( $product_id );
+        
+                if ( ! $adding_to_cart ) {
+                    continue;
+                }
+        
+                $add_to_cart_handler = apply_filters( 
+                    'woocommerce_add_to_cart_handler', 
+                    $adding_to_cart->get_type(), 
+                    $adding_to_cart 
                 );
-    
-            // Custom Handler
-            } elseif (
-                 has_action( 'woocommerce_add_to_cart_handler_' . $add_to_cart_handler ) 
-            ){
-                do_action( 
-                    'woocommerce_add_to_cart_handler_' . $add_to_cart_handler, 
-                    $url 
-                );
-    
-            // Simple Products
-            } else {
-                $this->woo_hack_invoke_private_method( 
-                    'WC_Form_Handler', 
-                    'add_to_cart_handler_simple', 
-                    $product_id 
-                );
+        
+                // Variable product handling
+                if ( 'variable' === $add_to_cart_handler ) {
+                    $this->woo_hack_invoke_private_method( 
+                        'WC_Form_Handler', 
+                        'add_to_cart_handler_variable', 
+                        $product_id 
+                    );
+        
+                // Grouped Products
+                } elseif ( 'grouped' === $add_to_cart_handler ) {
+                    $this->woo_hack_invoke_private_method( 
+                        'WC_Form_Handler', 
+                        'add_to_cart_handler_grouped', 
+                        $product_id 
+                    );
+        
+                // Custom Handler
+                } elseif (
+                    has_action( 'woocommerce_add_to_cart_handler_' . $add_to_cart_handler ) 
+                ){
+                    do_action( 
+                        'woocommerce_add_to_cart_handler_' . $add_to_cart_handler, 
+                        $url 
+                    );
+        
+                // Simple Products
+                } else {
+                    $this->woo_hack_invoke_private_method( 
+                        'WC_Form_Handler', 
+                        'add_to_cart_handler_simple', 
+                        $product_id 
+                    );
+                }
             }
         }
     }

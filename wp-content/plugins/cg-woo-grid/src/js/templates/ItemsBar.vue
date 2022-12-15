@@ -22,7 +22,7 @@
 </template>
 
 <script>  
-console.log('VUE ItemsBar loaded')
+//console.log('VUE ItemsBar loaded')
 
 import { config, emitter } from '../vueMain.js';
 
@@ -31,6 +31,7 @@ export default {
         data: function() {
             return {
                 message:        config.bar_message,
+                info:           config.bar_message,
                 success:        config.bar_success,
                 items:          0,
                 itemsTitle:     config.bar_itemstitle,
@@ -58,11 +59,13 @@ export default {
                     self.barClass = 'full';
                     self.barWidth = 100;
                     self.message = self.success;
+                } else {
+                    self.message = self.info;
                 }
 
             },
             resetAll: function(){
-                console.log('Reset');
+                //console.log('Reset');
                 this.displayBar(0); 
             }
         }

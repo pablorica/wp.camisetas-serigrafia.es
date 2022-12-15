@@ -11,28 +11,6 @@
  * @author     Pablo Rica <pablo@codigo.co.uk>
  */
 
-
- /*
- <div id="cdg_popup" 
-    style="display: none;"
->
-    <div class="white">
-        <h3 class="text-center"></h3>
-        <p class="text-center"></p>
-        <div class="text-center buttons">
-            <button class="btn btn-danger compra">
-                <?php _e("Seguir comprando","cg-woo-grid");?>
-            </button>
-            <a href="<?php echo get_permalink(wc_get_page_id('cart')); ?>" 
-                class="btn btn-danger compra"
-            ><?php _e("Ir al carrito de compras","cg-woo-grid");?></a>
-            <button class="btn btn-danger cerrar">
-                <?php _e("Cerrar","cg-woo-grid");?>
-            </button>
-        </div>
-    </div>
-</div>
-*/
 ?>
 
 <!-- Vue -->
@@ -43,15 +21,18 @@
 
 <div id="cdg_form" 
     class="cdg_box"
-    data-currentproduct = "<?php echo get_queried_object_id() ?>"
 >
 
-    <h3><?php _e("Elige colores y tallas para hacer tu presupuesto","cg-woo-grid");?></h3>
+    <?php if($header = get_option($this->plugin_name.'_header_setting')):?>
+        <h3><?=$header?></h3>
+    <?php endif;?>
 
     <div class="row sidebar_configurator">
 
         <!-- Vue -->
-        <div id="appTotalBox">
+        <div id="appTotalBox"
+            data-currentproduct = "<?php echo get_queried_object_id() ?>"
+        >
             <total-box></total-box>
         </div>
         <!-- / Vue  -->
@@ -67,7 +48,9 @@
             <!-- / Vue  -->
 
             <!-- Vue -->
-            <div id="appMatrix">
+            <div id="appMatrix" 
+                data-currentproduct = "<?php echo get_queried_object_id() ?>"
+            >
                 <attributes-matrix></attributes-matrix>
             </div>
             <!-- / Vue  -->
