@@ -105,6 +105,9 @@ package-lock.json
 
 
 # track these mu-plugins and/or plugins
+!wp-content/mu-plugins/index.php
+!wp-content/mu-plugins/sadoje
+
 !wp-content/plugins/theme-customisations-master
 !wp-content/plugins/cg-woo-grid
 

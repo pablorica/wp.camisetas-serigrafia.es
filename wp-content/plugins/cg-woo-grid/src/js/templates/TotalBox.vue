@@ -124,7 +124,7 @@ export default {
 
             let element = this.$el;
             this.product_id = element.parentElement.dataset.currentproduct;
-            //console.log(this.product_id);
+            //console.log('this.product_id '+this.product_id);
 
 
             emitter.on('fireReset', () => {

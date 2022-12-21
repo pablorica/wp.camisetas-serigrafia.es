@@ -212,7 +212,8 @@ class Cg_Woo_Grid
         $this->loader->add_action( 
             'woocommerce_after_single_product_summary', 
             $plugin_public, 
-            'cdg_products_grid' 
+            'cdg_products_grid',
+            19
         );
 
 		//add_action( 'wp_loaded', 'cdg_add_multiple_variations_to_cart', 15 );
