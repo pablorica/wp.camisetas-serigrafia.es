@@ -120,7 +120,6 @@ class Cg_Woo_Grid
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
-		//require_once CG_WOOGRID_PATH . 'public/class-cg-woo-grid-public.php';
         require_once CG_WOOGRID_PATH . '/public/class-cg-woo-grid-public.php';
         require_once CG_WOOGRID_PATH . '/public/class-cg-woo-grid-public-rest-api.php';
         
@@ -141,8 +140,12 @@ class Cg_Woo_Grid
 	private function set_locale() {
 
 		$plugin_i18n = new Cg_Woo_Grid_i18n();
-
-		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
+        
+		$this->loader->add_action( 
+            'wp_loaded', //'plugins_loaded', 
+            $plugin_i18n, 
+            'load_plugin_translations'
+        );
 	}
 
 	/**

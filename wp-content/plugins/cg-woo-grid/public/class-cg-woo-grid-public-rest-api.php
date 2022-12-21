@@ -106,7 +106,7 @@ class Rest_Api {
         if(!$return->product_id) {
             return new \WP_Error( 
                 'product_invalid', 
-                esc_html__( 'No results.', 'cg-woo-grid' ), 
+                esc_html__( 'No results', 'cg-woo-grid' ), 
                 array( 'status' => 404 ) 
             );
         }
@@ -155,7 +155,7 @@ class Rest_Api {
         if(!$_product instanceof \WC_Product) {
             return new \WP_Error( 
                 'rest_api_sad', 
-                esc_html__( 'Something went wrong.', 'cg-woo-grid' ), 
+                esc_html__( 'Something went wrong', 'cg-woo-grid' ), 
                 array( 'status' => 500 ) 
             );
         }
@@ -290,7 +290,7 @@ class Rest_Api {
 
             return new \WP_Error( 
                 'wrong_products_quantity', 
-                esc_html__( 'Something went wrong.', 'cg-woo-grid' ), 
+                esc_html__( 'Something went wrong', 'cg-woo-grid' ), 
                 array( 'status' => 500 ) 
             );
 
@@ -319,7 +319,7 @@ class Rest_Api {
         } else {
             return new \WP_Error( 
                 'product_invalid', 
-                esc_html__( 'No results.', 'cg-woo-grid' ), 
+                esc_html__( 'No results', 'cg-woo-grid' ), 
                 array( 'status' => 404 ) 
             );
         }
@@ -371,7 +371,7 @@ class Rest_Api {
             // If the code somehow executes to here something bad happened return a 500.
             return new \WP_Error( 
                 'rest_api_sad', 
-                esc_html__( 'Something went wrong.', 'cg-woo-grid' ), 
+                esc_html__( 'Something went wrong', 'cg-woo-grid' ), 
                 array( 'status' => 500 ) 
             );
         }
@@ -433,7 +433,7 @@ class Rest_Api {
         } else {
             return new \WP_Error( 
                 'product_invalid', 
-                esc_html__( 'No results.', 'cg-woo-grid' ), 
+                esc_html__( 'No results', 'cg-woo-grid' ), 
                 array( 'status' => 404 ) 
             );
         }

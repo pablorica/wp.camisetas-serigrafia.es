@@ -87,7 +87,14 @@ class Cg_Woo_Grid_Loader {
         $priority = 10, 
         $accepted_args = 1 
     ) {
-		$this->filters = $this->add( $this->filters, $hook, $component, $callback, $priority, $accepted_args );
+		$this->filters = $this->add( 
+            $this->filters, 
+            $hook, 
+            $component, 
+            $callback, 
+            $priority, 
+            $accepted_args 
+        );
 	}
 
 	/**

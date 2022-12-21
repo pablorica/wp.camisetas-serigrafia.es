@@ -355,7 +355,7 @@ class Functions {
             // If the code somehow executes to here something bad happened return a 500.
             return new \WP_Error( 
                 'rest_api_sad', 
-                esc_html__( 'Something went wrong.', "cg-woo-grid" ), 
+                esc_html__( 'Something went wrong', "cg-woo-grid" ), 
                 array( 'status' => 500 ) 
             );
         }
@@ -375,7 +375,7 @@ class Functions {
             // Return a WP_Error because the request product was not found. In this case we return a 404 because the main resource was not found.
             return new \WP_Error( 
                 'product_invalid', 
-                esc_html__( 'No results.', "cg-woo-grid" ), 
+                esc_html__( 'No results', "cg-woo-grid" ), 
                 array( 'status' => 404 ) 
             );
         }

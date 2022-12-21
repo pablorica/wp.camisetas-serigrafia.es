@@ -437,7 +437,7 @@ class Cg_Woo_Grid_Admin {
                 'get_options_list' => '',
                 'value_type'       => 'normal',
                 'wp_data'          => 'option',
-                'placeholder'      => esc_html__("The cart has been successfully updated.","cg-woo-grid"),
+                'placeholder'      => esc_html__("The cart has been successfully updated","cg-woo-grid"),
                 'class'            => '',
             )
         );

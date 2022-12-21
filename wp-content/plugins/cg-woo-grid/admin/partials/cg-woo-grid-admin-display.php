@@ -49,7 +49,7 @@ $settings = $wp_settings_sections['cg-woo-grid_general_settings']['cg-woo-grid_g
                         class="postbox"
                     >
                         <h2>
-                            <span><?php esc_html_e('Minimum bar','cg-woo-grid'); ?></span>
+                            <span><?php echo __('Minimum bar','cg-woo-grid'); ?></span>
                         </h2>
 						<div class="inside">
                             <p><?php 
