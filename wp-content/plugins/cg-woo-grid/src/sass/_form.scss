@@ -6,7 +6,7 @@ body.single-product #page {
     display: none !important;
 }
 
-#cdg_form {
+.cdg_box {
 	position: relative;
 
 	&:after {
@@ -29,7 +29,7 @@ body.single-product #page {
 		top: 0;
 		z-index: 10;
 	}
-	& > h3 {
+	h3.cdg_title {
 		background-color: #ececec;
 		font-size: 19px;
 		font-weight: bold;
@@ -37,7 +37,7 @@ body.single-product #page {
 		padding: 15px 30px;
 		text-transform: uppercase;
 	}
-	& > table {
+	table.cdg_table {
 		width: 100%;
 	
 		 th {

@@ -24,7 +24,7 @@
 >
 
     <?php if($header = get_option($this->plugin_name.'_header_setting')):?>
-        <h3><?=$header?></h3>
+        <h3 class="cdg_title"><?=$header?></h3>
     <?php endif;?>
 
     <div class="row sidebar_configurator">

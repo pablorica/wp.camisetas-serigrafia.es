@@ -13,6 +13,10 @@
   *  Autoload classes defiend in this folder
   *  This autoloader converts to WordPress standard filenaming conventions 
   *  rather than PSR-0 or -4
+  *
+  * @see https://cybmeta.com/como-registrar-y-utilizar-autoloaders-en-php
+  * @see https://www.php.net/manual/en/function.spl-autoload-register.php
+  * 
   */
 spl_autoload_register( function ( $classname ) {
 
