@@ -17,6 +17,18 @@ namespace Sadoje;
 
 abstract class Sadoje_Singleton {
 
+    /**** Plugin properties ****/
+
+    protected $plugin_name;
+    protected $version;
+
+
+    /**** Custom Plugin Properties ****/
+
+    protected $plugin_url;
+    protected $plugin_path;
+
+
 	/**
 	 * Static property to hold our singleton instances
 	 *
@@ -31,7 +43,39 @@ abstract class Sadoje_Singleton {
 	 *
 	 */
 	protected function __construct() {
+        //Initialize all the basics components of the plugin
+        $this->plugin_name = 'sadoje';
+        $this->version = '0.1.0';
 
+        //set the variable for the example endpoint. you can use a option plugin to store it and change it later in the admin page
+        $this->plugin_url  = str_replace(
+            '/sadoje/sadoje',
+            '/sadoje',
+            plugin_dir_url( __FILE__ ).'/'
+        );
+        $this->plugin_path = str_replace(
+            DIRECTORY_SEPARATOR.'sadoje'.DIRECTORY_SEPARATOR.'sadoje',
+            DIRECTORY_SEPARATOR.'sadoje',
+            dirname(__FILE__).DIRECTORY_SEPARATOR
+        ); 
+
+        wp_enqueue_style( 
+            $this->plugin_name, 
+            $this->plugin_url.'public/css/sadoje.css', 
+            array(),
+            $this->version, 
+            'all' 
+        );
+    
+    	wp_enqueue_script( 
+            $this->plugin_name, 
+            $this->plugin_url.'public/js/sadoje.js', 
+            array( 
+                'cg-woo-grid',
+            ),
+            $this->version, 
+            true 
+        );
 	}
 
 
@@ -53,6 +97,7 @@ abstract class Sadoje_Singleton {
 
 		return self::$instances[ static::class ];
 	}
+	
 
 	/**
 	 *

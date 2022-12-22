@@ -31,12 +31,28 @@ async function copyDir(src, dest) {
 		'readme.txt',
         '.orig'
 	];
+    let ignoreexp = [
+        '.orig',
+        '.tar.gz',
+	];
 
 
     for (let entry of entries) {
 		if ( ignore.indexOf( entry.name ) != -1 ) {
 			continue;
 		}
+
+        const contains = ignoreexp.some(element => {
+            if (entry.name.includes(element)) {
+                return true;
+            }
+            
+            return false;
+        });
+        if ( contains) {
+			continue;
+		}
+        
         let srcPath = path.join(src, entry.name);
         let destPath = path.join(dest, entry.name);
 
