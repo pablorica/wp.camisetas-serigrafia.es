@@ -80,9 +80,16 @@ class Cg_Woo_Grid_Admin {
 	}
 
 
+    public function sayHello($msg = null){
+        error_log('Cg_Woo_Grid_Admin: Hello! '.$msg);
+    }
+
+
 
     /**
      * Add menu to administration area
+     * 
+     * @see https://blog.wplauncher.com/create-wordpress-plugin-settings-page/
      *
      * @return void
      */
@@ -90,7 +97,7 @@ class Cg_Woo_Grid_Admin {
         //add_menu_page( $page_title, $menu_title, $capability, $menu_slug, $function, $icon_url, $position );
         add_menu_page(  
             $this->plugin_name, 
-            'Attribute Grid', 
+            esc_html__('Attribute Grid', 'cg-woo-grid'), 
             'administrator', 
             $this->plugin_name, 
             array( 
@@ -108,8 +115,6 @@ class Cg_Woo_Grid_Admin {
      * @return void
      */
     public function displayAdminDashboard() {
-        // set this var to be used in the display view
-        $active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'general';
 
         if(isset($_GET['error_message'])){
             add_action(
@@ -136,7 +141,7 @@ class Cg_Woo_Grid_Admin {
     public function adminMessages($error_message){
         switch ($error_message) {
             case '1':
-                $message = __( 'There was an error adding this setting. Please try again.  If this persists, shoot us an email.', 'codigo' );                 
+                $message = __( 'There was an error adding this setting. Please try again.  If this persists, shoot us an email.', 'cg-woo-grid' );                 
                 $err_code = esc_attr( 'cg-woo-grid_error_setting' );                 
                 $setting_field = 'cg-woo-grid_error_setting';                 
             break;

@@ -31,7 +31,7 @@ function cdg_remove_storefront_sidebar() {
     */
     remove_action( 'storefront_sidebar', 'storefront_get_sidebar', 10 );
 }
-add_action( 'get_header', 'cdg_remove_storefront_sidebar' );
+//add_action( 'get_header', 'cdg_remove_storefront_sidebar' );
 
 
 

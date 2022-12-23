@@ -6,10 +6,7 @@ import multi from '@rollup/plugin-multi-entry'
 
 
 export default  {
-    input: [
-        './src/js/customisations-for-cg-woo-grid.js', 
-        './src/js/vue-customisations-for-cg-woo-grid.js'
-    ],
+    input: "./src/js/*.js",
     output: {
         file: './public/js/sadoje.js',
         format: 'umd',

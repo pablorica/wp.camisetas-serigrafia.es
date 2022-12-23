@@ -42,4 +42,22 @@
   width: 100%;
 }
 
+/**
+ * Remove Storefront Sidebar
+ */
+body.woocommerce #primary,
+body.woocommerce-checkout #primary {
+  width: 100%;
+}
+
+@media screen and (min-width: 768px) {
+  body.right-sidebar .content-area,
+  body.left-sidebar .content-area {
+    width: 100%;
+    float: none;
+    margin-right: inherit;
+    margin-left: inherit;
+  }
+}
+
 /*# sourceMappingURL=sadoje.css.map */

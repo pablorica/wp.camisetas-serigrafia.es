@@ -5,7 +5,6 @@
  * This file is used to markup the public-facing aspects of the plugin.
  *
  * @since      1.0.0
- *
  * @author     Pablo Rica <pablo@codigo.co.uk>
  */
 

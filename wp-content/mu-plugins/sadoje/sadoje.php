@@ -31,6 +31,7 @@ $namespace = 'Sadoje\\';
 // and this is what they're called
 $classes = array( 
 	'Customisations_For_Cg_Woo_Grid',
+    'Customisations_For_Storefront_Template'
 );
 
 /**
