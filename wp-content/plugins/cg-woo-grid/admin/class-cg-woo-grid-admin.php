@@ -539,82 +539,109 @@ class Cg_Woo_Grid_Admin {
         switch ($args['type']) {
 
             case 'input':
-                $value = $wp_data_value;
+                $attr_data = null;
+                $value     = $wp_data_value;
                 if($args['value_type'] == 'serialized')  {
-                    $value = serialize($wp_data_value);
+                    //$value = serialize($wp_data_value);
+                    $unserialized = maybe_unserialize($wp_data_value);
+                    $json = json_encode($unserialized);
+                    //error_log('default: '.print_r($wp_data_value,true));
+                    //error_log('unserialized: '.print_r($unserialized,true));
+                    //error_log('json: '.print_r($json,true));
+                    $attr_data = ' data-json=\''.$json.'\' ';
                 }
+                
 
                 $after = $args['after'] ?? '';
+                
 
-                if($args['subtype'] != 'checkbox'){
+                switch ($args['subtype']) {
 
-                    $prependStart = $prependEnd = null;
-                    if(isset($args['prepend_value'])) {
-                        $prependStart = '<div class="input-prepend"> 
-                                            <span class="add-on">'.
-                                                $args['prepend_value'].
-                                            '</span>';
-                        $prependEnd   = '</div>';
-                    }
-                    if(isset($args['after'])) {
-                        $prependStart = $args['after'].
-                                            '</span>';
-                        $prependEnd   = '</div>';
-                    }
-                    
-                    $step        = (isset($args['step'])) ? 'step="'.$args['step'].'"' : '';
-                    $min         = (isset($args['min'])) ? 'min="'.$args['min'].'"' : '';
-                    $max         = (isset($args['max'])) ? 'max="'.$args['max'].'"' : '';
-                    $placeholder = (isset($args['placeholder'])) ? 'placeholder="'.$args['placeholder'].'"' : '';
-                    $inputAttr  = $step.' 
-                                '.$max.' 
-                                '.$min.' 
-                                '.$placeholder.' 
-                                size="40" 
-                                value="' . esc_attr($value) . '"';
-                    
-
-
-                    if(isset($args['disabled'])){
-                        // hide the actual input bc if it was just a disabled input the information saved in the database would be wrong - bc it would pass empty values and wipe the actual information
-                        echo $prependStart.
-                            '<input type="'.$args['subtype'].'" 
-                                id="'.$args['id'].'_disabled" 
-                                name="'.$args['name'].'_disabled" 
-                                disabled 
-                                '.$inputAttr.' 
-                            />
-                            <input type="hidden" 
+                    case 'checkbox':
+                        $checked = ($value) ? 'checked' : '';
+                        echo '<input type="'.$args['subtype'].'" 
                                 id="'.$args['id'].'" 
+                                "'.$args['required'].'" 
                                 name="'.$args['name'].'" 
-                                '.$inputAttr.' 
+                                value="1" 
+                                '.$checked.' 
                             />'.
-                            $prependEnd.
                             $after;
-                    } else {
-                        echo $prependStart.
-                            '<input type="'.$args['subtype'].'" 
+                    break;
+                    case 'radio':
+                        $radios = '';
+                        foreach($args['get_options_list'] as $val => $title) {
+ 
+                            $checked = ($value == $val) ? 'checked' : '';
+                            $radios.= '
+                            <input type="'.$args['subtype'].'" 
+                                id="'.$args['id'].'_'.$val.'" 
+                                "'.$args['required'].'" 
+                                name="'.$args['name'].'" 
+                                value="'.$val.'"
+                                '.$checked.' 
+                            ><label for="'.$args['id'].'_'.$val.'">'.$title.'</label>';
+                        }
+                        echo $radios.$after;
+                    break;
+                    default:
+                        $prependStart = $prependEnd = null;
+                        if(isset($args['prepend_value'])) {
+                            $prependStart = '<div class="input-prepend"> 
+                                                <span class="add-on">'.
+                                                    $args['prepend_value'].
+                                                '</span>';
+                            $prependEnd   = '</div>';
+                        }
+                        if(isset($args['after'])) {
+                            $prependStart = $args['after'].
+                                                '</span>';
+                            $prependEnd   = '</div>';
+                        }
+                        
+                        $step        = (isset($args['step'])) ? 'step="'.$args['step'].'"' : '';
+                        $min         = (isset($args['min'])) ? 'min="'.$args['min'].'"' : '';
+                        $max         = (isset($args['max'])) ? 'max="'.$args['max'].'"' : '';
+                        $placeholder = (isset($args['placeholder'])) ? 'placeholder="'.$args['placeholder'].'"' : '';
+                        $inputAttr  = $step.' 
+                                    '.$max.' 
+                                    '.$min.' 
+                                    '.$placeholder.' 
+                                    '.$attr_data.'
+                                    size="40" 
+                                    value="' . esc_attr($value) . '"';
+                        
+
+
+                        if(isset($args['disabled'])){
+                            // hide the actual input bc if it was just a disabled input the information saved in the database would be wrong - bc it would pass empty values and wipe the actual information
+                            echo $prependStart.
+                                '<input type="'.$args['subtype'].'" 
+                                    id="'.$args['id'].'_disabled" 
+                                    name="'.$args['name'].'_disabled" 
+                                    disabled 
+                                    '.$inputAttr.' 
+                                />
+                                <input type="hidden" 
                                     id="'.$args['id'].'" 
                                     name="'.$args['name'].'" 
-                                    '.$args['required'].'
                                     '.$inputAttr.' 
                                 />'.
                                 $prependEnd.
                                 $after;
-                    }
-                    /*<input required="required" '.$disabled.' type="number" step="any" id="'.$this->plugin_name.'_cost2" name="'.$this->plugin_name.'_cost2" value="' . esc_attr( $cost ) . '" size="25" /><input type="hidden" id="'.$this->plugin_name.'_cost" step="any" name="'.$this->plugin_name.'_cost" value="' . esc_attr( $cost ) . '" />*/
-
-                } else {
-                    $checked = ($value) ? 'checked' : '';
-                    echo '<input type="'.$args['subtype'].'" 
-                            id="'.$args['id'].'" 
-                            "'.$args['required'].'" 
-                            name="'.$args['name'].'" 
-                            size="40" 
-                            value="1" 
-                            '.$checked.' 
-                        />'.
-                        $after;
+                        } else {
+                            echo $prependStart.
+                                '<input type="'.$args['subtype'].'" 
+                                        id="'.$args['id'].'" 
+                                        name="'.$args['name'].'" 
+                                        '.$args['required'].'
+                                        '.$inputAttr.' 
+                                    />'.
+                                    $prependEnd.
+                                    $after;
+                        }
+                        /*<input required="required" '.$disabled.' type="number" step="any" id="'.$this->plugin_name.'_cost2" name="'.$this->plugin_name.'_cost2" value="' . esc_attr( $cost ) . '" size="25" /><input type="hidden" id="'.$this->plugin_name.'_cost" step="any" name="'.$this->plugin_name.'_cost" value="' . esc_attr( $cost ) . '" />*/
+                    break;
                 }
             break;
 
