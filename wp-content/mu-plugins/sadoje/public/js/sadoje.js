@@ -141,11 +141,12 @@
     var emitter = new Emitter();
     const config = {
       api: {
-        index: REST_POSTS_URL
-      },
-      nonce: REST_NONCE,
-      loadingif: LOADING_GIF
+        //index: REST_POSTS_URL
+      }
+      //nonce:         REST_NONCE,
+      //loadingif:     LOADING_GIF,
     };
+
     (function ($) {
       $(window).on('load', function () {
         if ($("#appTest").length) {

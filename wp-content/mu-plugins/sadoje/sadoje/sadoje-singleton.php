@@ -76,6 +76,16 @@ abstract class Sadoje_Singleton {
             $this->version, 
             true 
         );
+
+        wp_enqueue_script( 
+            $this->plugin_name.'-admin', 
+            $this->plugin_url.'admin/js/sadoje.js', 
+            array( 
+                'cg-woo-grid',
+            ),
+            $this->version, 
+            true 
+        );
 	}
 
 

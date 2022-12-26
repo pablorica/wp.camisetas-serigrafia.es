@@ -50,6 +50,11 @@ class Cg_Woo_Grid
 	 */
 	protected $version;
 
+    /**** Custom Plugin Properties ****/
+
+    protected $vue_filepath;
+    protected $vue_version;
+
     /**
 	 * Define the core functionality of the plugin.
 	 *
@@ -75,11 +80,44 @@ class Cg_Woo_Grid
 			$this->plugin_name = 'cg-woo-grid';
 		}
 
+        if ( defined( 'CG_WOOGRID_STATUS' ) ) {
+            if(CG_WOOGRID_STATUS == 'development'){
+                //https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.45/vue.global.js
+                //$this->vue_filepath = CG_WOOGRID_URL.'vue/js/vue.js';
+                $this->vue_filepath = 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.45/vue.global.js';
+            }
+            if(CG_WOOGRID_STATUS == 'production'){
+                $this->vue_filepath = 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.45/vue.global.prod.min.js';
+                //$this->vue_filepath = CG_WOOGRID_URL.'vue/js/vue.global.prod.min.js';
+            }
+        }
+        $this->vue_version = '3.2.45';
+
 		$this->load_dependencies();
+        $this->define_global_hooks();
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
     }
+
+    /**
+	 * Register the JavaScript for the global site.
+	 *
+	 * @since    1.0.0
+	 */
+	public function enqueue_global_scripts() {
+
+        //vue.js loads first
+        wp_enqueue_script( 
+            $this->plugin_name.'-vue',  
+            $this->vue_filepath,
+            array(), 
+            $this->vue_version, 
+            false
+        );
+	}
+
+    
 
     /**
 	 * Load the required dependencies for this plugin.
@@ -127,6 +165,29 @@ class Cg_Woo_Grid
 		$this->loader = new Cg_Woo_Grid_Loader();
 
 	}
+
+    /**
+	 * Register all global hooks
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function define_global_hooks() {
+
+		$this->loader->add_action( 
+            'wp_enqueue_scripts', 
+            $this, 
+            'enqueue_global_scripts' 
+        );
+
+        $this->loader->add_action( 
+            'admin_enqueue_scripts', 
+            $this, 
+            'enqueue_global_scripts' 
+        );
+
+        
+    }
 
     /**
 	 * Define the locale for this plugin for internationalization.

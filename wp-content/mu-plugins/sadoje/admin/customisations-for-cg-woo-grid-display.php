@@ -66,21 +66,66 @@
                         </h2>
 						<div class="inside">
                             <form id="formStamping">
-                                <table id="tableStamping" class="widefat">
+
+                                <table id="tableStamping"
+                                    class="widefat"
+                                >
                                     <thead>
-                                    <tr>
-                                        <th class="row-title">Tipo de estampación</th>
-                                        <th>Precio estampación por prenda (prendas blancas)</th>
-                                        <th>Precio estampación por prenda (prendas de color)</th>
-                                        <th>Precio adicional por pantalla y fotolitos</th>
-                                        <th></th>
-                                    </tr>
+                                        <tr>
+                                            <th class="row-title">Tipo de estampación</th>
+                                            <th>Precio estampación por prenda (prendas blancas)</th>
+                                            <th>Precio estampación por prenda (prendas de color)</th>
+                                            <th>Precio adicional por pantalla y fotolitos</th>
+                                            <th></th>
+                                        </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="appRows">
+                                        <tr v-for="(row, index) in rows"
+                                            v-bind:id="'row_'+index" 
+                                            v-bind:class="row.class" 
+                                        >
+                                                <th>
+                                                    <input type="text" 
+                                                        autocomplete="off"
+                                                        v-model="row.stamping"
+                                                        :name="'stamping['+index+']'"
+                                                    >
+                                                </th>
+                                                <th>
+                                                    <input type="text" 
+                                                        autocomplete="off"
+                                                        v-model="row.white_price"
+                                                        :name="'white_price['+index+']'"
+                                                    >
+                                                </th>
+                                                <th>
+                                                    <input type="text" 
+                                                        autocomplete="off"
+                                                        v-model="row.color_price"
+                                                        :name="'color_price['+index+']'"
+                                                    >
+                                                </th>
+                                                <th>
+                                                    <input type="text" 
+                                                        autocomplete="off"
+                                                        v-model="row.screen_price"
+                                                        :name="'screen_price['+index+']'"
+                                                    >
+                                                </th>
+                                                <th>
+                                                    <button class="button button-secondary button-delete" 
+                                                        style="background:#DC3232;color:#FFF;border-color:#FFF;"
+                                                        @click="deleteRow(index, $event)"
+                                                    ><?php echo __('Borrar fila','sadoje'); ?></button>
+                                                </th>
+                                        </tr>
                                     </tbody>
                                 </table>
+
                                 <p class="submit">
-                                    <button id="addRow" class="button button-secondary"><?php echo __('Añadir estampación','sadoje'); ?></button>
+                                    <button class="button button-secondary" 
+                                        @click="addRow($event)"
+                                    ><?php echo __('Añadir estampación','sadoje'); ?></button>
                                 </p>
                             </form>
 
@@ -122,8 +167,20 @@
                                 
                                 <p><tt id="results"></tt></p>
 
-                            <script>
+                                <div id="test">{{ message }}
+                                    <div>
+                                        {{ count }}
+                                        <button @click="decrement">-</button>
+                                        <button @click="increment">+</button>
+                                    </div>
+                                    
+                                </div>
+
+                                <script>
+                                
+
                                 //TODO : Rewrite all this is VUE. Rows cannot be deleted via jQUery if they are loaded dinamycally, This can be solved via VUE
+                                /*
                                     (function($) {
 
                                         function showValues($form) {
@@ -189,11 +246,13 @@
                                             addStampingRow(element, $tbody, int++)
                                         });
 
-                                        $("form#formStamping button#addRow").click(function(event ) {
+                                        $("form#formStamping button#addRow")
+                                        .click(function(event ) {
                                             event.preventDefault();
                                             addStampingRow('', $tbody, int++)
                                         });
-                                        $( "form#formStamping button.button-delete" ).on( "click", function( event ) {
+                                        $( "form#formStamping button.button-delete" )
+                                        .on( "click", function( event ) {
                                             event.preventDefault();
                                             const $row = $(this).closest('tr')
                                             $row.remove();
@@ -209,6 +268,7 @@
                                         
 
                                     })( jQuery );
+                                    */
                                 </script>
 						</div><!-- .inside -->
 					</div><!-- .postbox -->

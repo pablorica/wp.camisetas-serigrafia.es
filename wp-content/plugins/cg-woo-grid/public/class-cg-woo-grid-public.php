@@ -41,8 +41,8 @@ class Functions {
     protected $css_filepath;
     protected $js_filepath;
     protected $template_filepath;
-    protected $vue_filepath;
-    protected $vue_version;
+    //protected $vue_filepath;
+    //protected $vue_version;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -63,16 +63,16 @@ class Functions {
         $this->css_filepath      = CG_WOOGRID_URL.'public/css/cg-woo-grid.css';
         $this->js_filepath       = CG_WOOGRID_URL.'public/js/cg-woo-grid.js';
 
-        if(CG_WOOGRID_STATUS == 'development'){
-            //https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.45/vue.global.js
-            //$this->vue_filepath = CG_WOOGRID_URL.'vue/js/vue.js';
-            $this->vue_filepath = 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.45/vue.global.js';
-        }
-        if(CG_WOOGRID_STATUS == 'production'){
-            $this->vue_filepath = 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.45/vue.global.prod.min.js';
-            //$this->vue_filepath = CG_WOOGRID_URL.'vue/js/vue.global.prod.min.js';
-        }
-        $this->vue_version = '3.2.45';
+        // if(CG_WOOGRID_STATUS == 'development'){
+        //     //https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.45/vue.global.js
+        //     //$this->vue_filepath = CG_WOOGRID_URL.'vue/js/vue.js';
+        //     $this->vue_filepath = 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.45/vue.global.js';
+        // }
+        // if(CG_WOOGRID_STATUS == 'production'){
+        //     $this->vue_filepath = 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.45/vue.global.prod.min.js';
+        //     //$this->vue_filepath = CG_WOOGRID_URL.'vue/js/vue.global.prod.min.js';
+        // }
+        // $this->vue_version = '3.2.45';
 	}
 
 	/**
@@ -105,13 +105,13 @@ class Functions {
 	public function enqueue_scripts() {
 
         //vue.js loads first
-        wp_enqueue_script( 
-            $this->plugin_name.'-vue',  
-            $this->vue_filepath,
-            array(), 
-            $this->vue_version, 
-            true
-        );
+        // wp_enqueue_script( 
+        //     $this->plugin_name.'-vue',  
+        //     $this->vue_filepath,
+        //     array(), 
+        //     $this->vue_version, 
+        //     true
+        // );
 
         wp_enqueue_script( 
             $this->plugin_name, 

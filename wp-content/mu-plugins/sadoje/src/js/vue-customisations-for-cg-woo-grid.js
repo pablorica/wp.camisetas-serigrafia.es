@@ -9,10 +9,10 @@ console.log('VUE Main loaded')
 export var emitter = new Emitter();
 export const config = {
     api: {
-        index: REST_POSTS_URL
+        //index: REST_POSTS_URL
     },
-    nonce:         REST_NONCE,
-    loadingif:     LOADING_GIF,
+    //nonce:         REST_NONCE,
+    //loadingif:     LOADING_GIF,
 };
 
 
