@@ -539,22 +539,11 @@ class Cg_Woo_Grid_Admin {
         switch ($args['type']) {
 
             case 'input':
+
                 $attr_data = null;
                 $value     = $wp_data_value;
-                if($args['value_type'] == 'serialized')  {
-                    //$value = serialize($wp_data_value);
-                    $unserialized = maybe_unserialize($wp_data_value);
-                    $json = json_encode($unserialized);
-                    //error_log('default: '.print_r($wp_data_value,true));
-                    //error_log('unserialized: '.print_r($unserialized,true));
-                    //error_log('json: '.print_r($json,true));
-                    $attr_data = ' data-json=\''.$json.'\' ';
-                }
+                $after     = $args['after'] ?? '';
                 
-
-                $after = $args['after'] ?? '';
-                
-
                 switch ($args['subtype']) {
 
                     case 'checkbox':
@@ -603,15 +592,28 @@ class Cg_Woo_Grid_Admin {
                         $min         = (isset($args['min'])) ? 'min="'.$args['min'].'"' : '';
                         $max         = (isset($args['max'])) ? 'max="'.$args['max'].'"' : '';
                         $placeholder = (isset($args['placeholder'])) ? 'placeholder="'.$args['placeholder'].'"' : '';
+                        $ref         = 'ref="'.
+                            str_replace(
+                                "_",
+                                "",
+                                str_replace(
+                                    "-",
+                                    "",
+                                    $args['id']
+                                )
+                            ).
+                        '"';
+                        
                         $inputAttr  = $step.' 
                                     '.$max.' 
                                     '.$min.' 
                                     '.$placeholder.' 
+                                    '.$ref.' 
                                     '.$attr_data.'
                                     size="40" 
                                     value="' . esc_attr($value) . '"';
                         
-
+                        
 
                         if(isset($args['disabled'])){
                             // hide the actual input bc if it was just a disabled input the information saved in the database would be wrong - bc it would pass empty values and wipe the actual information

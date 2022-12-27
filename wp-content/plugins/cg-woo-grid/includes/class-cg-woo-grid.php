@@ -54,6 +54,7 @@ class Cg_Woo_Grid
 
     protected $vue_filepath;
     protected $vue_version;
+    protected $axios_filepath;
 
     /**
 	 * Define the core functionality of the plugin.
@@ -93,6 +94,8 @@ class Cg_Woo_Grid
         }
         $this->vue_version = '3.2.45';
 
+        $this->axios_filepath = "https://unpkg.com/axios/dist/axios.min.js";
+
 		$this->load_dependencies();
         $this->define_global_hooks();
 		$this->set_locale();
@@ -113,6 +116,16 @@ class Cg_Woo_Grid
             $this->vue_filepath,
             array(), 
             $this->vue_version, 
+            false
+        );
+        //then axios.js 
+        wp_enqueue_script( 
+            $this->plugin_name.'-axios',  
+            $this->axios_filepath,
+            array(
+                $this->plugin_name.'-vue'
+            ), 
+            '', 
             false
         );
 	}

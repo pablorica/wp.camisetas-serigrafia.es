@@ -6,67 +6,70 @@ const { createApp } = Vue
 createApp({
     data() {
         return {
-            message: 'Hello Vue!',
-            count: 0,
-        }
-    },
-    methods: {
-        increment() {
-            this.count += 1;
-        },
-        decrement() {
-            this.count -= 1;
-        }
-    }
-}).mount('#test')
-
-createApp({
-    data() {
-        return {
+            serialized: '',
+            apiurl:'',
             rows: [
                 {
-                    class: '',
-                    stamping: 'Serigrafía 1 color Tamaño Pequeño 10x15 cm aprox.',
-                    white_price: '0.4',
-                    color_price: '0.5',
-                    screen_price: '30'
-                },
-                {
-                    class: 'alternate',
-                    stamping: 'Serigrafía 2 colores Tamaño Pequeño 10x15 cm aprox.',
-                    white_price: '0.6',
-                    color_price: '0.7',
-                    screen_price: '31'
+                    stamping:     '',
+                    white_price:  '',
+                    color_price:  '',
+                    screen_price: ''
                 }
             ],
             items: [{ message: 'Foo' }, { message: 'Bar' }]
         }
     },
     mounted: function () {
- 
+        
+        let element     = this.$el;
+        this.apiurl     = element.parentElement.dataset.apiurl;
+        this.serialized = this.$refs.customisationsforcgwoogridbudgeteerstampingtypes.value
+        
         this.buildTable(); 
+
     },
     methods: {
-        buildTable: function () {
+        buildTable: async function () {
+            let self   = this;
+            let getURL = self.apiurl+'/encode';
 
-            var self = this;
-            // self.rows.push(row);
-            //console.log(self.rows)
-            //console.log(self.rows[0])
+             axios.post(getURL,{
+                    serialized: self.serialized
+                })
+                .then(function (response) {
+                    //console.log(response);
+                    self.rows = response.data
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+        updateStampings: function () {
+            let self   = this;
+            let getURL = self.apiurl+'/serialize';
+            console.log(self.rows);
 
+            axios.post(getURL,{
+                object: self.rows
+            })
+            .then(function (response) {
+                console.log(response);
+                //self.rows = response.data
+                self.serialized = response.data
+                self.$refs.customisationsforcgwoogridbudgeteerstampingtypes.value = self.serialized
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
         },
         addRow: function(event) {
             event.preventDefault()
             var self = this;
-            let classname = ''
-            if(self.rows.length % 2 === 1) {
-                classname = 'alternate'
-            }
+
             let row = {
-                class: classname,
-                stamping: '',
-                white_price: '',
-                color_price: '',
+                stamping:     '',
+                white_price:  '',
+                color_price:  '',
                 screen_price: ''
             }
             self.rows.push(row);
@@ -76,6 +79,7 @@ createApp({
             var self = this;
             //alert('Delete ' + row)
             self.rows.splice(row, 1)
+            this.updateStampings()
         }
     }
 }).mount('#formStamping')

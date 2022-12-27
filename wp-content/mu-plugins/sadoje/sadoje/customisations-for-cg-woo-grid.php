@@ -25,9 +25,11 @@ class Customisations_For_Cg_Woo_Grid extends Sadoje_Singleton {
 
         //TODO: Check if cg-woo-grid is enabled before init()!!!!!
          
-        $this->element_name = 'customisations-for-cg-woo-grid';
+        $this->get_element_name();
         $this->add_actions();
       //$this->add_filters();
+        $this->load_dependencies();
+        $this->define_admin_hooks();
     }
 
     /**** Plugin methods ****/
@@ -35,25 +37,6 @@ class Customisations_For_Cg_Woo_Grid extends Sadoje_Singleton {
     private function add_actions()
     {
 
-        //Backend actions
-
-        add_action(
-            'admin_menu',
-            array( 
-                $this, 
-                'cdg_add_admin_submenu' 
-            ),
-            10
-        );  
-
-        add_action(
-            'admin_init',
-            array( 
-                $this, 
-                'registerAndBuildBudgeteer' 
-            ),
-            20
-        ); 
 
 
         // add_action( 
@@ -64,8 +47,6 @@ class Customisations_For_Cg_Woo_Grid extends Sadoje_Singleton {
         //     )
         // );
 
-
-        //Frontend actions
 
         add_action( 
             'woocommerce_after_single_product_summary', 
@@ -82,227 +63,104 @@ class Customisations_For_Cg_Woo_Grid extends Sadoje_Singleton {
 
 
     }
-	
 
-    /** ** ** ** ** ** **
-     ** ** BACKEND  ** **
-     ** ** ** ** ** ** **/
+    /**
+     * Sets and returns the property $element_name
+     *
+     * @since    1.0.0
+     * @access   public
+     * @return string
+     */
+    public function get_element_name()
+    {
+        $this->element_name = 'customisations-for-cg-woo-grid';
+        //error_log('Customisations_For_Cg_Woo_Grid::get_element_name() -> '.$this->element_name);
+        return $this->element_name;
+
+    }
 
      /**
-      * Get the Codigo Woo Grid functions
-      *
-      * @param string           $function
-      * @param array || string  $var
-      * @return void
-      */
-     public function cdg_woo_grid_admin(
-        $function,
-        $var
-    ) {
+	 * Load the required dependencies for this add-on.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function load_dependencies() {
 
 
-        //error_log('cdg_woo_grid_admin: '.$function." ".print_r($var,true));
+		/**
+		 * The class responsible for defining all actions that occur in the admin area.
+		 */
+		require_once $this->plugin_path. 'admin/'.$this->element_name.'-admin.php';
+        require_once $this->plugin_path. 'admin/'.$this->element_name.'-admin-rest-api.php';
+        //error_log($this->plugin_path. 'admin/customisations-for-cg-woo-grid-admin.php');
 
-        require_once WP_PLUGIN_DIR . '/cg-woo-grid/includes/class-cg-woo-grid.php';
-        $cgWooGrid = new \Cg_Woo_Grid();
+		/**
+		 * The class responsible for defining all actions that occur in the public-facing
+		 * side of the site.
+		 */
+        //require_once CG_WOOGRID_PATH . '/public/class-cg-woo-grid-public.php';
 
-        require_once WP_PLUGIN_DIR . '/cg-woo-grid/admin/class-cg-woo-grid-admin.php';
-        $cgWooGridAdmin = new \Cg_Woo_Grid_Admin( 
-            $cgWooGrid->get_plugin_name(), 
-            $cgWooGrid->get_version() 
-        );
-
-        if($function == 'sayHello') {
-            $cgWooGridAdmin->sayHello($var);
-        }
-        if($function == 'buildFields') {
-            if(!$var['field_callback']) {
-                $var['field_callback'] =  array( 
-                    $cgWooGridAdmin, 
-                    'render_settings_field' 
-                );
-            }
-            $cgWooGridAdmin->buildFields(
-                $var['settings_page_slug'],
-                $var['field_id'], 
-                $var['field_title'], 
-                $var['field_callback'], 
-                $var['settings_section_id'],
-                $var['field_args']
-            );
-        }
-    }
+	}
 
     /**
-     * Adds submenu to administration area
-     *
-     * @see https://blog.wplauncher.com/create-wordpress-plugin-settings-page/
-     * 
-     * @return void
-     */
-    public function cdg_add_admin_submenu() {
+	 * Register all of the hooks related to the admin area functionality
+	 * of the plugin.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function define_admin_hooks() {
 
-        //$this->cdg_woo_grid_admin('sayHello','caracola' );
+		$plugin_admin = new Customisations_For_Cg_Woo_Grid_Admin();
 
-
-        //add_submenu_page( $parent_slug, $page_title, $menu_title, $capability, $menu_slug, $function );
-        add_submenu_page( 
-            'cg-woo-grid', 
-            esc_html__('Presupuestador', 'sadoje'), 
-            esc_html__('Presupuestador', 'sadoje'), 
-            'administrator', 
-            $this->element_name.'-budgeteer', 
+        add_action(
+            'admin_menu',
             array( 
-                $this, 
-                'cdg_display_admin_budgeteer' 
-            )
+                $plugin_admin, 
+                'cdg_add_admin_submenu' 
+            ),
+            10
+        );  
+
+        add_action(
+            'admin_init',
+            array( 
+                $plugin_admin, 
+                'registerAndBuildBudgeteer' 
+            ),
+            20
+        ); 
+
+
+        // add_action( 
+        //     'wp_loaded', 
+        //     array( 
+        //         $plugin_admin, 
+        //         'hello_world' 
+        //     )
+        // );
+
+        $plugin_admin_restapi = new Customisations_For_Cg_Woo_Grid_Admin_Rest_Api();
+
+        add_action(
+            'rest_api_init',
+            array( 
+                $plugin_admin_restapi, 
+                'add_routes_api' 
+            ),
+            20
         );
-    }
-    /**
-     * Build the admin page
-     *
-     * @return void
-     */
-    public function cdg_display_admin_budgeteer() {
-        // set this var to be used in the display view
-        //$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'general';
-		require_once $this->plugin_path.'admin/'.$this->element_name.'-display.php'; 
-    }
 
+	}
 
-    public function registerAndBuildBudgeteer() {
-
-        // ID used to identify this section and with which to register options
-        $settings_section_id = $this->element_name.'_budgeteer_section';
-        // Title to be displayed on the administration page
-        $settings_title = '';
-        // Callback that echos out any content at the top of the section (between heading and fields).
-        $settings_callback = null; 
-        //Function that fills each field with the desired form inputs. The function should echo its output.
-        $field_callback = null;
-
-        $settings_pages = array();
-        
-
-        //The slug-name of the settings page on which to show the section.
-        $settings_page  = new \stdClass();
-        $settings_page->slug   = $this->element_name.'_budgeteer_general';
-        $settings_page->fields = array();
-
-        $option_lists = array(
-            0 => __("Desactivado","sadoje"), 
-            1 => __("Activado","sadoje")
-        );
-        $field_id = $this->element_name.'_budgeteer_general_status';
-        $settings_page->fields[] = array(
-            'id'    => $field_id,
-            'title' => __("Estado","sadoje").":",
-            'args'  => array (
-                'type'             => 'input',
-                'subtype'          => 'radio',
-                'id'               => $field_id,
-                'name'             => $field_id,
-                'required'         => 'required="required"',
-                'get_options_list' => $option_lists,
-                'value_type'       => 'normal',
-                'wp_data'          => 'option',
-                'placeholder'      => '',
-                'class'            => '',
-                'onchange'         => ''
-            )
-        );
-        array_push($settings_pages,$settings_page);
-
-        /* Bagged */
-        $settings_page         = new \stdClass();
-        $settings_page->slug   = $this->element_name.'_budgeteer_bagged';
-        $settings_page->fields = array();
-
-        $field_id = $this->element_name.'_budgeteer_bagged_price';
-        $settings_page->fields[] = array(
-            'id'    => $field_id,
-            'title' => __("Precio de embolsado","sadoje").":",
-            'args'  => array (
-                'type'             => 'input',
-                'subtype'          => 'text',
-                'id'               => $field_id,
-                'name'             => $field_id,
-                'required'         => '',
-                'get_options_list' => '',
-                'value_type'       => 'normal',
-                'wp_data'          => 'option',
-                'class'            => 'alternate',
-            )
-        );
-        array_push($settings_pages,$settings_page);
-
-        /* Types of stamping */
-        $settings_page         = new \stdClass();
-        $settings_page->slug   = $this->element_name.'_budgeteer_stamping';
-        $settings_page->fields = array();
-
-        $field_id = $this->element_name.'_budgeteer_stamping_types';
-        $settings_page->fields[] = array(
-            'id'    => $field_id,
-            'title' => __("Tipo de estampación","sadoje").":",
-            'args'  => array (
-                'type'             => 'input',
-                'subtype'          => 'text',
-                'id'               => $field_id,
-                'name'             => $field_id,
-                'required'         => '',
-                'get_options_list' => '',
-                'value_type'       => 'serialized',
-                'wp_data'          => 'option',
-                'class'            => '',
-            )
-        );
-        array_push($settings_pages,$settings_page);
-
-        
-
-        /* Build settings page fields */
-        
-        foreach($settings_pages as $settings_page) {
-            add_settings_section(
-                $settings_section_id, 
-                $settings_title,  
-                $settings_callback,    
-                $settings_page->slug                
-            );
-
-            foreach($settings_page->fields as $field) {
-                $this->cdg_woo_grid_admin(
-                    'buildFields',
-                    array(
-                        'settings_page_slug'  => $settings_page->slug,
-                        'field_id'            => $field['id'],
-                        'field_title'         => $field['title'],
-                        'field_callback'      => $field_callback,
-                        'settings_section_id' => $settings_section_id,
-                        'field_args'          => $field['args'],
-                    )
-                );
-                
-            }
-
-        }
-        
-    }
-
-
-
-
-
-
-
+	
 
     /** ** ** ** ** ** **
      ** ** FRONTEND ** **
      ** ** ** ** ** ** **/
 
      /**
-	 * Frontend_scripts function. 
 	 * Hello World (for testing purposes)
 	 *
 	 * @access public
@@ -323,6 +181,8 @@ class Customisations_For_Cg_Woo_Grid extends Sadoje_Singleton {
      * @return void || WP_Error
 	 */
     function cdg_budgeteer() {
+
+        //error_log('cdg_budgeteer -> Element Name: '.$this->get_element_name());
 
         $args = array();
         

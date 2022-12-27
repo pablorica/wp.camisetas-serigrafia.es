@@ -9,8 +9,6 @@
  * @author     Pablo Rica <pablo@codigo.co.uk>
  */
 
-//global $wp_settings_sections;
-//$settings = $wp_settings_sections['cg-woo-grid_general_settings']['cg-woo-grid_general_section'];
 ?>
 
 <div class="wrap">
@@ -65,7 +63,15 @@
                             <span><?php echo __('Estampación','sadoje'); ?></span>
                         </h2>
 						<div class="inside">
-                            <form id="formStamping">
+                            <form id="formStamping"
+                                method="POST" 
+                                action="options.php"
+                                data-apiurl = "<?php echo $urlspace; ?>"
+                            >
+                                <?php 
+                                    settings_fields( 'customisations-for-cg-woo-grid_budgeteer_stamping' );
+                                    do_settings_sections( 'customisations-for-cg-woo-grid_budgeteer_stamping' ); 
+                                ?>
 
                                 <table id="tableStamping"
                                     class="widefat"
@@ -79,16 +85,17 @@
                                             <th></th>
                                         </tr>
                                     </thead>
-                                    <tbody id="appRows">
+                                    <tbody>
                                         <tr v-for="(row, index) in rows"
                                             v-bind:id="'row_'+index" 
-                                            v-bind:class="row.class" 
+                                            v-bind:class = "(index % 2 === 0)?'alternate':''"
                                         >
                                                 <th>
                                                     <input type="text" 
                                                         autocomplete="off"
                                                         v-model="row.stamping"
                                                         :name="'stamping['+index+']'"
+                                                        @input="updateStampings()"
                                                     >
                                                 </th>
                                                 <th>
@@ -96,6 +103,7 @@
                                                         autocomplete="off"
                                                         v-model="row.white_price"
                                                         :name="'white_price['+index+']'"
+                                                        @input="updateStampings()"
                                                     >
                                                 </th>
                                                 <th>
@@ -103,6 +111,7 @@
                                                         autocomplete="off"
                                                         v-model="row.color_price"
                                                         :name="'color_price['+index+']'"
+                                                        @input="updateStampings()"
                                                     >
                                                 </th>
                                                 <th>
@@ -110,6 +119,7 @@
                                                         autocomplete="off"
                                                         v-model="row.screen_price"
                                                         :name="'screen_price['+index+']'"
+                                                        @input="updateStampings()"
                                                     >
                                                 </th>
                                                 <th>
@@ -126,39 +136,7 @@
                                     <button class="button button-secondary" 
                                         @click="addRow($event)"
                                     ><?php echo __('Añadir estampación','sadoje'); ?></button>
-                                </p>
-                            </form>
-
-                                
-                            <form method="POST" action="options.php">  
-                                <?php 
-                                    settings_fields( 'customisations-for-cg-woo-grid_budgeteer_stamping' );
-                                    do_settings_sections( 'customisations-for-cg-woo-grid_budgeteer_stamping' ); 
-
-                                    //a:2:{i:0;O:8:"stdClass":4:{s:8:"stamping";s:52:"Serigrafía 1 color Tamaño Pequeño 10x15 cm aprox.";s:11:"white_price";d:0.4;s:11:"color_price";d:0.5;s:12:"screen_price";i:30;}i:1;O:8:"stdClass":4:{s:8:"stamping";s:54:"Serigrafía 2 colores Tamaño Pequeño 10x15 cm aprox.";s:11:"white_price";d:0.6;s:11:"color_price";d:0.7;s:12:"screen_price";i:31;}}
-
-                                    /*
-                                    $tests = array();
-                                    $test  = new \stdClass();
-                                    $test->stamping = sanitize_text_field("Serigrafía 1 color Tamaño Pequeño 10x15 cm aprox.");
-                                    $test->white_price = 0.4;
-                                    $test->color_price = 0.5;
-                                    $test->screen_price = 30;
-                                    $tests[] = $test;
-
-                                    $test  = new \stdClass();
-                                    $test->stamping = sanitize_text_field("Serigrafía 2 colores Tamaño Pequeño 10x15 cm aprox.");
-                                    $test->white_price = 0.6;
-                                    $test->color_price = 0.7;
-                                    $test->screen_price = 31;
-                                    $tests[] = $test;
-
-                                    //echo serialize($tests);
-                                    */
-                                    
-
-                                ?>
-                                
+                                </p>                                
 
                                 <?php submit_button(); ?>  
                             </form> 
@@ -167,14 +145,6 @@
                                 
                                 <p><tt id="results"></tt></p>
 
-                                <div id="test">{{ message }}
-                                    <div>
-                                        {{ count }}
-                                        <button @click="decrement">-</button>
-                                        <button @click="increment">+</button>
-                                    </div>
-                                    
-                                </div>
 
                                 <script>
                                 
