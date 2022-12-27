@@ -144,6 +144,31 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
         );
         array_push($settings_pages,$settings_page);
 
+
+        /* Base price */
+        $settings_page         = new \stdClass();
+        $settings_page->slug   = $this->get_element_name().'_budgeteer_baseprice';
+        $settings_page->fields = array();
+
+        $field_id = $this->get_element_name().'_budgeteer_baseprice_types';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => '',
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'hidden',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'serialized',
+                'wp_data'          => 'option',
+                'class'            => '',
+            )
+        );
+        array_push($settings_pages,$settings_page);
+
+
         /* Bagged */
         $settings_page         = new \stdClass();
         $settings_page->slug   = $this->get_element_name().'_budgeteer_bagged';
@@ -163,6 +188,7 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
                 'value_type'       => 'normal',
                 'wp_data'          => 'option',
                 'class'            => 'alternate',
+                'size'             => '10',
             )
         );
         $field_id = $this->get_element_name().'_budgeteer_bagged_wording';

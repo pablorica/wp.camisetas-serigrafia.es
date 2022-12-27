@@ -48,6 +48,100 @@
             <div id="post-body-content">
 				<div class="meta-box-sortables ui-sortable">
 
+                    <div id="settings-baseprice"
+                        class="postbox"
+                    >
+                        <h2>
+                            <span><?php echo __('Margen de beneficio por cantidades','sadoje'); ?></span>
+                        </h2>
+						<div class="inside">
+                            <form id="formBaseprice"
+                                method="POST" 
+                                action="options.php"
+                                data-apiurl = "<?php echo $urlspace; ?>"
+                            >
+                                <?php 
+                                    settings_fields( 'customisations-for-cg-woo-grid_budgeteer_baseprice' );
+                                    do_settings_sections( 'customisations-for-cg-woo-grid_budgeteer_baseprice' ); 
+                                ?>
+
+                                <table id="tableBaseprice"
+                                    class="widefat"
+                                >
+                                    <thead>
+                                        <tr>
+                                            <th class="row-title">
+                                                <strong><?php _e('Rango del Precio Unidad','sadoje'); ?></strong><br/>
+                                                <em><?php _e('El precio unidad se aplica a todos los productos cuya cantidad se encuentre en el rango de valores indicados en este campo.','sadoje'); ?></em>
+                                            </th>
+                                            <th><strong><?php _e('Rango del Precio Paquete','sadoje'); ?></strong><br/>
+                                                <em><?php _e('El precio paquete se aplica a todos los productos cuya cantidad se encuentre en el rango de valores indicados en este campo.','sadoje'); ?></em>
+                                            </th>
+                                            <th><strong><?php _e('Rango del Precio Caja','sadoje'); ?></strong><br/>
+                                                <em><?php _e('El precio caja se aplica a todos los productos cuya cantidad sea superior al valor indicado en este campo.','sadoje'); ?></em>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(row, index) in rows"
+                                            v-bind:id="'row_'+index" 
+                                            v-bind:class = "(index % 2 === 0)?'alternate':''"
+                                        >
+                                                <th>
+                                                    <?php _e('Desde','sadoje'); ?>
+                                                    <input type="number" 
+                                                        autocomplete="off"
+                                                        size="4"
+                                                        v-model="row.unitpricemin"
+                                                        :name="'unitPriceMin['+index+']'"
+                                                        @input="updateRows()"
+                                                    >
+                                                    <?php _e('hasta','sadoje'); ?>
+                                                    <input type="number" 
+                                                        autocomplete="off"
+                                                        size="4"
+                                                        v-model="row.unitpricemax"
+                                                        :name="'unitPriceMax['+index+']'"
+                                                        @input="updateRows()"
+                                                    >
+                                                </th>
+                                                <th>
+                                                    <?php _e('Desde','sadoje'); ?>
+                                                    <input type="number" 
+                                                        autocomplete="off"
+                                                        size="4"
+                                                        v-model="row.packagepricemin"
+                                                        :name="'unitPackageMin['+index+']'"
+                                                        @input="updateRows()"
+                                                    >
+                                                    <?php _e('hasta','sadoje'); ?>
+                                                    <input type="number" 
+                                                        autocomplete="off"
+                                                        size="4"
+                                                        v-model="row.packagepricemax"
+                                                        :name="'unitPackageMax['+index+']'"
+                                                        @input="updateRows()"
+                                                    >
+                                                </th>
+                                                <th>
+                                                    <?php _e('Desde','sadoje'); ?>
+                                                    <input type="number" 
+                                                        autocomplete="off"
+                                                        size="4"
+                                                        v-model="row.boxpricemin"
+                                                        :name="'unitBoxMin['+index+']'"
+                                                        @input="updateRows()"
+                                                    >
+                                                </th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <?php submit_button(); ?>  
+                            </form> 
+
+						</div><!-- .inside -->
+					</div><!-- #settings-profit -->
+
                     <div id="settings-bagged"
                         class="postbox"
                     >
@@ -87,10 +181,10 @@
                                 >
                                     <thead>
                                         <tr>
-                                            <th class="row-title">Tipo de estampación</th>
-                                            <th>Precio estampación por prenda (prendas blancas)</th>
-                                            <th>Precio estampación por prenda (prendas de color)</th>
-                                            <th>Precio adicional por pantalla y fotolitos</th>
+                                            <th class="row-title"><?php _e('Tipo de estampación','sadoje'); ?></th>
+                                            <th><?php _e('Precio estampación por prenda (prendas blancas)','sadoje'); ?></th>
+                                            <th><?php _e('Precio estampación por prenda (prendas de color)','sadoje'); ?></th>
+                                            <th><?php _e('Precio adicional por pantalla y fotolitos','sadoje'); ?></th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -135,7 +229,7 @@
                                                         @input="updateRows()"
                                                     >
                                                 </th>
-                                                <th>
+                                                <th style="text-align:right">
                                                     <button class="button button-secondary button-delete" 
                                                         style="background:#DC3232;color:#FFF;border-color:#FFF;"
                                                         @click="deleteRow(index, $event)"
@@ -286,8 +380,8 @@
                                 >
                                     <thead>
                                         <tr>
-                                            <th class="row-title">Cantidad</th>
-                                            <th>Beneficio</th>
+                                            <th class="row-title"><?php _e('Cantidad','sadoje'); ?></th>
+                                            <th><?php _e('Beneficio','sadoje'); ?></th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -297,7 +391,7 @@
                                             v-bind:class = "(index % 2 === 0)?'alternate':''"
                                         >
                                                 <th>
-                                                    Desde
+                                                    <?php _e('Desde','sadoje'); ?>
                                                     <input type="number" 
                                                         autocomplete="off"
                                                         size="8"
@@ -305,7 +399,7 @@
                                                         :name="'min['+index+']'"
                                                         @input="updateRows()"
                                                     >
-                                                    hasta
+                                                    <?php _e('hasta','sadoje'); ?>
                                                     <input type="number" 
                                                         autocomplete="off"
                                                         size="8"
@@ -323,7 +417,7 @@
                                                         @input="updateRows()"
                                                     >
                                                 </th>
-                                                <th>
+                                                <th style="text-align:right">
                                                     <button class="button button-secondary button-delete" 
                                                         style="background:#DC3232;color:#FFF;border-color:#FFF;"
                                                         @click="deleteRow(index, $event)"
@@ -343,14 +437,11 @@
                                         </tr>
                                     </tfoot>
                                 </table>
-
-                                                                
-
                                 <?php submit_button(); ?>  
                             </form> 
 
 						</div><!-- .inside -->
-					</div><!-- #settings-stamping -->
+					</div><!-- #settings-profit -->
 
                     <div id="settings-info"
                         class="postbox"
@@ -372,27 +463,6 @@
 
 				</div><!-- .meta-box-sortables .ui-sortable -->
 			</div><!-- #post-body-content-->
-
-            <!-- sidebar -->
-			<div id="postbox-container-1" 
-                class="postbox-container"
-            >
-                <div class="meta-box-sortables">
-					<div class="postbox">
-						<h2 class="hndle">
-                            <span><?php esc_html_e('Configuración','sadoje'); ?></span>
-                        </h2>
-						<div class="inside">
-                        <p><?php 
-                        esc_html_e( 
-                            'Esta configuración se aplica al presupestador', 
-                            'sadoje'
-                        ); ?></p>
-						</div><!-- .inside -->
-					</div><!-- .postbox -->
-				</div><!-- .meta-box-sortables -->
-			</div><!-- #postbox-container-1.postbox-container -->
-
 			
 		</div><!-- #post-body .metabox-holder .columns-2 -->
 		<br class="clear">

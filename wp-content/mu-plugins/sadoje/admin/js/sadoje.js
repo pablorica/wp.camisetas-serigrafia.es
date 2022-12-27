@@ -49,6 +49,42 @@ function gDeleteRow(event, self, row) {
     self.updateRows()
 }
 
+
+createApp({
+    data() {
+        return {
+            serialized: '',
+            apiurl:'',
+            rows: [{
+                unitpricemin:    0,
+                unitpricemax:    0,
+                packagepricemin: 0,
+                packagepricemax: 0,
+                boxpricemin:     0,
+            }],
+            refId: 'customisationsforcgwoogridbudgeteerbasepricetypes'
+        }
+    },
+    mounted: function () {
+        
+        let element     = this.$el;
+        this.apiurl     = element.parentElement.dataset.apiurl;
+        this.serialized = this.$refs[this.refId].value
+        
+        this.buildTable(); 
+
+    },
+    methods: {
+        buildTable: function () {
+            gBuildTable(this);
+        },
+        updateRows: function () {
+            gUpdateRows(this)
+        }
+    }
+}).mount('#formBaseprice')
+
+
 createApp({
     data() {
         return {
