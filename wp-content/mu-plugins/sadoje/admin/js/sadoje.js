@@ -3,82 +3,82 @@
 
 const { createApp } = Vue
 
+
+function gBuildTable(self) {
+
+    let getURL = self.apiurl+'/encode';
+
+    if(self.serialized !== ''){
+
+     axios.post(getURL,{
+            serialized: self.serialized
+        })
+        .then(function (response) {
+            //console.log(response);
+            self.rows = response.data
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+}
+function gUpdateRows(self) {
+    let getURL = self.apiurl+'/serialize';
+    //console.log(self.rows);
+    axios.post(getURL,{
+            object: self.rows
+        })
+        .then(function (response) {
+            //console.log(response);
+            self.serialized = response.data
+            self.$refs[self.refId].value = self.serialized
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+function gAddRow(event, self) {
+    event.preventDefault()
+    let row = {}
+    self.rows.push(row);
+}
+function gDeleteRow(event, self, row) {
+    event.preventDefault()
+    //alert('Delete ' + row)
+    self.rows.splice(row, 1)
+    self.updateRows()
+}
+
 createApp({
     data() {
         return {
             serialized: '',
             apiurl:'',
-            rows: [
-                {
-                    stamping:     '',
-                    white_price:  '',
-                    color_price:  '',
-                    screen_price: ''
-                }
-            ],
-            items: [{ message: 'Foo' }, { message: 'Bar' }]
+            rows: [],
+            refId: 'customisationsforcgwoogridbudgeteerstampingtypes'
         }
     },
     mounted: function () {
         
         let element     = this.$el;
         this.apiurl     = element.parentElement.dataset.apiurl;
-        this.serialized = this.$refs.customisationsforcgwoogridbudgeteerstampingtypes.value
+        this.serialized = this.$refs[this.refId].value
         
         this.buildTable(); 
 
     },
     methods: {
         buildTable: function () {
-            let self   = this;
-            let getURL = self.apiurl+'/encode';
-
-             axios.post(getURL,{
-                    serialized: self.serialized
-                })
-                .then(function (response) {
-                    //console.log(response);
-                    self.rows = response.data
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+            gBuildTable(this);
         },
-        updateStampings: function () {
-            let self   = this;
-            let getURL = self.apiurl+'/serialize';
-            console.log(self.rows);
-
-            axios.post(getURL,{
-                    object: self.rows
-                })
-                .then(function (response) {
-                    //console.log(response);
-                    self.serialized = response.data
-                    self.$refs.customisationsforcgwoogridbudgeteerstampingtypes.value = self.serialized
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+        updateRows: function () {
+            gUpdateRows(this)
         },
         addRow: function(event) {
-            event.preventDefault()
-            var self = this;
-
-            let row = {
-                stamping:     '',
-                white_price:  '',
-                color_price:  '',
-                screen_price: ''
-            }
-            self.rows.push(row);
+            gAddRow(event, this)
         },
         deleteRow(row, event) {
-            event.preventDefault()
-            var self = this;
-            //alert('Delete ' + row)
-            self.rows.splice(row, 1)
-            this.updateStampings()
+            gDeleteRow(event, this, row)
         }
     }
 }).mount('#formStamping')
@@ -89,78 +89,31 @@ createApp({
         return {
             serialized: '',
             apiurl:'',
-            rows: [
-                {
-                    min:      '',
-                    max:      '',
-                    quantity: ''
-                }
-            ],
+            rows: [],
+            refId: 'customisationsforcgwoogridbudgeteerprofittypes'
         }
     },
     mounted: function () {
         
         let element     = this.$el;
         this.apiurl     = element.parentElement.dataset.apiurl;
-        this.serialized = this.$refs.customisationsforcgwoogridbudgeteerprofittypes.value
+        this.serialized = this.$refs[this.refId].value
         
         this.buildTable(); 
 
     },
     methods: {
         buildTable: function () {
-            let self   = this;
-            let getURL = self.apiurl+'/encode';
-
-            if(self.serialized !== ''){
-
-             axios.post(getURL,{
-                    serialized: self.serialized
-                })
-                .then(function (response) {
-                    //console.log(response);
-                    self.rows = response.data
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-            }
+            gBuildTable(this);
         },
         updateRows: function () {
-            let self   = this;
-            let getURL = self.apiurl+'/serialize';
-            //console.log(self.rows);
-
-            axios.post(getURL,{
-                    object: self.rows
-                })
-                .then(function (response) {
-                    //console.log(response);
-                    self.serialized = response.data
-                    self.$refs.customisationsforcgwoogridbudgeteerprofittypes.value = self.serialized
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+            gUpdateRows(this)
         },
         addRow: function(event) {
-            event.preventDefault()
-            var self = this;
-
-            let row = {
-                stamping:     '',
-                white_price:  '',
-                color_price:  '',
-                screen_price: ''
-            }
-            self.rows.push(row);
+            gAddRow(event, this)
         },
         deleteRow(row, event) {
-            event.preventDefault()
-            var self = this;
-            //alert('Delete ' + row)
-            self.rows.splice(row, 1)
-            this.updateRows()
+            gDeleteRow(event, this, row)
         }
     }
 }).mount('#formProfit')

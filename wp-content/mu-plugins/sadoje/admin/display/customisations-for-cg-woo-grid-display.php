@@ -105,7 +105,7 @@
                                                         size="50"
                                                         v-model="row.stamping"
                                                         :name="'stamping['+index+']'"
-                                                        @input="updateStampings()"
+                                                        @input="updateRows()"
                                                     >
                                                 </th>
                                                 <th>
@@ -114,7 +114,7 @@
                                                         size="4"
                                                         v-model="row.white_price"
                                                         :name="'white_price['+index+']'"
-                                                        @input="updateStampings()"
+                                                        @input="updateRows()"
                                                     >
                                                 </th>
                                                 <th>
@@ -123,7 +123,7 @@
                                                         size="4"
                                                         v-model="row.color_price"
                                                         :name="'color_price['+index+']'"
-                                                        @input="updateStampings()"
+                                                        @input="updateRows()"
                                                     >
                                                 </th>
                                                 <th>
@@ -132,7 +132,7 @@
                                                         size="4"
                                                         v-model="row.screen_price"
                                                         :name="'screen_price['+index+']'"
-                                                        @input="updateStampings()"
+                                                        @input="updateRows()"
                                                     >
                                                 </th>
                                                 <th>
@@ -351,6 +351,23 @@
 
 						</div><!-- .inside -->
 					</div><!-- #settings-stamping -->
+
+                    <div id="settings-info"
+                        class="postbox"
+                    >
+                        <h2>
+                            <span><?php echo __('Texto informativo','sadoje'); ?></span>
+                        </h2>
+						<div class="inside">
+                            <form method="POST" action="options.php">  
+                                <?php 
+                                    settings_fields( 'customisations-for-cg-woo-grid_budgeteer_info' );
+                                    do_settings_sections( 'customisations-for-cg-woo-grid_budgeteer_info' ); 
+                                ?>       
+                                <?php submit_button(); ?>  
+                            </form> 
+						</div><!-- .inside -->
+					</div><!-- #settings-info -->
 
 
 				</div><!-- .meta-box-sortables .ui-sortable -->

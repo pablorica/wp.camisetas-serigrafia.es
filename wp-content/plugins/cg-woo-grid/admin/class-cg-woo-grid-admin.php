@@ -536,14 +536,15 @@ class Cg_Woo_Grid_Admin {
             );
         }
 
+        $attr_data = null;
+        $value     = $wp_data_value;
+        $after     = $args['after'] ?? '';
+
+
         switch ($args['type']) {
 
             case 'input':
 
-                $attr_data = null;
-                $value     = $wp_data_value;
-                $after     = $args['after'] ?? '';
-                
                 switch ($args['subtype']) {
 
                     case 'checkbox':
@@ -574,6 +575,7 @@ class Cg_Woo_Grid_Admin {
                         echo $radios.$after;
                     break;
                     default:
+
                         $prependStart = $prependEnd = null;
                         if(isset($args['prepend_value'])) {
                             $prependStart = '<div class="input-prepend"> 
@@ -587,10 +589,11 @@ class Cg_Woo_Grid_Admin {
                                                 '</span>';
                             $prependEnd   = '</div>';
                         }
-                        
+
                         $step        = (isset($args['step'])) ? 'step="'.$args['step'].'"' : '';
                         $min         = (isset($args['min'])) ? 'min="'.$args['min'].'"' : '';
                         $max         = (isset($args['max'])) ? 'max="'.$args['max'].'"' : '';
+                        $size        = (isset($args['size'])) ? 'size="'.$args['size'].'"' : 'size="40"';
                         $placeholder = (isset($args['placeholder'])) ? 'placeholder="'.$args['placeholder'].'"' : '';
                         $ref         = 'ref="'.
                             str_replace(
@@ -610,11 +613,9 @@ class Cg_Woo_Grid_Admin {
                                     '.$placeholder.' 
                                     '.$ref.' 
                                     '.$attr_data.'
-                                    size="40" 
+                                    '.$size.'
                                     value="' . esc_attr($value) . '"';
                         
-                        
-
                         if(isset($args['disabled'])){
                             // hide the actual input bc if it was just a disabled input the information saved in the database would be wrong - bc it would pass empty values and wipe the actual information
                             echo $prependStart.
@@ -642,14 +643,12 @@ class Cg_Woo_Grid_Admin {
                                     $prependEnd.
                                     $after;
                         }
-                        /*<input required="required" '.$disabled.' type="number" step="any" id="'.$this->plugin_name.'_cost2" name="'.$this->plugin_name.'_cost2" value="' . esc_attr( $cost ) . '" size="25" /><input type="hidden" id="'.$this->plugin_name.'_cost" step="any" name="'.$this->plugin_name.'_cost" value="' . esc_attr( $cost ) . '" />*/
                     break;
                 }
             break;
 
             case 'select':
                 
-                $after    = $args['after'] ?? '';
                 $options  = '<option disabled selected value> -- select an option -- </option>';
                 $selected = get_option($args['name']);
                 foreach($args['get_options_list'] as $value => $title) {
@@ -701,6 +700,26 @@ class Cg_Woo_Grid_Admin {
                         $prependEnd.
                         $after;
                 }
+            break;
+
+            case 'wp_editor':
+
+                $prependStart = $prependEnd = null;
+                if(isset($args['prepend_value'])) {
+                    $prependStart = '<div class="editor-prepend"> 
+                                        <span class="add-on">'.
+                                            $args['prepend_value'].
+                                        '</span>';
+                    $prependEnd   = '</div>';
+                }
+
+                echo $prependStart.
+                    wp_editor( $value, 
+                        $args['id'], 
+                        array()
+                    ).
+                    $prependEnd.
+                    $after;
             break;
 
             default:
