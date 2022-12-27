@@ -17,27 +17,36 @@
     <?php settings_errors(); ?>  
 
     <div id="poststuff">
-        <!-- Main settings -->
-		<div id="post-body" 
+
+
+        <div id="post-body" 
             class="columns-2 metabox-holder"
         >
-			<!-- main content -->
 			<div id="post-body-content">
-				<div class="meta-box-sortables ui-sortable">
+                <div class="meta-box-sortables ui-sortable">
 					<div id="settings-main" 
                         class="card"
                         style="margin-bottom:3rem"
                     >
-                            <form method="POST" 
-                                action="options.php"
-                            >  
-                                <?php 
-                                    settings_fields( 'customisations-for-cg-woo-grid_budgeteer_general' );
-                                    do_settings_sections( 'customisations-for-cg-woo-grid_budgeteer_general' ); 
-                                ?>             
-                                <?php submit_button(); ?>  
-                            </form> 
+                        <form method="POST" 
+                            action="options.php"
+                        >  
+                            <?php 
+                                settings_fields( 'customisations-for-cg-woo-grid_budgeteer_general' );
+                                do_settings_sections( 'customisations-for-cg-woo-grid_budgeteer_general' ); 
+                            ?>             
+                            <?php submit_button(); ?>  
+                        </form> 
 					</div><!-- .card -->
+                </div><!-- .meta-box-sortables .ui-sortable -->
+			</div><!-- #post-body-content-->
+		</div><!-- #post-body .metabox-holder .columns-2 -->
+		<br class="clear">
+       
+        <div id="post-body" 
+            class="columns-2 metabox-holder">
+            <div id="post-body-content">
+				<div class="meta-box-sortables ui-sortable">
 
                     <div id="settings-bagged"
                         class="postbox"
@@ -54,7 +63,7 @@
                                 <?php submit_button(); ?>  
                             </form> 
 						</div><!-- .inside -->
-					</div><!-- .postbox -->
+					</div><!-- #settings-bagged -->
 
                     <div id="settings-stamping"
                         class="postbox"
@@ -93,6 +102,7 @@
                                                 <th>
                                                     <input type="text" 
                                                         autocomplete="off"
+                                                        size="50"
                                                         v-model="row.stamping"
                                                         :name="'stamping['+index+']'"
                                                         @input="updateStampings()"
@@ -101,6 +111,7 @@
                                                 <th>
                                                     <input type="text" 
                                                         autocomplete="off"
+                                                        size="4"
                                                         v-model="row.white_price"
                                                         :name="'white_price['+index+']'"
                                                         @input="updateStampings()"
@@ -109,6 +120,7 @@
                                                 <th>
                                                     <input type="text" 
                                                         autocomplete="off"
+                                                        size="4"
                                                         v-model="row.color_price"
                                                         :name="'color_price['+index+']'"
                                                         @input="updateStampings()"
@@ -117,6 +129,7 @@
                                                 <th>
                                                     <input type="text" 
                                                         autocomplete="off"
+                                                        size="4"
                                                         v-model="row.screen_price"
                                                         :name="'screen_price['+index+']'"
                                                         @input="updateStampings()"
@@ -126,17 +139,24 @@
                                                     <button class="button button-secondary button-delete" 
                                                         style="background:#DC3232;color:#FFF;border-color:#FFF;"
                                                         @click="deleteRow(index, $event)"
-                                                    ><?php echo __('Borrar fila','sadoje'); ?></button>
+                                                    ><?php echo __('Borrar','sadoje'); ?></button>
                                                 </th>
                                         </tr>
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="5">
+                                                <p style="text-align:right">
+                                                    <button class="button button-secondary" 
+                                                        @click="addRow($event)"
+                                                    ><?php echo __('Añadir estampación','sadoje'); ?></button>
+                                                </p>
+                                            </th>
+                                        </tr>
+                                    </tfoot>
                                 </table>
 
-                                <p class="submit">
-                                    <button class="button button-secondary" 
-                                        @click="addRow($event)"
-                                    ><?php echo __('Añadir estampación','sadoje'); ?></button>
-                                </p>                                
+                                                                
 
                                 <?php submit_button(); ?>  
                             </form> 
@@ -241,16 +261,106 @@
                                     */
                                 </script>
 						</div><!-- .inside -->
-					</div><!-- .postbox -->
+					</div><!-- #settings-stamping -->
+
+
+                    <div id="settings-profit"
+                        class="postbox"
+                    >
+                        <h2>
+                            <span><?php echo __('Margen de beneficio por cantidades','sadoje'); ?></span>
+                        </h2>
+						<div class="inside">
+                            <form id="formProfit"
+                                method="POST" 
+                                action="options.php"
+                                data-apiurl = "<?php echo $urlspace; ?>"
+                            >
+                                <?php 
+                                    settings_fields( 'customisations-for-cg-woo-grid_budgeteer_profit' );
+                                    do_settings_sections( 'customisations-for-cg-woo-grid_budgeteer_profit' ); 
+                                ?>
+
+                                <table id="tableProfit"
+                                    class="widefat"
+                                >
+                                    <thead>
+                                        <tr>
+                                            <th class="row-title">Cantidad</th>
+                                            <th>Beneficio</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(row, index) in rows"
+                                            v-bind:id="'row_'+index" 
+                                            v-bind:class = "(index % 2 === 0)?'alternate':''"
+                                        >
+                                                <th>
+                                                    Desde
+                                                    <input type="number" 
+                                                        autocomplete="off"
+                                                        size="8"
+                                                        v-model="row.min"
+                                                        :name="'min['+index+']'"
+                                                        @input="updateRows()"
+                                                    >
+                                                    hasta
+                                                    <input type="number" 
+                                                        autocomplete="off"
+                                                        size="8"
+                                                        v-model="row.max"
+                                                        :name="'max['+index+']'"
+                                                        @input="updateRows()"
+                                                    >
+                                                </th>
+                                                <th>
+                                                    <input type="number" 
+                                                        autocomplete="off"
+                                                        size="4"
+                                                        v-model="row.quantity"
+                                                        :name="'quantity['+index+']'"
+                                                        @input="updateRows()"
+                                                    >
+                                                </th>
+                                                <th>
+                                                    <button class="button button-secondary button-delete" 
+                                                        style="background:#DC3232;color:#FFF;border-color:#FFF;"
+                                                        @click="deleteRow(index, $event)"
+                                                    ><?php echo __('Borrar','sadoje'); ?></button>
+                                                </th>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="5">
+                                                <p style="text-align:right">
+                                                    <button class="button button-secondary" 
+                                                        @click="addRow($event)"
+                                                    ><?php echo __('Añadir margen','sadoje'); ?></button>
+                                                </p>
+                                            </th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+
+                                                                
+
+                                <?php submit_button(); ?>  
+                            </form> 
+
+						</div><!-- .inside -->
+					</div><!-- #settings-stamping -->
 
 
 				</div><!-- .meta-box-sortables .ui-sortable -->
 			</div><!-- #post-body-content-->
-			<!-- sidebar -->
+
+            <!-- sidebar -->
 			<div id="postbox-container-1" 
                 class="postbox-container"
             >
-				<div class="meta-box-sortables">
+                <div class="meta-box-sortables">
 					<div class="postbox">
 						<h2 class="hndle">
                             <span><?php esc_html_e('Configuración','sadoje'); ?></span>
@@ -264,7 +374,9 @@
 						</div><!-- .inside -->
 					</div><!-- .postbox -->
 				</div><!-- .meta-box-sortables -->
-			</div><!-- #settings-main-postbox.postbox-container -->
+			</div><!-- #postbox-container-1.postbox-container -->
+
+			
 		</div><!-- #post-body .metabox-holder .columns-2 -->
 		<br class="clear">
     </div> <!-- #poststuff -->

@@ -29,7 +29,7 @@ createApp({
 
     },
     methods: {
-        buildTable: async function () {
+        buildTable: function () {
             let self   = this;
             let getURL = self.apiurl+'/encode';
 
@@ -50,17 +50,16 @@ createApp({
             console.log(self.rows);
 
             axios.post(getURL,{
-                object: self.rows
-            })
-            .then(function (response) {
-                console.log(response);
-                //self.rows = response.data
-                self.serialized = response.data
-                self.$refs.customisationsforcgwoogridbudgeteerstampingtypes.value = self.serialized
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+                    object: self.rows
+                })
+                .then(function (response) {
+                    //console.log(response);
+                    self.serialized = response.data
+                    self.$refs.customisationsforcgwoogridbudgeteerstampingtypes.value = self.serialized
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         },
         addRow: function(event) {
             event.preventDefault()
@@ -85,30 +84,83 @@ createApp({
 }).mount('#formStamping')
 
 
+createApp({
+    data() {
+        return {
+            serialized: '',
+            apiurl:'',
+            rows: [
+                {
+                    min:      '',
+                    max:      '',
+                    quantity: ''
+                }
+            ],
+        }
+    },
+    mounted: function () {
+        
+        let element     = this.$el;
+        this.apiurl     = element.parentElement.dataset.apiurl;
+        this.serialized = this.$refs.customisationsforcgwoogridbudgeteerprofittypes.value
+        
+        this.buildTable(); 
 
+    },
+    methods: {
+        buildTable: function () {
+            let self   = this;
+            let getURL = self.apiurl+'/encode';
 
+            if(self.serialized !== ''){
 
-function changeSelectValue(fieldID) {
+             axios.post(getURL,{
+                    serialized: self.serialized
+                })
+                .then(function (response) {
+                    //console.log(response);
+                    self.rows = response.data
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            }
+        },
+        updateRows: function () {
+            let self   = this;
+            let getURL = self.apiurl+'/serialize';
+            //console.log(self.rows);
 
-    console.log('changeSelectValue')
-    console.log(fieldID)
+            axios.post(getURL,{
+                    object: self.rows
+                })
+                .then(function (response) {
+                    //console.log(response);
+                    self.serialized = response.data
+                    self.$refs.customisationsforcgwoogridbudgeteerprofittypes.value = self.serialized
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        },
+        addRow: function(event) {
+            event.preventDefault()
+            var self = this;
 
-    let newValue = document.getElementById(fieldID +'_title').value;
-    let sel = document.getElementById(fieldID);
-    let str = sel.options[sel.selectedIndex].value;
-
-    var regex = /("(.*?)")/g;
-    var matches = str.match(regex);
-
-    if (matches) {
-        var lastMatch = matches[matches.length - 1];
-        str = str.replace( lastMatch,'"'+newValue+'"');
-        console.log(str)
-        sel.options[sel.selectedIndex].value = str
+            let row = {
+                stamping:     '',
+                white_price:  '',
+                color_price:  '',
+                screen_price: ''
+            }
+            self.rows.push(row);
+        },
+        deleteRow(row, event) {
+            event.preventDefault()
+            var self = this;
+            //alert('Delete ' + row)
+            self.rows.splice(row, 1)
+            this.updateRows()
+        }
     }
-}
-
-function changeTextValue(fieldID) {
-    let sel = document.getElementById(fieldID);
-    document.getElementById(fieldID +'_title').value = sel.options[sel.selectedIndex].text;
-}
+}).mount('#formProfit')
