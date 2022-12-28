@@ -102,6 +102,7 @@
             changeCookie: function() {
                 let self   = this;
                 window.$cookies.set("addsRegPrice",self.bagged);
+                //TODO this works, but it would be better to find a way to trigerr the update Total function using VUE elements , or tiny-emitter
                 document.getElementById("updateTotal").click();
             }
         }
