@@ -180,7 +180,8 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
             'title' => __("Precio de embolsado","sadoje").":",
             'args'  => array (
                 'type'             => 'input',
-                'subtype'          => 'text',
+                'subtype'          => 'number',
+                'step'             => 'any',
                 'id'               => $field_id,
                 'name'             => $field_id,
                 'required'         => '',

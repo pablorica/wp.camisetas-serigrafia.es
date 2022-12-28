@@ -28,6 +28,15 @@
 input[type="number"][size="4"]{ 
     width: 4em; 
 }
+input[type="number"][size="5"]{ 
+    width: 5em; 
+}
+input[type="number"][size="6"]{ 
+    width: 6em; 
+}
 input[type="number"][size="8"]{ 
     width: 8em; 
+}
+input[type="number"][size="10"]{ 
+    width: 10em; 
 }

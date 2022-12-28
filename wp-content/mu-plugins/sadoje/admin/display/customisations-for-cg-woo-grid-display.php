@@ -215,27 +215,33 @@
                                                         >
                                                     </th>
                                                     <th>
-                                                        <input type="text" 
+                                                        <input type="number" 
+                                                            step="0.05"
+                                                            min="0"
                                                             autocomplete="off"
-                                                            size="4"
+                                                            size="5"
                                                             v-model="row.white_price1"
                                                             :name="'white_price['+index+']'"
                                                             @input="updateRows()"
                                                         >
                                                     </th>
                                                     <th>
-                                                        <input type="text" 
+                                                        <input type="number" 
+                                                            step="0.05"
+                                                            min="0"
                                                             autocomplete="off"
-                                                            size="4"
+                                                            size="5"
                                                             v-model="row.color_price1"
                                                             :name="'color_price['+index+']'"
                                                             @input="updateRows()"
                                                         >
                                                     </th>
                                                     <th>
-                                                        <input type="text" 
+                                                        <input type="number" 
+                                                            step="0.05"
+                                                            min="0"
                                                             autocomplete="off"
-                                                            size="4"
+                                                            size="5"
                                                             v-model="row.screen_price1"
                                                             :name="'screen_price['+index+']'"
                                                             @input="updateRows()"
@@ -263,27 +269,33 @@
                                                         >
                                                     </th>
                                                     <th>
-                                                        <input type="text" 
+                                                        <input type="number" 
+                                                            step="0.05"
+                                                            min="0"
                                                             autocomplete="off"
-                                                            size="4"
+                                                            size="5"
                                                             v-model="row.white_price2"
                                                             :name="'white_price['+index+']'"
                                                             @input="updateRows()"
                                                         >
                                                     </th>
                                                     <th>
-                                                        <input type="text" 
+                                                        <input type="number" 
+                                                            step="0.05"
+                                                            min="0"
                                                             autocomplete="off"
-                                                            size="4"
+                                                            size="5"
                                                             v-model="row.color_price2"
                                                             :name="'color_price['+index+']'"
                                                             @input="updateRows()"
                                                         >
                                                     </th>
                                                     <th>
-                                                        <input type="text" 
+                                                        <input type="number" 
+                                                            step="0.05"
+                                                            min="0"
                                                             autocomplete="off"
-                                                            size="4"
+                                                            size="5"
                                                             v-model="row.screen_price2"
                                                             :name="'screen_price['+index+']'"
                                                             @input="updateRows()"
