@@ -190,6 +190,7 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
                 'wp_data'          => 'option',
                 'class'            => 'alternate',
                 'size'             => '10',
+                'after'            => ' <em>'.__('Este precio se sumará a cada uno de los productos','sadoje').'</em>',
             )
         );
         $field_id = $this->get_element_name().'_budgeteer_bagged_title';

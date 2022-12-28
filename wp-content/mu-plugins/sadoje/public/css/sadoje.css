@@ -1,3 +1,6 @@
+.cdg_box *:focus {
+  outline: none;
+}
 .cdg_box table.cdg_table {
   width: 100%;
 }
@@ -40,6 +43,11 @@
   height: 42px;
   padding: 6px 12px;
   width: 100%;
+}
+.cdg_box table.cdg_table td.cdg_radio label,
+.cdg_box table.cdg_table td.cdg_radio small {
+  display: inline-block;
+  padding-right: 15px;
 }
 
 /**

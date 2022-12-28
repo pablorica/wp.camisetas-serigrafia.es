@@ -45,7 +45,7 @@ abstract class Sadoje_Singleton {
 	protected function __construct() {
         //Initialize all the basics components of the plugin
         $this->plugin_name = 'sadoje';
-        $this->version = '0.5.0';
+        $this->version = '0.6.11';
 
         //set the variable for the example endpoint. you can use a option plugin to store it and change it later in the admin page
         $this->plugin_url  = str_replace(

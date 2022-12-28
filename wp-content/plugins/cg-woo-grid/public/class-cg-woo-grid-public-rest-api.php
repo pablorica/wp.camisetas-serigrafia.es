@@ -204,10 +204,14 @@ class Rest_Api {
                     }
                     $gridattributes[$nk]['x'][] = array($attr['attribute_'.$tax_x_slug], $quantity);
     
-                    $miprecio = (float) $single_variation->get_price();
+                    //$miprecio = (float) $single_variation->get_price();
                     $numberofprods += $quantity;
 
-                    $uprice = (float) $single_variation->get_regular_price();
+                    //$uprice = (float) $single_variation->get_regular_price();
+                    $uprice = apply_filters( 
+                        'cg-woo-grid_get_regular_price', 
+                        $single_variation->get_regular_price()
+                    );
 
                     $price  += $quantity * $uprice;
                     
@@ -502,7 +506,10 @@ class Rest_Api {
             array(
                 // By using this constant we ensure that when the \WP_REST_Server changes our readable endpoints will work as intended.
                 'methods'  => \WP_REST_Server::CREATABLE,
-                'callback' => array( $this, 'update_total_box')
+                'callback' => array( 
+                    $this, 
+                    'update_total_box'
+                )
             )
         ); 
         //https://local.camisetas-serigrafia.wp.es/wp-json/cg-woo-grid/v1/updatetotalbox

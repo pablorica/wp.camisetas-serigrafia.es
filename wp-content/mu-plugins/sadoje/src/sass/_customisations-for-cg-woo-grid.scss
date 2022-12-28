@@ -1,4 +1,8 @@
 .cdg_box {
+    *:focus {
+        outline: none;
+    }
+    
 	table.cdg_table {
 		width: 100%;
 		 th {
@@ -41,6 +45,13 @@
 					padding: 6px 12px;
 					width: 100%;
 				}
+            }
+            &.cdg_radio {
+                label,
+                small {
+                    display: inline-block;
+                    padding-right: 15px;
+                }
             }
         }
     }

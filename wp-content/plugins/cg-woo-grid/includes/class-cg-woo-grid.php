@@ -94,7 +94,8 @@ class Cg_Woo_Grid
         }
         $this->vue_version = '3.2.45';
 
-        $this->axios_filepath = "https://unpkg.com/axios/dist/axios.min.js";
+        $this->axios_filepath      = "https://unpkg.com/axios/dist/axios.min.js";
+        $this->vuecookies_filepath = "https://unpkg.com/vue-cookies@1.8.2/vue-cookies.js";
 
 		$this->load_dependencies();
         $this->define_global_hooks();
@@ -118,10 +119,20 @@ class Cg_Woo_Grid
             $this->vue_version, 
             false
         );
-        //then axios.js 
+        //axios.js 
         wp_enqueue_script( 
             $this->plugin_name.'-axios',  
             $this->axios_filepath,
+            array(
+                $this->plugin_name.'-vue'
+            ), 
+            '', 
+            false
+        );
+        //vue-cookies
+        wp_enqueue_script( 
+            $this->plugin_name.'-vuecookies',  
+            $this->vuecookies_filepath,
             array(
                 $this->plugin_name.'-vue'
             ), 

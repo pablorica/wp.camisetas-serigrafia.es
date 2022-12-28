@@ -319,7 +319,6 @@
 
                                 <hr/>
 
-
                                 <table id="tableStampingWording"
                                     class="widefat"
                                 >
@@ -335,14 +334,13 @@
                                     <tbody>
                                         <tr class="alternate">
                                             <th class="row-title">
-                                                <strong><?php _e('Titulo 1','sadoje'); ?></strong><br/>
+                                                <strong><?php _e('Titulo Tipos','sadoje'); ?></strong><br/>
                                             </th>
                                             <td>
                                                 <input type="text" 
                                                     autocomplete="off"
                                                     size="40"
                                                     v-model="wording.title1"
-                                                    :name="'title1['+index+']'"
                                                     @input="updateWording()"
                                                 >
                                             </td>
@@ -356,7 +354,6 @@
                                                     autocomplete="off"
                                                     size="40"
                                                     v-model="wording.defaultSelect1"
-                                                    :name="'titleRear1['+index+']'"
                                                     @input="updateWording()"
                                                 >
                                             </td>
@@ -372,7 +369,6 @@
                                                     autocomplete="off"
                                                     size="40"
                                                     v-model="wording.titleFront1"
-                                                    :name="'titleFront1['+index+']'"
                                                     @input="updateWording()"
                                                 >
                                             </td>
@@ -386,21 +382,19 @@
                                                     autocomplete="off"
                                                     size="40"
                                                     v-model="wording.titleRear1"
-                                                    :name="'titleRear1['+index+']'"
                                                     @input="updateWording()"
                                                 >
                                             </td>
                                         </tr>
                                         <tr>
                                             <th class="row-title">
-                                                <strong><?php _e('Titulo 2','sadoje'); ?></strong><br/>
+                                                <strong><?php _e('Titulo Áreas','sadoje'); ?></strong><br/>
                                             </th>
                                             <td colspan="3">
                                                 <input type="text" 
                                                     autocomplete="off"
                                                     size="40"
                                                     v-model="wording.title2"
-                                                    :name="'title2['+index+']'"
                                                     @input="updateWording()"
                                                 >
                                             </td>
@@ -416,7 +410,6 @@
                                                     autocomplete="off"
                                                     size="40"
                                                     v-model="wording.titleFront2"
-                                                    :name="'titleFront2['+index+']'"
                                                     @input="updateWording()"
                                                 >
                                             </td>
@@ -430,7 +423,6 @@
                                                     autocomplete="off"
                                                     size="40"
                                                     v-model="wording.titleRear2"
-                                                    :name="'titleRear2['+index+']'"
                                                     @input="updateWording()"
                                                 >
                                             </td>
@@ -446,7 +438,6 @@
                                                     autocomplete="off"
                                                     size="40"
                                                     v-model="wording.defaultSelect2"
-                                                    :name="'titleRear1['+index+']'"
                                                     @input="updateWording()"
                                                 >
                                             </td>
@@ -460,7 +451,6 @@
                                                     autocomplete="off"
                                                     size="40"
                                                     v-model="wording.disabledSelect2"
-                                                    :name="'titleRear1['+index+']'"
                                                     @input="updateWording()"
                                                 >
                                             </td>
@@ -470,106 +460,6 @@
 
                                 <?php submit_button(); ?>  
                             </form> 
-
-
-                                
-                                <p><tt id="results"></tt></p>
-
-
-                                <script>
-                                
-
-                                //TODO : Rewrite all this is VUE. Rows cannot be deleted via jQUery if they are loaded dinamycally, This can be solved via VUE
-                                /*
-                                    (function($) {
-
-                                        function showValues($form) {
-                                            console.log('showValues',$form)
-                                            var str = $form.serialize();
-                                            $( "#results" ).text( str );
-                                        }
-
-                                        function removeStampingRow(rowKey) {
-                                            $("form#formStamping #row_"+rowKey).remove();
-                                            alert("form#formStamping #row_"+rowKey)
-                                        }
-
-                                        function addStampingRow(element, $tbody, $int) {
-                                            let classRow = ''
-                                            if(int % 2 == 0) {
-                                                classRow = 'alternate'
-                                            }
-
-                                            stampingValue = ""
-                                            whitePriceValue = ""
-                                            colorPriceValue = ""
-                                            screenPriceValue = ""
-                                            if(element) {
-                                                stampingValue = "value=\""+element.stamping+"\""
-                                                whitePriceValue = "value=\""+element.white_price+"\""
-                                                colorPriceValue = "value=\""+element.color_price+"\""
-                                                screenPriceValue = "value=\""+element.screen_price+"\""
-                                            }
-
-                                            // Append text nodes to the cell
-                                            //let newText = document.createTextNode(element.stamping);
-                                            let stampingInput = "<th><input type=\"text\" id=\"stamping["+int+"]\" name=\"stamping["+int+"]\" "+stampingValue+" /></th>";
-                                            let whitePriceInput = "<th><input type=\"text\" id=\"white_price["+int+"]\" name=\"white_price["+int+"]\""+whitePriceValue+" /></th>";
-                                            let colorPriceInput = "<th><input type=\"text\" id=\"color_price["+int+"]\" name=\"color_price["+int+"]\" "+colorPriceValue+" /></th>";
-                                            let screenPriceInput = "<th><input type=\"text\" id=\"screen_price["+int+"]\" name=\"screen_price["+int+"]\" "+screenPriceValue+" /></th>";
-                                            let deleteRow = "<th><button data-row='"+int+"' class='button button-secondary button-delete' style='background:#DC3232;color:#FFF;border-color:#FFF;'>Delete Row</button></th>";
-
-                                            let $newRow = $("<tr id=\"row_"+int+"\" class=\""+classRow+"\">"
-                                                + stampingInput
-                                                + whitePriceInput
-                                                + colorPriceInput
-                                                + screenPriceInput
-                                                + deleteRow
-                                                + "</tr>"
-                                            );
-                                            //console.log($newRow);
-                                            $tbody.append($newRow);
-                                        }
-
-                                        const stampingsObj = JSON.parse(
-                                            document
-                                            .getElementById(
-                                                'customisations-for-cg-woo-grid_budgeteer_stamping_types'
-                                            )
-                                            .dataset.json
-                                        );
-
-                                        //console.log(stampingsObj);
-                                        let $tbody = $('table#tableStamping tbody');
-                                        let int = 0;
-                                        stampingsObj.forEach(element => {
-                                            addStampingRow(element, $tbody, int++)
-                                        });
-
-                                        $("form#formStamping button#addRow")
-                                        .click(function(event ) {
-                                            event.preventDefault();
-                                            addStampingRow('', $tbody, int++)
-                                        });
-                                        $( "form#formStamping button.button-delete" )
-                                        .on( "click", function( event ) {
-                                            event.preventDefault();
-                                            const $row = $(this).closest('tr')
-                                            $row.remove();
-                                        });
-
-                                        $( "form#formStamping" ).on( "submit", function( event ) {
-                                            event.preventDefault();
-                                            showValues($('form#formStamping'))
-                                        });
-
-                                        showValues($('form#formStamping'));
-
-                                        
-
-                                    })( jQuery );
-                                    */
-                                </script>
 						</div><!-- .inside -->
 					</div><!-- #settings-stamping -->
 

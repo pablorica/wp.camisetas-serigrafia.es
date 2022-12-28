@@ -1,12 +1,13 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('vue')) :
-    typeof define === 'function' && define.amd ? define(['exports', 'vue'], factory) :
-    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.bundle = {}, global.Vue));
-})(this, (function (exports, Vue) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('vue'), require('vue-cookies')) :
+    typeof define === 'function' && define.amd ? define(['exports', 'vue', 'vue-cookies'], factory) :
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.bundle = {}, global.Vue, global.VueCookies));
+})(this, (function (exports, Vue, VueCookies) { 'use strict';
 
     function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
     var Vue__default = /*#__PURE__*/_interopDefaultLegacy(Vue);
+    var VueCookies__default = /*#__PURE__*/_interopDefaultLegacy(VueCookies);
 
     const consoleHello = message => {
       console.log(message);
@@ -33,37 +34,262 @@
     console.log('customisations-for-cg-woo-grid: VUE Test loaded');
 
     var script = {
-      name: 'counter',
-      data() {
-        return {
-          // Initialized to zero to begin
-          count: 0,
-        }
-      },
-      methods: {
-        increment() {
-          this.count += 1;
+        name: 'budgeteer',
+        data() {
+            return {
+                apiurl:        '',
+                serwording:    '',
+                wording:       {},
+                serialized:    '',
+                rows:          [],
+                indexFront:    '',
+                indexRear:     '',
+                bagged:         0,
+                baggedtitle:   '',
+                baggedwording: '',
+            }
         },
-        decrement() {
-          this.count -= 1;
+        mounted: function () {
+            
+            let element        = this.$el;
+            this.apiurl        = element.parentElement.dataset.apiurl;
+            this.serialized    = element.parentElement.dataset.serialized;
+            this.serwording    = element.parentElement.dataset.wording;
+
+            this.baggedprice   = element.parentElement.dataset.baggedprice;
+            this.baggedtitle   = element.parentElement.dataset.baggedtitle;
+            this.baggedwording = element.parentElement.dataset.baggedwording;
+            
+            this.buildBugeteer(); 
+            //this.$cookie.set("keyName", keyValue, "expiring time")
+            //$cookies.set(keyName, value[, expires[, path[, domain[, secure[, sameSite]]]]])
+            window.$cookies.set("addsRegPrice","",0);
+        },
+        methods: {
+
+            buildBugeteer: function() {
+                let self   = this;
+                let getURL = self.apiurl+'/encode';
+
+                if(self.serialized !== ''){
+
+                    axios.post(getURL,{
+                            serialized: self.serialized
+                        })
+                        .then(function (response) {
+                            //console.log(response);
+                            self.rows = response.data;
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                }
+
+                if(self.serwording !== ''){
+
+                    axios.post(getURL,{
+                            serialized: self.serwording
+                        })
+                        .then(function (response) {
+                            //console.log(response);
+                            self.wording = response.data;
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                }
+            },
+            changeCookie: function() {
+                let self   = this;
+                window.$cookies.set("addsRegPrice",self.bagged);
+                document.getElementById("updateTotal").click();
+            }
         }
-      }
     };
 
+    const _hoisted_1 = { class: "cdg_table" };
+    const _hoisted_2 = /*#__PURE__*/Vue.createElementVNode("span", { class: "cdg_alert" }, "1", -1 /* HOISTED */);
+    const _hoisted_3 = /*#__PURE__*/Vue.createElementVNode("br", null, null, -1 /* HOISTED */);
+    const _hoisted_4 = { value: "" };
+    const _hoisted_5 = ["value", "innerHTML"];
+    const _hoisted_6 = /*#__PURE__*/Vue.createElementVNode("br", null, null, -1 /* HOISTED */);
+    const _hoisted_7 = { value: "" };
+    const _hoisted_8 = ["value", "innerHTML"];
+    const _hoisted_9 = /*#__PURE__*/Vue.createElementVNode("div", { style: {"clear":"both","float":"none"} }, null, -1 /* HOISTED */);
+    const _hoisted_10 = /*#__PURE__*/Vue.createElementVNode("span", { class: "cdg_alert" }, "2", -1 /* HOISTED */);
+    const _hoisted_11 = /*#__PURE__*/Vue.createElementVNode("br", null, null, -1 /* HOISTED */);
+    const _hoisted_12 = ["disabled"];
+    const _hoisted_13 = {
+      key: 0,
+      value: ""
+    };
+    const _hoisted_14 = { value: "" };
+    const _hoisted_15 = ["innerHTML"];
+    const _hoisted_16 = ["innerHTML"];
+    const _hoisted_17 = /*#__PURE__*/Vue.createElementVNode("br", null, null, -1 /* HOISTED */);
+    const _hoisted_18 = ["disabled"];
+    const _hoisted_19 = {
+      key: 0,
+      value: ""
+    };
+    const _hoisted_20 = { value: "" };
+    const _hoisted_21 = ["innerHTML"];
+    const _hoisted_22 = ["innerHTML"];
+    const _hoisted_23 = /*#__PURE__*/Vue.createElementVNode("div", { style: {"clear":"both","float":"none"} }, null, -1 /* HOISTED */);
+    const _hoisted_24 = /*#__PURE__*/Vue.createElementVNode("span", { class: "cdg_alert" }, "3", -1 /* HOISTED */);
+    const _hoisted_25 = { class: "cdg_radio" };
+    const _hoisted_26 = ["value"];
+    const _hoisted_27 = /*#__PURE__*/Vue.createElementVNode("label", { for: "yes" }, "Si", -1 /* HOISTED */);
+    const _hoisted_28 = /*#__PURE__*/Vue.createElementVNode("label", { for: "no" }, "No", -1 /* HOISTED */);
+    const _hoisted_29 = ["innerHTML"];
+
     function render(_ctx, _cache, $props, $setup, $data, $options) {
-      return (Vue.openBlock(), Vue.createElementBlock("div", null, [
-        Vue.createTextVNode(Vue.toDisplayString($data.count) + " ", 1 /* TEXT */),
-        Vue.createElementVNode("button", {
-          onClick: _cache[0] || (_cache[0] = (...args) => ($options.decrement && $options.decrement(...args)))
-        }, "-"),
-        Vue.createElementVNode("button", {
-          onClick: _cache[1] || (_cache[1] = (...args) => ($options.increment && $options.increment(...args)))
-        }, "+")
+      return (Vue.openBlock(), Vue.createElementBlock("table", _hoisted_1, [
+        Vue.createElementVNode("tbody", null, [
+          Vue.createElementVNode("tr", null, [
+            Vue.createElementVNode("th", null, [
+              _hoisted_2,
+              Vue.createTextVNode(Vue.toDisplayString($data.wording.title1), 1 /* TEXT */)
+            ]),
+            Vue.createElementVNode("td", null, [
+              Vue.createElementVNode("div", null, [
+                Vue.createElementVNode("b", null, Vue.toDisplayString($data.wording.titleFront1), 1 /* TEXT */),
+                _hoisted_3,
+                Vue.withDirectives(Vue.createElementVNode("select", {
+                  id: "estampado_delantero",
+                  name: "estampado_delantero",
+                  "onUpdate:modelValue": _cache[0] || (_cache[0] = $event => (($data.indexFront) = $event))
+                }, [
+                  Vue.createElementVNode("option", _hoisted_4, Vue.toDisplayString($data.wording.defaultSelect1), 1 /* TEXT */),
+                  (Vue.openBlock(true), Vue.createElementBlock(Vue.Fragment, null, Vue.renderList($data.rows, (row, index) => {
+                    return (Vue.openBlock(), Vue.createElementBlock("option", {
+                      value: index,
+                      innerHTML: row.stamping
+                    }, null, 8 /* PROPS */, _hoisted_5))
+                  }), 256 /* UNKEYED_FRAGMENT */))
+                ], 512 /* NEED_PATCH */), [
+                  [Vue.vModelSelect, $data.indexFront]
+                ])
+              ]),
+              Vue.createElementVNode("div", null, [
+                Vue.createElementVNode("b", null, Vue.toDisplayString($data.wording.titleRear1), 1 /* TEXT */),
+                _hoisted_6,
+                Vue.withDirectives(Vue.createElementVNode("select", {
+                  id: "estampado_trasero",
+                  name: "estampado_trasero",
+                  "onUpdate:modelValue": _cache[1] || (_cache[1] = $event => (($data.indexRear) = $event))
+                }, [
+                  Vue.createElementVNode("option", _hoisted_7, Vue.toDisplayString($data.wording.defaultSelect1), 1 /* TEXT */),
+                  (Vue.openBlock(true), Vue.createElementBlock(Vue.Fragment, null, Vue.renderList($data.rows, (row, index) => {
+                    return (Vue.openBlock(), Vue.createElementBlock("option", {
+                      value: index,
+                      innerHTML: row.stamping
+                    }, null, 8 /* PROPS */, _hoisted_8))
+                  }), 256 /* UNKEYED_FRAGMENT */))
+                ], 512 /* NEED_PATCH */), [
+                  [Vue.vModelSelect, $data.indexRear]
+                ])
+              ]),
+              _hoisted_9
+            ])
+          ]),
+          Vue.createElementVNode("tr", null, [
+            Vue.createElementVNode("th", null, [
+              _hoisted_10,
+              Vue.createTextVNode(Vue.toDisplayString($data.wording.title2), 1 /* TEXT */)
+            ]),
+            Vue.createElementVNode("td", null, [
+              Vue.createElementVNode("div", {
+                class: Vue.normalizeClass((Number.isInteger($data.indexFront)? '' : 'disabled'))
+              }, [
+                Vue.createElementVNode("b", null, Vue.toDisplayString($data.wording.titleFront2), 1 /* TEXT */),
+                _hoisted_11,
+                Vue.createElementVNode("select", {
+                  id: "tamano_delantero",
+                  name: "tamano_delantero",
+                  disabled: !Number.isInteger($data.indexFront)
+                }, [
+                  (!Number.isInteger($data.indexFront))
+                    ? (Vue.openBlock(), Vue.createElementBlock("option", _hoisted_13, Vue.toDisplayString($data.wording.disabledSelect2), 1 /* TEXT */))
+                    : Vue.createCommentVNode("v-if", true),
+                  (Number.isInteger($data.indexFront))
+                    ? (Vue.openBlock(), Vue.createElementBlock(Vue.Fragment, { key: 1 }, [
+                        Vue.createElementVNode("option", _hoisted_14, Vue.toDisplayString($data.wording.defaultSelect2), 1 /* TEXT */),
+                        Vue.createElementVNode("option", {
+                          innerHTML: $data.rows[$data.indexFront].area1
+                        }, null, 8 /* PROPS */, _hoisted_15),
+                        Vue.createElementVNode("option", {
+                          innerHTML: $data.rows[$data.indexFront].area2
+                        }, null, 8 /* PROPS */, _hoisted_16)
+                      ], 64 /* STABLE_FRAGMENT */))
+                    : Vue.createCommentVNode("v-if", true)
+                ], 8 /* PROPS */, _hoisted_12)
+              ], 2 /* CLASS */),
+              Vue.createElementVNode("div", {
+                class: Vue.normalizeClass((Number.isInteger($data.indexRear)? '' : 'disabled'))
+              }, [
+                Vue.createElementVNode("b", null, Vue.toDisplayString($data.wording.titleRear2), 1 /* TEXT */),
+                _hoisted_17,
+                Vue.createElementVNode("select", {
+                  id: "tamano_trasero",
+                  name: "tamano_trasero",
+                  disabled: !Number.isInteger($data.indexRear)
+                }, [
+                  (!Number.isInteger($data.indexRear))
+                    ? (Vue.openBlock(), Vue.createElementBlock("option", _hoisted_19, Vue.toDisplayString($data.wording.disabledSelect2), 1 /* TEXT */))
+                    : Vue.createCommentVNode("v-if", true),
+                  (Number.isInteger($data.indexRear))
+                    ? (Vue.openBlock(), Vue.createElementBlock(Vue.Fragment, { key: 1 }, [
+                        Vue.createElementVNode("option", _hoisted_20, Vue.toDisplayString($data.wording.defaultSelect2), 1 /* TEXT */),
+                        Vue.createElementVNode("option", {
+                          innerHTML: $data.rows[$data.indexRear].area1
+                        }, null, 8 /* PROPS */, _hoisted_21),
+                        Vue.createElementVNode("option", {
+                          innerHTML: $data.rows[$data.indexRear].area2
+                        }, null, 8 /* PROPS */, _hoisted_22)
+                      ], 64 /* STABLE_FRAGMENT */))
+                    : Vue.createCommentVNode("v-if", true)
+                ], 8 /* PROPS */, _hoisted_18)
+              ], 2 /* CLASS */),
+              _hoisted_23
+            ])
+          ]),
+          Vue.createElementVNode("tr", null, [
+            Vue.createElementVNode("th", null, [
+              _hoisted_24,
+              Vue.createTextVNode(" " + Vue.toDisplayString($data.baggedtitle), 1 /* TEXT */)
+            ]),
+            Vue.createElementVNode("td", _hoisted_25, [
+              Vue.withDirectives(Vue.createElementVNode("input", {
+                type: "radio",
+                id: "yes",
+                value: _ctx.baggedprice,
+                "onUpdate:modelValue": _cache[2] || (_cache[2] = $event => (($data.bagged) = $event)),
+                onChange: _cache[3] || (_cache[3] = $event => ($options.changeCookie()))
+              }, null, 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_26), [
+                [Vue.vModelRadio, $data.bagged]
+              ]),
+              _hoisted_27,
+              Vue.withDirectives(Vue.createElementVNode("input", {
+                type: "radio",
+                id: "no",
+                value: "0",
+                "onUpdate:modelValue": _cache[4] || (_cache[4] = $event => (($data.bagged) = $event)),
+                onChange: _cache[5] || (_cache[5] = $event => ($options.changeCookie()))
+              }, null, 544 /* HYDRATE_EVENTS, NEED_PATCH */), [
+                [Vue.vModelRadio, $data.bagged]
+              ]),
+              _hoisted_28,
+              Vue.createTextVNode("   "),
+              Vue.createElementVNode("small", { innerHTML: $data.baggedwording }, null, 8 /* PROPS */, _hoisted_29)
+            ])
+          ])
+        ])
       ]))
     }
 
     script.render = render;
-    script.__file = "src/js/templates/Test.vue";
+    script.__file = "src/js/templates/Budgeteer.vue";
 
     var tinyEmitter = {exports: {}};
 
@@ -147,14 +373,8 @@
       //loadingif:     LOADING_GIF,
     };
 
-    (function ($) {
-      $(window).on('load', function () {
-        if ($("#appTest").length) {
-          console.log('customisations-for-cg-woo-grid: Loading VUE Test');
-          Vue__default["default"].createApp(script).mount('#appTest');
-        }
-      });
-    })(jQuery);
+    //const appTest      = Vue.createApp(Test).mount('#appTest')
+    Vue__default["default"].createApp(script).use(VueCookies__default["default"]).mount('#appBudgeteer');
 
     exports.config = config;
     exports.emitter = emitter;

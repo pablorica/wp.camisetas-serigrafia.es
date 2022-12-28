@@ -185,7 +185,6 @@ export default {
 
 	        },
             populateBox: function (response) {
-
                 var self     = this;
                 self.loading = false;
 
@@ -197,7 +196,6 @@ export default {
                     self.loading = true;
                 }
                 
-
                 //console.log('populateBox');
                 //console.log(response)
                 // for(var rkey in response){

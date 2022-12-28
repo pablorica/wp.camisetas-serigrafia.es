@@ -1,6 +1,10 @@
 //vue libraries are already loaded by cg-woo-grid plugin
 import Vue from 'vue'
+import VueCookies from 'vue-cookies'
+// default options config: { expires: '1d', path: '/', domain: '', secure: '', sameSite: 'Lax' }
+
 import Test from './templates/Test.vue';
+import Budgeteer from './templates/Budgeteer.vue';
 
 import Emitter from 'tiny-emitter';
 
@@ -15,12 +19,6 @@ export const config = {
     //loadingif:     LOADING_GIF,
 };
 
+//const appTest      = Vue.createApp(Test).mount('#appTest')
+const appBudgeteer = Vue.createApp(Budgeteer).use(VueCookies).mount('#appBudgeteer')
 
-(function($) {
-    $(window).on('load', function() {
-        if($("#appTest").length){
-            console.log('customisations-for-cg-woo-grid: Loading VUE Test')
-            const app = Vue.createApp(Test).mount('#appTest')
-        }
-    });
-})( jQuery );

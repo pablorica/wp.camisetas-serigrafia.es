@@ -9,7 +9,9 @@ import Emitter from 'tiny-emitter';
 
 console.log('VUE Main loaded')
 
+
 export var emitter = new Emitter();
+
 export const config = {
     api: {
         index: REST_POSTS_URL
@@ -35,33 +37,8 @@ export const config = {
 };
 
 
-(function($) {
-    $(window).on('load', function() {
-        if($("#appTest").length){
-            console.log('Loading VUE Test')
-            //const app = Vue.createApp(Test).mount('#appTest')
-        }
-
-        if($("#appTotalBox").length){
-            console.log('Loading VUE TotalBox')
-            const app = Vue.createApp(TotalBox).mount('#appTotalBox')
-        }
-
-        if($("#appMatrix").length){
-            console.log('Loading VUE Matrix')
-            const app = Vue.createApp(Matrix).mount('#appMatrix')
-        }
-
-        if($("#appBar").length){
-            console.log('Loading VUE ItemsBar')
-            const app = Vue.createApp(ItemsBar).mount('#appBar')
-        }
-
-        if($("#appPopUp").length){
-            console.log('Loading VUE PopUp')
-            const app = Vue.createApp(PopUp).mount('#appPopUp')
-        }
-
-
-    });
-})( jQuery );
+//const appTest = Vue.createApp(Test).mount('#appTest')
+const appTotalBox = Vue.createApp(TotalBox).mount('#appTotalBox')
+const appMatrix   = Vue.createApp(Matrix).mount('#appMatrix')
+const appBar      = Vue.createApp(ItemsBar).mount('#appBar')
+const appPopUp    = Vue.createApp(PopUp).mount('#appPopUp')

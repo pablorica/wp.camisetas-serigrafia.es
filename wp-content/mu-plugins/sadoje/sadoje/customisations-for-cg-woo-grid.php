@@ -26,19 +26,17 @@ class Customisations_For_Cg_Woo_Grid extends Sadoje_Singleton {
         //TODO: Check if cg-woo-grid is enabled before init()!!!!!
          
         $this->get_element_name();
-        $this->add_actions();
-      //$this->add_filters();
+        //$this->add_actions();
+        //$this->add_filters();
         $this->load_dependencies();
         $this->define_admin_hooks();
+        $this->define_public_hooks();
     }
 
     /**** Plugin methods ****/
 
     private function add_actions()
     {
-
-
-
         // add_action( 
         //     'wp_loaded', 
         //     array( 
@@ -46,21 +44,11 @@ class Customisations_For_Cg_Woo_Grid extends Sadoje_Singleton {
         //         'hello_world' 
         //     )
         // );
-
-
-        add_action( 
-            'woocommerce_after_single_product_summary', 
-            array( 
-                $this, 
-                'cdg_budgeteer' 
-            ),
-            18
-        );
     }
 
     private function add_filters()
     {
-
+        //
 
     }
 
@@ -99,7 +87,7 @@ class Customisations_For_Cg_Woo_Grid extends Sadoje_Singleton {
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
-        //require_once CG_WOOGRID_PATH . '/public/class-cg-woo-grid-public.php';
+        require_once $this->plugin_path. 'public/'.$this->element_name.'-public.php';
 
 	}
 
@@ -154,48 +142,41 @@ class Customisations_For_Cg_Woo_Grid extends Sadoje_Singleton {
 
 	}
 
-	
-
-    /** ** ** ** ** ** **
-     ** ** FRONTEND ** **
-     ** ** ** ** ** ** **/
-
-     /**
-	 * Hello World (for testing purposes)
-	 *
-	 * @access public
-	 * @return void
-	 */
-	public function hello_world() {
-        error_log('Hello World!');
-        echo "<h1>Hello World!</h1>";
-        error_log($this->plugin_url.' '.$this->plugin_path);
-	}
-
-
     /**
-	 * Build the products attributes grid
+	 * Register all of the hooks related to the frontend
+	 * of the plugin.
 	 *
 	 * @since    1.0.0
-     * 
-     * @return void || WP_Error
+	 * @access   private
 	 */
-    function cdg_budgeteer() {
+	private function define_public_hooks() {
 
-        //error_log('cdg_budgeteer -> Element Name: '.$this->get_element_name());
+		$plugin_public = new Customisations_For_Cg_Woo_Grid_Public();
 
-        $args = array();
-        
-        if( null !== get_queried_object_id()) {
-            //$args['product'] = wc_get_product(get_queried_object_id());
-            include_once $this->plugin_path.'public/'.$this->element_name.'-display.php'; 
-        } else {
-            // If the code somehow executes to here something bad happened return a 500.
-            return new \WP_Error( 
-                $this->element_name.'_error', 
-                esc_html__( 'Something went wrong', "cg-woo-grid" ), 
-                array( 'status' => 500 ) 
-            );
-        }
+        add_action( 
+            'woocommerce_after_single_product_summary', 
+            array( 
+                $plugin_public, 
+                'cdg_budgeteer' 
+            ),
+            18
+        );
+
+        // add_action( 
+        //     'wp_loaded', 
+        //     array( 
+        //         $plugin_public, 
+        //         'hello_world' 
+        //     )
+        // );
+
+        add_filter( 
+            'cg-woo-grid_get_regular_price', 
+            array( 
+                $plugin_public, 
+                'cdg_alter_regular_price' 
+            ),
+            100
+        );
     }
 }

@@ -18,6 +18,7 @@
         </div><!-- /.row -->
     </div><!-- /.container -->
 
+    <button id="updateTotal" @click="updateTotal">Click me</button>
     <form id="matrixGrid" 
         ref="matrixForm"
     >
@@ -26,6 +27,7 @@
         >
             <i class="fa fa-refresh fa-spin"></i>
         </div>
+        
         <div class="cdg_product" 
             v-for="(attribute, key) in matrix"
         >
@@ -89,6 +91,9 @@ export default {
             emitter.on('fireReset', () => {
                 this.resetAll();
             });  
+            emitter.on('fireUpdateAll', () => {
+                this.updateTotal();
+            });  
 
             this.buildMatrix(); 
         },
@@ -140,6 +145,7 @@ export default {
                 }
 	        },
             updateTotal: function(){
+                console.log('updateTotal')
 
                 var self = this;
 
@@ -164,51 +170,83 @@ export default {
                 for(var ikey in _data['quantities']){
                     purchaseAmount += parseInt(_data['quantities'][ikey]);
                 }
+                //console.log(purchaseAmount)
 
-                if(_letSend !== false)	{
-                    _letSend.abort();
-                }
+                if(purchaseAmount > 0) {
 
-                var postURL = config.api.index + '/updatetotalbox';
-                
-                if(purchaseAmount >= self.min_quantity){
-                    //$('.cdg_total').css('display', 'block');
-                    emitter.emit('hideTotalBox');
-                } 
-                emitter.emit('fireUpdateBar', purchaseAmount );
-                
-                (function($){
-                    _letSend = $.post( 
+                    if(_letSend !== false)	{
+                        _letSend.abort();
+                    }
+
+                    var postURL = config.api.index + '/updatetotalbox';
+                    
+                    if(purchaseAmount >= self.min_quantity){
+                        //$('.cdg_total').css('display', 'block');
+                        emitter.emit('hideTotalBox');
+                    } 
+                    emitter.emit('fireUpdateBar', purchaseAmount );
+
+                    _letSend = axios.post(
                         postURL,
                         _data
                     )
-                    .done(function( response ) {
-                        //$('#cdg_form .cdg_total .loading').stop(true).fadeOut(0);
-                            //console.log('firePopulateBox');
-                            if(purchaseAmount >= self.min_quantity){	
-                                //console.log('firePopulateBox', response);
-                                response.addcartenabled = true;
-                            } else {
-                                //console.log('response.addcartenabled: false');
-                                response.addcartenabled = false;
-                            }
-                            emitter.emit('firePopulateBox', response );
+                    .then(function (response) {
+                        console.log('then');
+                        if(purchaseAmount >= self.min_quantity){	
+                            response.data.addcartenabled = true;
+                        } else {
+                            response.data.addcartenabled = false;
+                        }
+                        emitter.emit('firePopulateBox', response.data );
 
-                            //total = r[0];
+                        _letSend = false;
                     })
-                    .fail(function() {
-                        console.log('woops');
+                    .catch(function (error) {
+                        console.log(error);
+                        //console.log('woops');
                         self.loading = false;
                         self.matrix     = [];
                         self.quantities = {};
                         self.empty      = true;
-                    })
-                    .always(function() {
-                        //console.log('updateTotal POST finished');
+
                         _letSend = false;
                     });
+                    
+                    /* *
+                    (function($){
+                        _letSend = $.post( 
+                            postURL,
+                            _data
+                        )
+                        .done(function( response ) {
+                            //$('#cdg_form .cdg_total .loading').stop(true).fadeOut(0);
+                                //console.log('firePopulateBox');
+                                if(purchaseAmount >= self.min_quantity){	
+                                    //console.log('firePopulateBox', response);
+                                    response.addcartenabled = true;
+                                } else {
+                                    //console.log('response.addcartenabled: false');
+                                    response.addcartenabled = false;
+                                }
+                                emitter.emit('firePopulateBox', response );
 
-                })( jQuery );
+                                //total = r[0];
+                        })
+                        .fail(function() {
+                            console.log('woops');
+                            self.loading = false;
+                            self.matrix     = [];
+                            self.quantities = {};
+                            self.empty      = true;
+                        })
+                        .always(function() {
+                            //console.log('updateTotal POST finished');
+                            _letSend = false;
+                        });
+
+                    })( jQuery );
+                    /* */
+                }
                 
                 
             },

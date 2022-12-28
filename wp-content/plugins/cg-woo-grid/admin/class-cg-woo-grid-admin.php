@@ -584,11 +584,11 @@ class Cg_Woo_Grid_Admin {
                                                 '</span>';
                             $prependEnd   = '</div>';
                         }
-                        if(isset($args['after'])) {
-                            $prependStart = $args['after'].
-                                                '</span>';
-                            $prependEnd   = '</div>';
-                        }
+                        // if($after) {
+                        //     $prependStart = $after.
+                        //                         '</span>';
+                        //     $prependEnd   = '</div>';
+                        // }
 
                         $step        = (isset($args['step'])) ? 'step="'.$args['step'].'"' : '';
                         $min         = (isset($args['min'])) ? 'min="'.$args['min'].'"' : '';
