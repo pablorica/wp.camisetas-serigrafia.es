@@ -191,6 +191,22 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
                 'size'             => '10',
             )
         );
+        $field_id = $this->get_element_name().'_budgeteer_bagged_title';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Título","sadoje").":",
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'text',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'class'            => '',
+            )
+        );
         $field_id = $this->get_element_name().'_budgeteer_bagged_wording';
         $settings_page->fields[] = array(
             'id'    => $field_id,
@@ -204,7 +220,7 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
                 'get_options_list' => '',
                 'value_type'       => 'normal',
                 'wp_data'          => 'option',
-                'class'            => '',
+                'class'            => 'alternate',
                 'size'             => '120',
             )
         );
@@ -216,6 +232,22 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
         $settings_page->fields = array();
 
         $field_id = $this->get_element_name().'_budgeteer_stamping_types';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => '',
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'hidden',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'serialized',
+                'wp_data'          => 'option',
+                'class'            => '',
+            )
+        );
+        $field_id = $this->get_element_name().'_budgeteer_stamping_wording';
         $settings_page->fields[] = array(
             'id'    => $field_id,
             'title' => '',
@@ -258,15 +290,33 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
         array_push($settings_pages,$settings_page);
 
 
-        /* Information */
+        /* Wording */
         $settings_page         = new \stdClass();
         $settings_page->slug   = $this->get_element_name().'_budgeteer_info';
         $settings_page->fields = array();
 
+        $field_id = $this->get_element_name().'_budgeteer_info_header';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Cabecera","sadoje").":",
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'text',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'class'            => 'alternate',
+                'size'             => '120',
+            )
+        );
+
         $field_id = $this->get_element_name().'_budgeteer_info_wording';
         $settings_page->fields[] = array(
             'id'    => $field_id,
-            'title' => '',
+            'title' => __("Texto informativo","sadoje").":",
             'args'  => array (
                 'type'             => 'wp_editor',
                 'id'               => $field_id,

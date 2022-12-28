@@ -91,7 +91,10 @@ createApp({
             serialized: '',
             apiurl:'',
             rows: [],
-            refId: 'customisationsforcgwoogridbudgeteerstampingtypes'
+            refId: 'customisationsforcgwoogridbudgeteerstampingtypes',
+            wording: {},
+            serwording: '',
+            refWording: 'customisationsforcgwoogridbudgeteerstampingwording'
         }
     },
     mounted: function () {
@@ -99,8 +102,12 @@ createApp({
         let element     = this.$el;
         this.apiurl     = element.parentElement.dataset.apiurl;
         this.serialized = this.$refs[this.refId].value
+       
         
         this.buildTable(); 
+
+        this.serwording = this.$refs[this.refWording].value
+        this.buildTableWording();
 
     },
     methods: {
@@ -115,6 +122,40 @@ createApp({
         },
         deleteRow(row, event) {
             gDeleteRow(event, this, row)
+        },
+        buildTableWording: function () {
+            let self   = this
+            let getURL = self.apiurl+'/encode';
+        
+            if(self.serwording !== ''){
+        
+             axios.post(getURL,{
+                    serialized: self.serwording
+                })
+                .then(function (response) {
+                    //console.log(response);
+                    self.wording = response.data
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            }
+        },
+        updateWording: function() {
+            let self   = this
+            let getURL = self.apiurl+'/serialize';
+            //console.log(self.rows);
+            axios.post(getURL,{
+                    object: self.wording
+                })
+                .then(function (response) {
+                    //console.log(response);
+                    self.serwording = response.data
+                    self.$refs[self.refWording].value = self.serwording
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         }
     }
 }).mount('#formStamping')

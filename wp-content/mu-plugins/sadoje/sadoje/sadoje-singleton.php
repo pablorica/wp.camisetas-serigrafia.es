@@ -45,7 +45,7 @@ abstract class Sadoje_Singleton {
 	protected function __construct() {
         //Initialize all the basics components of the plugin
         $this->plugin_name = 'sadoje';
-        $this->version = '0.1.0';
+        $this->version = '0.5.0';
 
         //set the variable for the example endpoint. you can use a option plugin to store it and change it later in the admin page
         $this->plugin_url  = str_replace(
@@ -59,6 +59,41 @@ abstract class Sadoje_Singleton {
             dirname(__FILE__).DIRECTORY_SEPARATOR
         ); 
 
+        $this->load_hooks();
+	}
+
+    /**
+	 * Register all hooks
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function load_hooks() {
+
+        add_action( 
+            'wp_enqueue_scripts', 
+            array( 
+                $this, 
+                'enqueue_frontend_scripts' 
+            )
+        );
+
+        add_action( 
+            'admin_enqueue_scripts', 
+            array( 
+                $this, 
+                'enqueue_backend_scripts' 
+            )
+        );        
+    }
+
+    /**
+	 * Register the frontend styles and scripts
+	 *
+	 * @since    1.0.0
+	 */
+	public function enqueue_frontend_scripts() {
+
         wp_enqueue_style( 
             $this->plugin_name, 
             $this->plugin_url.'public/css/sadoje.css', 
@@ -66,7 +101,6 @@ abstract class Sadoje_Singleton {
             $this->version, 
             'all' 
         );
-    
     	wp_enqueue_script( 
             $this->plugin_name, 
             $this->plugin_url.'public/js/sadoje.js', 
@@ -76,7 +110,22 @@ abstract class Sadoje_Singleton {
             $this->version, 
             true 
         );
+	}
 
+    /**
+	 * Register the backend styles and scripts
+	 *
+	 * @since    1.0.0
+	 */
+	public function enqueue_backend_scripts() {
+        
+        wp_enqueue_style( 
+            $this->plugin_name.'-admin', 
+            $this->plugin_url.'admin/css/sadoje.css', 
+            array(),
+            $this->version, 
+            'all' 
+        );
         wp_enqueue_script( 
             $this->plugin_name.'-admin', 
             $this->plugin_url.'admin/js/sadoje.js', 

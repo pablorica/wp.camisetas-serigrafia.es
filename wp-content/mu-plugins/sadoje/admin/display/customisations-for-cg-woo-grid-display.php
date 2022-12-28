@@ -59,6 +59,7 @@
                                 method="POST" 
                                 action="options.php"
                                 data-apiurl = "<?php echo $urlspace; ?>"
+                                class="hide-form-table"
                             >
                                 <?php 
                                     settings_fields( 'customisations-for-cg-woo-grid_budgeteer_baseprice' );
@@ -170,6 +171,7 @@
                                 method="POST" 
                                 action="options.php"
                                 data-apiurl = "<?php echo $urlspace; ?>"
+                                class="hide-form-table"
                             >
                                 <?php 
                                     settings_fields( 'customisations-for-cg-woo-grid_budgeteer_stamping' );
@@ -182,6 +184,7 @@
                                     <thead>
                                         <tr>
                                             <th class="row-title"><?php _e('Tipo de estampación','sadoje'); ?></th>
+                                            <th class="row-title"><?php _e('Área de estampación','sadoje'); ?></th>
                                             <th><?php _e('Precio estampación por prenda (prendas blancas)','sadoje'); ?></th>
                                             <th><?php _e('Precio estampación por prenda (prendas de color)','sadoje'); ?></th>
                                             <th><?php _e('Precio adicional por pantalla y fotolitos','sadoje'); ?></th>
@@ -189,57 +192,109 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="(row, index) in rows"
-                                            v-bind:id="'row_'+index" 
-                                            v-bind:class = "(index % 2 === 0)?'alternate':''"
-                                        >
-                                                <th>
-                                                    <input type="text" 
-                                                        autocomplete="off"
-                                                        size="50"
-                                                        v-model="row.stamping"
-                                                        :name="'stamping['+index+']'"
-                                                        @input="updateRows()"
+                                        <template v-for="(row, index) in rows">
+                                            <tr v-bind:id="'row_'+index" 
+                                                v-bind:class = "(index % 2 == 1)?'':'alternate'"
+                                            >
+                                                    <th rowspan="2">
+                                                        <input type="text" 
+                                                            autocomplete="off"
+                                                            size="30"
+                                                            v-model="row.stamping"
+                                                            :name="'stamping['+index+']'"
+                                                            @input="updateRows()"
+                                                        >
+                                                    </th>
+                                                    <th>
+                                                        <input type="text" 
+                                                            autocomplete="off"
+                                                            size="30"
+                                                            v-model="row.area1"
+                                                            :name="'stamping['+index+']'"
+                                                            @input="updateRows()"
+                                                        >
+                                                    </th>
+                                                    <th>
+                                                        <input type="text" 
+                                                            autocomplete="off"
+                                                            size="4"
+                                                            v-model="row.white_price1"
+                                                            :name="'white_price['+index+']'"
+                                                            @input="updateRows()"
+                                                        >
+                                                    </th>
+                                                    <th>
+                                                        <input type="text" 
+                                                            autocomplete="off"
+                                                            size="4"
+                                                            v-model="row.color_price1"
+                                                            :name="'color_price['+index+']'"
+                                                            @input="updateRows()"
+                                                        >
+                                                    </th>
+                                                    <th>
+                                                        <input type="text" 
+                                                            autocomplete="off"
+                                                            size="4"
+                                                            v-model="row.screen_price1"
+                                                            :name="'screen_price['+index+']'"
+                                                            @input="updateRows()"
+                                                        >
+                                                    </th>
+                                                    <th style="text-align:right" 
+                                                        rowspan="2"
                                                     >
-                                                </th>
-                                                <th>
-                                                    <input type="text" 
-                                                        autocomplete="off"
-                                                        size="4"
-                                                        v-model="row.white_price"
-                                                        :name="'white_price['+index+']'"
-                                                        @input="updateRows()"
-                                                    >
-                                                </th>
-                                                <th>
-                                                    <input type="text" 
-                                                        autocomplete="off"
-                                                        size="4"
-                                                        v-model="row.color_price"
-                                                        :name="'color_price['+index+']'"
-                                                        @input="updateRows()"
-                                                    >
-                                                </th>
-                                                <th>
-                                                    <input type="text" 
-                                                        autocomplete="off"
-                                                        size="4"
-                                                        v-model="row.screen_price"
-                                                        :name="'screen_price['+index+']'"
-                                                        @input="updateRows()"
-                                                    >
-                                                </th>
-                                                <th style="text-align:right">
-                                                    <button class="button button-secondary button-delete" 
-                                                        style="background:#DC3232;color:#FFF;border-color:#FFF;"
-                                                        @click="deleteRow(index, $event)"
-                                                    ><?php echo __('Borrar','sadoje'); ?></button>
-                                                </th>
-                                        </tr>
+                                                        <button class="button button-secondary button-delete" 
+                                                            style="background:#DC3232;color:#FFF;border-color:#FFF;"
+                                                            @click="deleteRow(index, $event)"
+                                                        ><?php echo __('Borrar','sadoje'); ?></button>
+                                                    </th>
+                                            </tr>
+                                            <tr v-bind:id="'row_'+index" 
+                                                v-bind:class = "(index % 2 == 1)?'':'alternate'"
+                                            >
+                                                    <th>
+                                                        <input type="text" 
+                                                            autocomplete="off"
+                                                            size="30"
+                                                            v-model="row.area2"
+                                                            :name="'stamping['+index+']'"
+                                                            @input="updateRows()"
+                                                        >
+                                                    </th>
+                                                    <th>
+                                                        <input type="text" 
+                                                            autocomplete="off"
+                                                            size="4"
+                                                            v-model="row.white_price2"
+                                                            :name="'white_price['+index+']'"
+                                                            @input="updateRows()"
+                                                        >
+                                                    </th>
+                                                    <th>
+                                                        <input type="text" 
+                                                            autocomplete="off"
+                                                            size="4"
+                                                            v-model="row.color_price2"
+                                                            :name="'color_price['+index+']'"
+                                                            @input="updateRows()"
+                                                        >
+                                                    </th>
+                                                    <th>
+                                                        <input type="text" 
+                                                            autocomplete="off"
+                                                            size="4"
+                                                            v-model="row.screen_price2"
+                                                            :name="'screen_price['+index+']'"
+                                                            @input="updateRows()"
+                                                        >
+                                                    </th>
+                                            </tr>
+                                        </template>
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="5">
+                                            <th colspan="6">
                                                 <p style="text-align:right">
                                                     <button class="button button-secondary" 
                                                         @click="addRow($event)"
@@ -250,7 +305,156 @@
                                     </tfoot>
                                 </table>
 
-                                                                
+                                <hr/>
+
+
+                                <table id="tableStampingWording"
+                                    class="widefat"
+                                >
+                                    <thead>
+                                        <tr>
+                                            <th class="row-title" 
+                                                colspan="4"
+                                            >
+                                                <strong><?php _e('Títulos','sadoje'); ?></strong><br/>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="alternate">
+                                            <th class="row-title">
+                                                <strong><?php _e('Titulo 1','sadoje'); ?></strong><br/>
+                                            </th>
+                                            <td>
+                                                <input type="text" 
+                                                    autocomplete="off"
+                                                    size="40"
+                                                    v-model="wording.title1"
+                                                    :name="'title1['+index+']'"
+                                                    @input="updateWording()"
+                                                >
+                                            </td>
+                                            <th>
+                                                <strong>
+                                                    <?php _e('Opción por defecto','sadoje'); ?>
+                                                </strong>
+                                            </th>
+                                            <td>
+                                                <input type="text" 
+                                                    autocomplete="off"
+                                                    size="40"
+                                                    v-model="wording.defaultSelect1"
+                                                    :name="'titleRear1['+index+']'"
+                                                    @input="updateWording()"
+                                                >
+                                            </td>
+                                        </tr>
+                                        <tr class="alternate">
+                                            <th>
+                                                <strong>
+                                                    <?php _e('Caja de selección estampación delantera','sadoje'); ?>
+                                                </strong>
+                                            </th>
+                                            <td>
+                                                <input type="text" 
+                                                    autocomplete="off"
+                                                    size="40"
+                                                    v-model="wording.titleFront1"
+                                                    :name="'titleFront1['+index+']'"
+                                                    @input="updateWording()"
+                                                >
+                                            </td>
+                                            <th>
+                                                <strong>
+                                                    <?php _e('Caja de selección estampación trasera','sadoje'); ?>
+                                                </strong>
+                                            </th>
+                                            <td>
+                                                <input type="text" 
+                                                    autocomplete="off"
+                                                    size="40"
+                                                    v-model="wording.titleRear1"
+                                                    :name="'titleRear1['+index+']'"
+                                                    @input="updateWording()"
+                                                >
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="row-title">
+                                                <strong><?php _e('Titulo 2','sadoje'); ?></strong><br/>
+                                            </th>
+                                            <td colspan="3">
+                                                <input type="text" 
+                                                    autocomplete="off"
+                                                    size="40"
+                                                    v-model="wording.title2"
+                                                    :name="'title2['+index+']'"
+                                                    @input="updateWording()"
+                                                >
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                <strong>
+                                                    <?php _e('Caja de selección área delantera','sadoje'); ?>
+                                                </strong>
+                                            </th>
+                                            <td>
+                                                <input type="text" 
+                                                    autocomplete="off"
+                                                    size="40"
+                                                    v-model="wording.titleFront2"
+                                                    :name="'titleFront2['+index+']'"
+                                                    @input="updateWording()"
+                                                >
+                                            </td>
+                                            <th>
+                                                <strong>
+                                                    <?php _e('Caja de selección área trasera','sadoje'); ?>
+                                                </strong>
+                                            </th>
+                                            <td>
+                                                <input type="text" 
+                                                    autocomplete="off"
+                                                    size="40"
+                                                    v-model="wording.titleRear2"
+                                                    :name="'titleRear2['+index+']'"
+                                                    @input="updateWording()"
+                                                >
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>
+                                                <strong>
+                                                    <?php _e('Opción por defecto','sadoje'); ?>
+                                                </strong>
+                                            </th>
+                                            <td>
+                                                <input type="text" 
+                                                    autocomplete="off"
+                                                    size="40"
+                                                    v-model="wording.defaultSelect2"
+                                                    :name="'titleRear1['+index+']'"
+                                                    @input="updateWording()"
+                                                >
+                                            </td>
+                                            <th>
+                                                <strong>
+                                                    <?php _e('Mensaje cuando está desactivado ','sadoje'); ?>
+                                                </strong>
+                                            </th>
+                                            <td>
+                                                <input type="text" 
+                                                    autocomplete="off"
+                                                    size="40"
+                                                    v-model="wording.disabledSelect2"
+                                                    :name="'titleRear1['+index+']'"
+                                                    @input="updateWording()"
+                                                >
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
 
                                 <?php submit_button(); ?>  
                             </form> 
@@ -369,6 +573,7 @@
                                 method="POST" 
                                 action="options.php"
                                 data-apiurl = "<?php echo $urlspace; ?>"
+                                class="hide-form-table"
                             >
                                 <?php 
                                     settings_fields( 'customisations-for-cg-woo-grid_budgeteer_profit' );
@@ -447,9 +652,10 @@
                         class="postbox"
                     >
                         <h2>
-                            <span><?php echo __('Texto informativo','sadoje'); ?></span>
+                            <span><?php echo __('Contenido','sadoje'); ?></span>
                         </h2>
 						<div class="inside">
+                            <p><?php _e('Mensajes y cabeceras del presupuestador','sadoje'); ?></p>
                             <form method="POST" action="options.php">  
                                 <?php 
                                     settings_fields( 'customisations-for-cg-woo-grid_budgeteer_info' );
