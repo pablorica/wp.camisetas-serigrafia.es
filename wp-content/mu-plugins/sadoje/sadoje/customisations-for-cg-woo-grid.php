@@ -176,6 +176,24 @@ class Customisations_For_Cg_Woo_Grid extends Sadoje_Singleton {
                 $plugin_public, 
                 'cdg_alter_regular_price' 
             ),
+            100,
+            2
+        );
+        // add_filter( 
+        //     'cg-woo-grid_get_total_price', 
+        //     array( 
+        //         $plugin_public, 
+        //         'cdg_alter_total_price' 
+        //     ),
+        //     100,
+        //     2
+        // );
+        add_action( 
+            'woocommerce_before_calculate_totals',
+            array( 
+                $plugin_public, 
+                'cdg_alter_price_cart' 
+            ),
             100
         );
     }

@@ -210,7 +210,8 @@ class Rest_Api {
                     //$uprice = (float) $single_variation->get_regular_price();
                     $uprice = apply_filters( 
                         'cg-woo-grid_get_regular_price', 
-                        $single_variation->get_regular_price()
+                        $single_variation->get_regular_price(),
+                        $single_variation
                     );
 
                     $price  += $quantity * $uprice;
@@ -261,6 +262,11 @@ class Rest_Api {
             }
             $addurl = rtrim($addurl, ',');
 
+
+            $price = apply_filters( 
+                'cg-woo-grid_get_total_price', 
+                $price
+            );
 
             //Taxes
             $tax_p = 0;

@@ -9,9 +9,8 @@
                     <div>
                         <b>{{wording.titleFront1}}</b><br>
                         <select 
-                            id="estampado_delantero" 
-                            name="estampado_delantero"
                             v-model="indexFront"
+                            @change="changeCookie()"
                         >
                             <option value="">{{wording.defaultSelect1}}</option>
                             <template v-for="(row, index) in rows">
@@ -24,9 +23,8 @@
                     <div>
                         <b>{{wording.titleRear1}}</b><br>
                         <select 
-                            id="estampado_trasero" 
-                            name="estampado_trasero"
                             v-model="indexRear"
+                            @change="changeCookie()"
                         >
                             <option value="">{{wording.defaultSelect1}}</option>
                             <template v-for="(row, index) in rows">
@@ -49,8 +47,8 @@
                     >
                         <b>{{wording.titleFront2}}</b><br>
                         <select 
-                            id="tamano_delantero" 
-                            name="tamano_delantero" 
+                            v-model="areaFront"
+                            @change="changeCookie()"
                             :disabled="!Number.isInteger(indexFront)"
                         >
                             <option v-if="!Number.isInteger(indexFront)"
@@ -58,8 +56,8 @@
                             >{{wording.disabledSelect2}}</option>
                             <template v-if="Number.isInteger(indexFront)">
                                 <option value="">{{wording.defaultSelect2}}</option>
-                                <option v-html="rows[indexFront].area1"></option>
-                                <option v-html="rows[indexFront].area2"></option>
+                                <option value="1" v-html="rows[indexFront].area1"></option>
+                                <option value="2" v-html="rows[indexFront].area2"></option>
                             </template>
                         </select>
                     </div>
@@ -68,8 +66,8 @@
                     >
                         <b>{{wording.titleRear2}}</b><br>
                         <select 
-                            id="tamano_trasero" 
-                            name="tamano_trasero" 
+                            v-model="areaRear"
+                            @change="changeCookie()"
                             :disabled="!Number.isInteger(indexRear)"
                         >
                             <option v-if="!Number.isInteger(indexRear)"
@@ -77,8 +75,8 @@
                             >{{wording.disabledSelect2}}</option>
                             <template v-if="Number.isInteger(indexRear)">
                                 <option value="">{{wording.defaultSelect2}}</option>
-                                <option v-html="rows[indexRear].area1"></option>
-                                <option v-html="rows[indexRear].area2"></option>
+                                <option value="1" v-html="rows[indexRear].area1"></option>
+                                <option value="2" v-html="rows[indexRear].area2"></option>
                             </template>
                         </select>
                     </div>
@@ -125,14 +123,18 @@ export default {
             serialized:    '',
             rows:          [],
             indexFront:    '',
+            areaFront:     '',
             indexRear:     '',
+            areaRear:      '',
             bagged:         0,
             baggedtitle:   '',
             baggedwording: '',
+            cookieName:    "cgWooGrid",
+            totalProducts: 0
         }
     },
     mounted: function () {
-        
+
         let element        = this.$el;
         this.apiurl        = element.parentElement.dataset.apiurl;
         this.serialized    = element.parentElement.dataset.serialized;
@@ -143,9 +145,7 @@ export default {
         this.baggedwording = element.parentElement.dataset.baggedwording;
         
         this.buildBugeteer(); 
-        //this.$cookie.set("keyName", keyValue, "expiring time")
-        //$cookies.set(keyName, value[, expires[, path[, domain[, secure[, sameSite]]]]])
-        window.$cookies.set("addsRegPrice","",0);
+        
     },
     methods: {
 
@@ -182,9 +182,84 @@ export default {
             }
         },
         changeCookie: function() {
-            let self   = this
-            window.$cookies.set("addsRegPrice",self.bagged);
-            //TODO this works, but it would be better to find a way to trigerr the update Total function using VUE elements , or tiny-emitter
+            let self      = this
+            let cookieObj = {}
+            console.log('addOn changeCookie')
+
+            cookieObj.bagged = self.bagged
+
+            if( typeof self.indexFront !== 'undefined'
+                && Number.isInteger(self.indexFront) 
+            ) {
+                cookieObj.front = {}
+                let keyFront    = self.indexFront
+
+                cookieObj.front.screenPrice = self.rows[keyFront].screen_price
+                cookieObj.front.stamping    = self.rows[keyFront].stamping
+
+                if( typeof self.areaFront !== 'undefined') {
+                    //console.log(self.areaFront)
+                    if(self.areaFront === '1') {
+                        cookieObj.front.whitePrice = self.rows[keyFront].white_price1
+                        cookieObj.front.colorPrice = self.rows[keyFront].color_price1
+                    }
+                    if(self.areaFront === '2') {
+                        cookieObj.front.whitePrice = self.rows[keyFront].white_price2
+                        cookieObj.front.colorPrice = self.rows[keyFront].color_price2
+                    }
+                }
+            }
+
+            if( typeof self.indexRear !== 'undefined'
+                && Number.isInteger(self.indexRear) 
+            ) {
+                cookieObj.rear = {}
+                let keyRear    = self.indexRear
+
+                cookieObj.rear.screenPrice = self.rows[keyRear].screen_price
+                cookieObj.rear.stamping    = self.rows[keyRear].stamping
+
+                if( typeof self.areaRear !== 'undefined') {
+                    //console.log(self.areaRear)
+                    if(self.areaRear === '1') {
+                        cookieObj.rear.whitePrice = self.rows[keyRear].white_price1
+                        cookieObj.rear.colorPrice = self.rows[keyRear].color_price1
+                    }
+                    if(self.areaRear === '2') {
+                        cookieObj.rear.whitePrice = self.rows[keyRear].white_price2
+                        cookieObj.rear.colorPrice = self.rows[keyRear].color_price2
+                    }
+                }
+            }
+
+
+            if(typeof document.getElementById("cdg_total").innerHTML !== 'undefined'){
+                self.totalProducts  = parseInt(
+                    document
+                    .getElementById("cdg_total")
+                    .innerHTML
+                );
+                //console.log('AddOn: total products '+self.totalProducts)
+                cookieObj.totalProducts = self.totalProducts
+            }
+            
+            //console.log('Is cookie? '+window.$cookies.isKey(self.cookieName))
+            if(window.$cookies.isKey(self.cookieName)) {
+                let oldCookieObj = window.$cookies.get(self.cookieName);
+
+                delete oldCookieObj.front
+                delete oldCookieObj.rear
+
+                cookieObj = {...oldCookieObj,...cookieObj};
+            }
+            const cookieJSON = JSON.stringify(cookieObj);
+            window.$cookies.set(self.cookieName,cookieJSON);
+            console.log('AddOn cookie')
+            console.log(window.$cookies.get(self.cookieName))
+
+            /* TODO this works and trigers the updateTotal function, 
+            but it would be better to find a way to triger that function 
+            using VUE elements , or tiny-emitter */
             document.getElementById("updateTotal").click();
         }
     }

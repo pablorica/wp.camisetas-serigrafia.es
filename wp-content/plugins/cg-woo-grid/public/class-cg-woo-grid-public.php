@@ -62,17 +62,6 @@ class Functions {
         //set the variable for the example endpoint. you can use a option plugin to store it and change it later in the admin page
         $this->css_filepath      = CG_WOOGRID_URL.'public/css/cg-woo-grid.css';
         $this->js_filepath       = CG_WOOGRID_URL.'public/js/cg-woo-grid.js';
-
-        // if(CG_WOOGRID_STATUS == 'development'){
-        //     //https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.45/vue.global.js
-        //     //$this->vue_filepath = CG_WOOGRID_URL.'vue/js/vue.js';
-        //     $this->vue_filepath = 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.45/vue.global.js';
-        // }
-        // if(CG_WOOGRID_STATUS == 'production'){
-        //     $this->vue_filepath = 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.45/vue.global.prod.min.js';
-        //     //$this->vue_filepath = CG_WOOGRID_URL.'vue/js/vue.global.prod.min.js';
-        // }
-        // $this->vue_version = '3.2.45';
 	}
 
 	/**
@@ -103,15 +92,6 @@ class Functions {
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
-
-        //vue.js loads first
-        // wp_enqueue_script( 
-        //     $this->plugin_name.'-vue',  
-        //     $this->vue_filepath,
-        //     array(), 
-        //     $this->vue_version, 
-        //     true
-        // );
 
         wp_enqueue_script( 
             $this->plugin_name, 
@@ -333,12 +313,13 @@ class Functions {
         return $template;
     }
 
-
-
     /**
 	 * Build the products attributes grid
 	 *
-	 * @since    1.0.0
+	 * @since  1.0.0
+     * @see    https://www.webroomtech.com/woocommerce-add-multiple-products-to-cart-via-url/
+     * @see    https://avada.io/woocommerce/docs/select-multiple-variations.html
+     * @see    https://stackoverflow.com/questions/51606535/how-to-add-multiple-variable-products-to-the-cart-via-the-add-to-cart-query-stri
      * 
      * @return void || WP_Error
 	 */
@@ -381,8 +362,45 @@ class Functions {
         }
     }
 
-    //https://www.webroomtech.com/woocommerce-add-multiple-products-to-cart-via-url/
-    //https://avada.io/woocommerce/docs/select-multiple-variations.html
-    //https://stackoverflow.com/questions/51606535/how-to-add-multiple-variable-products-to-the-cart-via-the-add-to-cart-query-stri
+
+    // https://woocommerce.com/document/tutorial-customising-checkout-fields-using-actions-and-filters/
+   // add_action( 'woocommerce_checkout_fields', 'cdg_add_checkout_description' );
+
+// Our hooked in function - $fields is passed via the filter!
+function cdg_add_checkout_description1( $fields ) {
+    $fields['order']['description']  = array(
+        'type' => 'textarea',
+        'class' => array('notes'),
+        'label' => __('Order Description', 'cg-woo-grid'),
+        'placeholder' => esc_html__( 'Purchase description', 'cg-woo-grid' )
+    );
+
+     return $fields;
+}
+
+/**
+ * Add the field to the checkout
+ */
+//woocommerce_review_order_before_payment
+//woocommerce_after_order_notes
+//add_action( 'woocommerce_review_order_after_order_total', 'cdg_add_checkout_description' );
+
+function cdg_add_checkout_description() {
+
+    $checkout =  WC()->checkout;
+
+    echo '<div id="order_description_checkout_field">';
+
+    woocommerce_form_field( 'order_description', array(
+        'type'          => 'textarea',
+        'class'         => array('form-row-wide'),
+        //'label'         => esc_html__('Order Description', 'cg-woo-grid'),
+        'placeholder'   => esc_html__( 'Purchase description', 'cg-woo-grid' ),
+        ), $checkout->get_value( 'order_description' ));
+
+    echo '</div>';
+
+}
+
 
 }

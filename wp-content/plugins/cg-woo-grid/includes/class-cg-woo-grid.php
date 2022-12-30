@@ -301,7 +301,6 @@ class Cg_Woo_Grid
             19
         );
 
-		//add_action( 'wp_loaded', 'cdg_add_multiple_variations_to_cart', 15 );
 		$this->loader->add_action( 
             'wp_loaded', 
             $plugin_public, 
@@ -309,7 +308,6 @@ class Cg_Woo_Grid
 			15
         );
 
-       //add_filter( 'woocommerce_locate_template', 'cdg_woo_overwrite_template', 1, 3 );
         $this->loader->add_filter( 
             'woocommerce_locate_template',
             $plugin_public, 
@@ -326,6 +324,19 @@ class Cg_Woo_Grid
             20,
             2
         );
+
+
+        $this->loader->add_action( 
+            'woocommerce_review_order_before_payment', 
+            $plugin_public, 
+            'cdg_add_checkout_description',
+			15
+        );
+        // $this->loader->add_filter( 
+        //     'woocommerce_checkout_fields',
+        //     $plugin_public, 
+        //     'cdg_add_checkout_description'
+        // );
 
 
 

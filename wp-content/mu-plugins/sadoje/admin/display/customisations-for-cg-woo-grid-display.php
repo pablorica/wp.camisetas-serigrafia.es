@@ -184,123 +184,112 @@
                                     <thead>
                                         <tr>
                                             <th class="row-title"><?php _e('Tipo de estampación','sadoje'); ?></th>
+                                            <th><?php _e('Precio adicional por pantalla y fotolitos','sadoje'); ?></th>
                                             <th class="row-title"><?php _e('Área de estampación','sadoje'); ?></th>
                                             <th><?php _e('Precio estampación por prenda (prendas blancas)','sadoje'); ?></th>
                                             <th><?php _e('Precio estampación por prenda (prendas de color)','sadoje'); ?></th>
-                                            <th><?php _e('Precio adicional por pantalla y fotolitos','sadoje'); ?></th>
                                             <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <template v-for="(row, index) in rows">
-                                            <tr v-bind:id="'row_'+index" 
+                                            <tr v-bind:id="'row1_'+index" 
                                                 v-bind:class = "(index % 2 == 1)?'':'alternate'"
                                             >
-                                                    <th rowspan="2">
-                                                        <input type="text" 
-                                                            autocomplete="off"
-                                                            size="30"
-                                                            v-model="row.stamping"
-                                                            :name="'stamping['+index+']'"
-                                                            @input="updateRows()"
-                                                        >
-                                                    </th>
-                                                    <th>
-                                                        <input type="text" 
-                                                            autocomplete="off"
-                                                            size="30"
-                                                            v-model="row.area1"
-                                                            :name="'stamping['+index+']'"
-                                                            @input="updateRows()"
-                                                        >
-                                                    </th>
-                                                    <th>
-                                                        <input type="number" 
-                                                            step="0.05"
-                                                            min="0"
-                                                            autocomplete="off"
-                                                            size="5"
-                                                            v-model="row.white_price1"
-                                                            :name="'white_price['+index+']'"
-                                                            @input="updateRows()"
-                                                        >
-                                                    </th>
-                                                    <th>
-                                                        <input type="number" 
-                                                            step="0.05"
-                                                            min="0"
-                                                            autocomplete="off"
-                                                            size="5"
-                                                            v-model="row.color_price1"
-                                                            :name="'color_price['+index+']'"
-                                                            @input="updateRows()"
-                                                        >
-                                                    </th>
-                                                    <th>
-                                                        <input type="number" 
-                                                            step="0.05"
-                                                            min="0"
-                                                            autocomplete="off"
-                                                            size="5"
-                                                            v-model="row.screen_price1"
-                                                            :name="'screen_price['+index+']'"
-                                                            @input="updateRows()"
-                                                        >
-                                                    </th>
-                                                    <th style="text-align:right" 
-                                                        rowspan="2"
+                                                <th rowspan="2">
+                                                    <input type="text" 
+                                                        autocomplete="off"
+                                                        size="30"
+                                                        v-model="row.stamping"
+                                                        :name="'stamping['+index+']'"
+                                                        @input="updateRows()"
                                                     >
-                                                        <button class="button button-secondary button-delete" 
-                                                            style="background:#DC3232;color:#FFF;border-color:#FFF;"
-                                                            @click="deleteRow(index, $event)"
-                                                        ><?php echo __('Borrar','sadoje'); ?></button>
-                                                    </th>
+                                                </th>
+                                                <th rowspan="2">
+                                                    <input type="number" 
+                                                        step="0.05"
+                                                        min="0"
+                                                        autocomplete="off"
+                                                        size="5"
+                                                        v-model="row.screen_price"
+                                                        :name="'screen_price['+index+']'"
+                                                        @input="updateRows()"
+                                                    >
+                                                </th>
+                                                <th>
+                                                    <input type="text" 
+                                                        autocomplete="off"
+                                                        size="30"
+                                                        v-model="row.area1"
+                                                        :name="'area1['+index+']'"
+                                                        @input="updateRows()"
+                                                    >
+                                                </th>
+                                                <th>
+                                                    <input type="number" 
+                                                        step="0.05"
+                                                        min="0"
+                                                        autocomplete="off"
+                                                        size="5"
+                                                        v-model="row.white_price1"
+                                                        :name="'white_price1['+index+']'"
+                                                        @input="updateRows()"
+                                                    >
+                                                </th>
+                                                <th>
+                                                    <input type="number" 
+                                                        step="0.05"
+                                                        min="0"
+                                                        autocomplete="off"
+                                                        size="5"
+                                                        v-model="row.color_price1"
+                                                        :name="'color_price1['+index+']'"
+                                                        @input="updateRows()"
+                                                    >
+                                                </th>
+                                                <th style="text-align:right" 
+                                                    rowspan="2"
+                                                >
+                                                    <button class="button button-secondary button-delete" 
+                                                        style="background:#DC3232;color:#FFF;border-color:#FFF;"
+                                                        @click="deleteRow(index, $event)"
+                                                    ><?php echo __('Borrar','sadoje'); ?></button>
+                                                </th>
                                             </tr>
-                                            <tr v-bind:id="'row_'+index" 
+                                            <tr v-bind:id="'row2_'+index" 
                                                 v-bind:class = "(index % 2 == 1)?'':'alternate'"
                                             >
-                                                    <th>
-                                                        <input type="text" 
-                                                            autocomplete="off"
-                                                            size="30"
-                                                            v-model="row.area2"
-                                                            :name="'stamping['+index+']'"
-                                                            @input="updateRows()"
-                                                        >
-                                                    </th>
-                                                    <th>
-                                                        <input type="number" 
-                                                            step="0.05"
-                                                            min="0"
-                                                            autocomplete="off"
-                                                            size="5"
-                                                            v-model="row.white_price2"
-                                                            :name="'white_price['+index+']'"
-                                                            @input="updateRows()"
-                                                        >
-                                                    </th>
-                                                    <th>
-                                                        <input type="number" 
-                                                            step="0.05"
-                                                            min="0"
-                                                            autocomplete="off"
-                                                            size="5"
-                                                            v-model="row.color_price2"
-                                                            :name="'color_price['+index+']'"
-                                                            @input="updateRows()"
-                                                        >
-                                                    </th>
-                                                    <th>
-                                                        <input type="number" 
-                                                            step="0.05"
-                                                            min="0"
-                                                            autocomplete="off"
-                                                            size="5"
-                                                            v-model="row.screen_price2"
-                                                            :name="'screen_price['+index+']'"
-                                                            @input="updateRows()"
-                                                        >
-                                                    </th>
+                                                <th>
+                                                    <input type="text" 
+                                                        autocomplete="off"
+                                                        size="30"
+                                                        v-model="row.area2"
+                                                        :name="'area2['+index+']'"
+                                                        @input="updateRows()"
+                                                    >
+                                                </th>
+                                                <th>
+                                                    <input type="number" 
+                                                        step="0.05"
+                                                        min="0"
+                                                        autocomplete="off"
+                                                        size="5"
+                                                        v-model="row.white_price2"
+                                                        :name="'white_price2['+index+']'"
+                                                        @input="updateRows()"
+                                                    >
+                                                </th>
+                                                <th>
+                                                    <input type="number" 
+                                                        step="0.05"
+                                                        min="0"
+                                                        autocomplete="off"
+                                                        size="5"
+                                                        v-model="row.color_price2"
+                                                        :name="'color_price2['+index+']'"
+                                                        @input="updateRows()"
+                                                    >
+                                                </th>
                                             </tr>
                                         </template>
                                     </tbody>

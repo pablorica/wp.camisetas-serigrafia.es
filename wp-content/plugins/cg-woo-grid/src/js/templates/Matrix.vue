@@ -79,7 +79,8 @@ export default {
                 taxonomy_x:     config.taxonomy_x,
                 min_quantity:   config.min_quantity,
                 matrix: 	    [],
-                quantities: 	{}
+                quantities: 	{},
+                cookieName:    "cgWooGrid"
             }
         },
         mounted: function () {
@@ -95,6 +96,8 @@ export default {
                 this.updateTotal();
             });  
 
+            //Remove the cookie (if exists)
+            this.removeCookie();
             this.buildMatrix(); 
         },
         methods: {
@@ -170,7 +173,9 @@ export default {
                 for(var ikey in _data['quantities']){
                     purchaseAmount += parseInt(_data['quantities'][ikey]);
                 }
-                //console.log(purchaseAmount)
+                console.log('Plugin: total products '+purchaseAmount)
+
+                self.updateCookie({  totalProducts: purchaseAmount }) 
 
                 if(purchaseAmount > 0) {
 
@@ -186,12 +191,14 @@ export default {
                     } 
                     emitter.emit('fireUpdateBar', purchaseAmount );
 
+                    
+
                     _letSend = axios.post(
                         postURL,
                         _data
                     )
                     .then(function (response) {
-                        console.log('then');
+                        //console.log('then');
                         if(purchaseAmount >= self.min_quantity){	
                             response.data.addcartenabled = true;
                         } else {
@@ -199,7 +206,10 @@ export default {
                         }
                         emitter.emit('firePopulateBox', response.data );
 
+                        
+
                         _letSend = false;
+
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -211,6 +221,8 @@ export default {
 
                         _letSend = false;
                     });
+
+                    
                     
                     /* *
                     (function($){
@@ -250,8 +262,29 @@ export default {
                 
                 
             },
+            updateCookie: function(cookieObj) {
+                let self = this
+                //$cookies.set(keyName, value[, expires[, path[, domain[, secure[, sameSite]]]]])
+                //console.log('Is cookie? '+window.$cookies.isKey(self.cookieName))
+                if(window.$cookies.isKey(self.cookieName)) {
+                    let oldCookieObj = window.$cookies.get(self.cookieName);
+                    //console.log(oldCookieObj)
+                    cookieObj = {...oldCookieObj,...cookieObj};
+                } 
+
+                const cookieJSON = JSON.stringify(cookieObj);
+                window.$cookies.set(self.cookieName,cookieJSON);
+                console.log('Plugin cookie')
+                console.log(window.$cookies.get(self.cookieName))
+            },
+            removeCookie: function() {
+                let self = this
+                console.log('Remove cookie')
+                window.$cookies.remove(self.cookieName);
+            },
             resetAll: function(){
                 this.empty = false;
+                this.removeCookie();
                 this.buildMatrix();
             }
         }
