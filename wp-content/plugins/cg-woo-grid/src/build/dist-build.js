@@ -1,10 +1,6 @@
 const { promises: fs } = require("fs")
-const path = require("path")
-
-const replace = require('replace-in-file');
-
-
-
+const path             = require("path")
+const replace          = require('replace-in-file');
 
 async function copyDir(src, dest) {
     await fs.mkdir(dest, { recursive: true });
@@ -35,6 +31,10 @@ async function copyDir(src, dest) {
         '.orig',
         '.tar.gz',
 	];
+    let ignorestart = [
+        '.',
+        '_',
+	];
 
 
     for (let entry of entries) {
@@ -50,6 +50,17 @@ async function copyDir(src, dest) {
             return false;
         });
         if ( contains) {
+			continue;
+		}
+
+        const starts = ignorestart.some(element => {
+            if (entry.name.startsWith(element)) {
+                return true;
+            }
+            
+            return false;
+        });
+        if (starts) {
 			continue;
 		}
         

@@ -364,21 +364,27 @@ class Functions {
 
 
     /**
-     * Custom order description field
+     * Custom order item names description field
      */
     
-    /**
-     * Show description field in cart
-     * 
-     * // Action defined in /woocommerce/templates/cart/cart.php
-     * add_action( 'woocommerce_cart_contents', 'cdg_add_cart_description' );
-     *
-     * @return void
-     */
-    function cdg_add_cart_description() {
 
-        $description = '';
-
+     /**
+      * Copy cdg_description from cookie and paste it in a custom field of cart item meta
+      * 
+      * add_filter('woocommerce_add_cart_item_data', 'cdg_update_cart_item_meta', 20, 4 );
+      *
+      * @param array $cart_item_data
+      * @param int $product_id
+      * @param int $variation_id
+      * @param int $quantity
+      * @return array
+      */
+     function cdg_update_cart_item_meta(
+        $cart_item_data, 
+        $product_id, 
+        $variation_id, 
+        $quantity
+     ){
         if(isset($_COOKIE['cgWooGrid'])) {
 
             $cgWooGrid = json_decode( 
@@ -389,178 +395,75 @@ class Functions {
                 ) 
             );
 
-            $description = implode("<br/>", $cgWooGrid->description);
-        }
-
-        if($description) {
-            echo '<tr><td colspan="6" class="description">'.$description.'</td></tr>';
-        }
-        
-    }
-
-
-    /**
-     * TODO: Update description with variations quantities on cart update
-     * $cart_updated = apply_filters( 'woocommerce_update_cart_action_cart_updated', $cart_updated );
-     * 
-     * @see https://stackoverflow.com/questions/49493085/which-hook-is-running-after-woocommerce-update-cart-button-action
-     * @see https://woocommerce.github.io/code-reference/files/woocommerce-includes-class-wc-form-handler.html#source-view.696
-     * @see https://www.businessbloomer.com/woocommerce-get-cart-info-total-items-etc-from-cart-object/
-     *
-     * @param [bool] $cart_updated
-     * @return void
-     */
-    function on_action_cart_updated( $cart_updated ){
-        /*
-        $description .= $nameproduct." - ".$numberofprods ." ".__("products","cg-woo-grid").": ";
-            foreach ($gridattributes as $k => $v) {
-                $description .= ($k != 0 ? ' - ' : '') . ucfirst($v['y']) . ', ';
-                foreach ($v['x'] as $kx => $vx) {
-                    $description .= ($kx != 0 ? ', ' : '') . strtoupper($vx[0]) . ' (' . $vx[1] . ')';
-                }
-            }
-        */
-
-        foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
-            $product = $cart_item['data'];
-            $product_id = $cart_item['product_id'];
-            $variation_id = $cart_item['variation_id'];
-            $quantity = $cart_item['quantity'];
-            // Anything related to $product, check $product tutorial
-            $attributes = $product->get_attributes();
-            $whatever_attribute = $product->get_attribute( 'whatever' );
-            $whatever_attribute_tax = $product->get_attribute( 'pa_whatever' );
-
-            $tax_y_slug = get_option($this->plugin_name.'_taxonomy_y_setting');
-            $tax_x_slug = get_option($this->plugin_name.'_taxonomy_x_setting');
-
-            $any_attribute = $cart_item['variation']['attribute_whatever'];
-            $meta = wc_get_formatted_cart_item_data( $cart_item );
-
-        }
-    }
-
-    /**
-     * Add custom description field to checkout
-     * @see https://woocommerce.com/document/tutorial-customising-checkout-fields-using-actions-and-filters/
-     * @see https://rudrastyh.com/woocommerce/woocommerce_form_field.html
-     * 
-     * add_action(  'woocommerce_review_order_before_payment',    'cdg_add_checkout_description'  );
-     * 
-     * @return void
-     */
-    function cdg_add_checkout_description() {
-
-        $description = '';
-
-        if(isset($_COOKIE['cgWooGrid'])) {
-
-            $cgWooGrid = json_decode( 
-                html_entity_decode( 
-                    stripslashes (
-                        $_COOKIE['cgWooGrid'] 
-                    ) 
-                ) 
-            );
-
-            $description = implode("<br/>", $cgWooGrid->description);
-        }
-        else {
-            $checkout    =  WC()->checkout;
-            $description = $checkout->get_value( 'cdg_order_description' );
-        }
-
-        
-        echo '<div id="cdg_order_description_checkout_field">';
-
-        woocommerce_form_field('cdg_order_description',
-            array(
-                'type'          => 'textarea',
-                'class'         => array('form-row-wide'),
-                //'label'         => esc_html__('Order Description', 'cg-woo-grid'),
-                'placeholder'   => esc_html__( 'Purchase description', 'cg-woo-grid' ),
-            ),
-            $description
-        );
-
-        echo '</div>';
-    }
-
-    /**
-     * Update the order meta with field value
-     * @see https://woocommerce.com/document/tutorial-customising-checkout-fields-using-actions-and-filters/
-     * 
-     * add_action( 'woocommerce_checkout_update_order_meta',  'cdg_checkout_description_update_order_meta');
-     *
-     * @param  int $order_id
-     * @return void
-     */
-    function cdg_checkout_description_update_order_meta( $order_id ) {
-        if ( ! empty( $_POST['cdg_order_description'] ) ) {
-            update_post_meta( 
-                $order_id, 
-                'cdg_order_description', 
-                sanitize_text_field( $_POST['cdg_order_description'] ) 
+            $cart_item_data = array(
+                'cdg_description' => implode(
+                    "<br/>", $cgWooGrid->description
+                )
             );
         }
-    }
+
+        return $cart_item_data;
+     }
 
     /**
-     * Display field value on the order edit page
-     * @see https://woocommerce.com/document/tutorial-customising-checkout-fields-using-actions-and-filters/
+     * Show the new custom data at the cart/checkout page
      * 
-     * // Action defined woocommerce/includes/admin/meta-boxes/views/html-order-items.php
-     *  add_action('woocommerce_admin_order_totals_after_discount',  'cdg_checkout_description_display_admin_order_meta', 10, 1 );
-     *
-     * @param  int  $order_id
-     * @return void
-     */
-    function cdg_checkout_description_display_admin_order_meta($order_id){
-        if( get_post_meta( $order_id, 
-                'cdg_order_description' 
-            ) 
-        ){
-            echo '<div style="clear:both; text-align:left;background: #d7cad2;
-            margin: -1.6em -2em 0 -2em;padding: 5px 0 1px 0;">'
-                .'<div style="padding: 1.5em 2em;background:white">' 
-                . get_post_meta( 
-                    $order_id, 
-                    'cdg_order_description', 
-                    true 
-                ) 
-                . '</div>'
-                . '</div>';
-        }
-    }
-
-    /**
-     * Add the custom field called 'cdg_order_description' to WooCommerce emails
-     * @see https://wpbeaches.com/add-a-required-checkbox-field-in-woocommerce-checkout-page/
+     * add_filter( 'woocommerce_get_item_data', cdg_get_cart_item_data, 10, 2 );
      * 
-     * $this->loader->add_filter( 'woocommerce_email_order_meta_fields','cdg_checkout_description_add_order_meta_fields_email',  10,  3 );
+     * @see https://stackoverflow.com/questions/25188365/how-to-retrieve-cart-item-data-with-woocommerce
      *
-     * @param  array $fields
-     * @param  bool $sent_to_admin
-     * @param  WC_Order $order
+     * @param array $item_data
+     * @param array $cart_item
      * @return array
      */
-    function cdg_checkout_description_add_order_meta_fields_email( 
-        $fields, 
-        $sent_to_admin, 
-        $order 
+    function cdg_get_cart_item_data( 
+        $item_data, 
+        $cart_item  
     ) {
+        if ( isset( $cart_item['cdg_description'] ) ) {
+            $item_data[] = array(
+                'key' => 'cdg_description',
+                'keystyle' => 'display:none', 
+                'display' => $cart_item['cdg_description']
+            );
+        }
 
-        //this is how its rendered: '<p><strong>' . $field['label'] . ':</strong> ' . $field['value'] . '</p>'; 
-        
-        $description = get_post_meta( $order->get_id(), 'cdg_order_description', true );
-
-        $fields['cdg_order_description'] = array(
-            'label' => '</strong></p><h2 style="color: #7f54b3; display: block; font-family: "Helvetica Neue",Helvetica,Roboto,Arial,sans-serif; font-size: 18px; font-weight: bold; line-height: 130%; margin: 0 0 18px; text-align: left;">'.esc_html__( 'Purchase description', 'cg-woo-grid' ).'</h2><strong style="display:none">',
-            'value' => '<p style="margin: 0 0 16px;">'.$description,
-        );
-        return $fields;
+        return $item_data;
     }
 
+    /**
+     * Update the order meta with the cart custom field value
+     * (woocommerce_add_order_item_meta is deprecated since 3.0)
+     * 
+     * @see https://woocommerce.com/document/tutorial-customising-checkout-fields-using-actions-and-filters/
+     * @see https://stackoverflow.com/questions/63753188/change-order-item-name-of-an-existing-order-in-woocommerce
+     * @see https://stackoverflow.com/questions/29666820/woocommerce-which-hook-to-replace-deprecated-woocommerce-add-order-item-meta
+     * 
+     * do_action( 'woocommerce_checkout_create_order_line_item', $item, $cart_item_key, $values, $order );
+     *
+     * @param WC_Order_Item_Product $item
+     * @param int                   $cart_item_key
+     * @param array                 $values
+     * @param int                   $order
+     * @return void
+     */
+    function cdg_checkout_update_order_line_item( 
+        $item, 
+        $cart_item_key, 
+        $values, 
+        $order
+    ) {
 
+        //error_log('$order->item[values]: '.print_r($values,true));
+        if(isset($values['cdg_description'])) {
+            $item->set_name( $item->get_name() .'<br/>'. $values['cdg_description'] );
+            wc_add_order_item_meta( 
+                $item->get_id(), 
+                'cdg_description', 
+                $values['cdg_description']
+            );
+        }
+        
+    }
 
 }

@@ -34,6 +34,10 @@ async function copyDir(src, dest) {
         '.orig',
         '.tar.gz',
 	];
+    let ignorestart = [
+        '.',
+        '_',
+	];
 
 
     for (let entry of entries) {
@@ -49,6 +53,17 @@ async function copyDir(src, dest) {
             return false;
         });
         if ( contains) {
+			continue;
+		}
+
+        const starts = ignorestart.some(element => {
+            if (entry.name.startsWith(element)) {
+                return true;
+            }
+            
+            return false;
+        });
+        if (starts) {
 			continue;
 		}
 

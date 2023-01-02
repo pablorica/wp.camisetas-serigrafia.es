@@ -1,0 +1,24 @@
+body.woocommerce-checkout {
+    table.woocommerce-checkout-review-order-table {
+        td.product-name {
+            dl.variation {
+                position: relative;
+                height: 100px;
+                dd.variation-cdg_description {
+                    position: absolute;
+                    width: 78vw;
+                    @media (min-width: 576px) {
+                        width: 88vw;
+                    }
+                    @media (min-width: 768px) {
+                        width: 34vw;
+                    }
+                    @media (min-width: 1400px) {
+                        width: 485px;
+                    }
+                }
+            }
+        }
+    }
+
+}

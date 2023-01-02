@@ -324,49 +324,41 @@ class Cg_Woo_Grid
             20,
             2
         );
+        
 
         /**
-         * Custom order description field
+         * Custom order items description fields
          */
-        // Action defined in /woocommerce/templates/cart/cart.php
-        $this->loader->add_action( 
-            'woocommerce_cart_contents', 
+
+        // Filter defined in /woocommerce/includes/class-wc-cart.php
+         //$cart_item_data = (array) apply_filters( 'woocommerce_add_cart_item_data', $cart_item_data, $product_id, $variation_id, $quantity );
+         $this->loader->add_filter( 
+            'woocommerce_add_cart_item_data', 
             $plugin_public, 
-            'cdg_add_cart_description'
+            'cdg_update_cart_item_meta',
+            20,
+            4
         );
-        $this->loader->add_action( 
-            'woocommerce_review_order_before_payment', 
-            $plugin_public, 
-            'cdg_add_checkout_description'
-        );
-        $this->loader->add_action( 
-            'woocommerce_checkout_update_order_meta', 
-            $plugin_public, 
-            'cdg_checkout_description_update_order_meta'
-        );
-        // Action defined woocommerce/includes/admin/meta-boxes/views/html-order-items.php
-        $this->loader->add_action( 
-            'woocommerce_admin_order_totals_after_discount', 
-            $plugin_public, 
-            'cdg_checkout_description_display_admin_order_meta',
-            10,
-            1
-        );
+        // Filter defined in /woocommerce/includes/wc-template-functions.php
+        // $item_data = apply_filters( 'woocommerce_get_item_data', $item_data, $cart_item );
         $this->loader->add_filter( 
-            'woocommerce_email_order_meta_fields',
+            'woocommerce_get_item_data', 
             $plugin_public, 
-            'cdg_checkout_description_add_order_meta_fields_email',
-            10, 
-            3
+            'cdg_get_cart_item_data',
+            10,
+            2
+        );
+        //Action defined in /woocommerce/includes/class-wc-checkout.php
+        //do_action( 'woocommerce_checkout_create_order_line_item', $item, $cart_item_key, $values, $order );
+        $this->loader->add_action( 
+            'woocommerce_checkout_create_order_line_item', 
+            $plugin_public, 
+            'cdg_checkout_update_order_line_item',
+			20,
+            4
         );
         
-        // $this->loader->add_filter( 
-        //     'woocommerce_checkout_fields',
-        //     $plugin_public, 
-        //     'cdg_add_checkout_description'
-        // );
-
-
+        /* */
 
         $plugin_public_restapi = new Cg_Woo_Grid_Public\Rest_Api( 
             $this->get_plugin_name(), 
