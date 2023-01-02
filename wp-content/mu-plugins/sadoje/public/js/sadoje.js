@@ -106,7 +106,8 @@
                 let cookieObj = {};
                 console.log('addOn changeCookie');
 
-                cookieObj.bagged = self.bagged;
+                
+                cookieObj.descStamping = '';
 
                 if( typeof self.indexFront !== 'undefined'
                     && Number.isInteger(self.indexFront) 
@@ -120,14 +121,20 @@
                     if( typeof self.areaFront !== 'undefined') {
                         //console.log(self.areaFront)
                         if(self.areaFront === '1') {
+                            cookieObj.front.area       = self.rows[keyFront].area1;
                             cookieObj.front.whitePrice = self.rows[keyFront].white_price1;
                             cookieObj.front.colorPrice = self.rows[keyFront].color_price1;
                         }
                         if(self.areaFront === '2') {
+                            cookieObj.front.area       = self.rows[keyFront].area2;
                             cookieObj.front.whitePrice = self.rows[keyFront].white_price2;
                             cookieObj.front.colorPrice = self.rows[keyFront].color_price2;
                         }
                     }
+
+                    cookieObj.descStamping += '\nEstampación en pecho' 
+                        +' ('+ cookieObj.front.stamping
+                        + ' ' + cookieObj.front.area + ') ';
                 }
 
                 if( typeof self.indexRear !== 'undefined'
@@ -142,14 +149,25 @@
                     if( typeof self.areaRear !== 'undefined') {
                         //console.log(self.areaRear)
                         if(self.areaRear === '1') {
+                            cookieObj.rear.area       = self.rows[keyRear].area1;
                             cookieObj.rear.whitePrice = self.rows[keyRear].white_price1;
                             cookieObj.rear.colorPrice = self.rows[keyRear].color_price1;
                         }
                         if(self.areaRear === '2') {
+                            cookieObj.rear.area       = self.rows[keyRear].area2;
                             cookieObj.rear.whitePrice = self.rows[keyRear].white_price2;
                             cookieObj.rear.colorPrice = self.rows[keyRear].color_price2;
                         }
                     }
+
+                    cookieObj.descStamping += '\nEstampación en espalda' 
+                        +' ('+ cookieObj.rear.stamping
+                        + ' ' + cookieObj.rear.area + ') ';
+                }
+
+                cookieObj.bagged = self.bagged;
+                if(self.bagged > 0 ) {
+                    cookieObj.descStamping += '\nEmbolsado';
                 }
 
 
@@ -167,11 +185,34 @@
                 if(window.$cookies.isKey(self.cookieName)) {
                     let oldCookieObj = window.$cookies.get(self.cookieName);
 
+                    if(typeof oldCookieObj.description !== 'undefined') {
+
+                        cookieObj.description = [
+                            oldCookieObj.description,
+                            cookieObj.descStamping
+                        ];
+                        delete oldCookieObj.description;
+                    } else {
+                        cookieObj.description = [
+                            '',
+                            cookieObj.descStamping
+                        ];
+                    }
+                    
+
                     delete oldCookieObj.front;
                     delete oldCookieObj.rear;
+                    
 
                     cookieObj = {...oldCookieObj,...cookieObj};
+                } else {
+                    cookieObj.description = [
+                        '',
+                        cookieObj.descStamping
+                    ];
                 }
+                delete cookieObj.descStamping;
+
                 const cookieJSON = JSON.stringify(cookieObj);
                 window.$cookies.set(self.cookieName,cookieJSON);
                 console.log('AddOn cookie');

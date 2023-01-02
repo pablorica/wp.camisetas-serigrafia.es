@@ -230,16 +230,13 @@ class Rest_Api {
 
         if($numberofprods > 0){
 
-            $description .= $nameproduct.": ".$numberofprods ." ".__("products","cg-woo-grid")."-> ";
+            $description .= $nameproduct." - ".$numberofprods ." ".__("products","cg-woo-grid").": ";
             foreach ($gridattributes as $k => $v) {
-                $description .= ($k != 0 ? ' - ' : '') . ucfirst($v['y']) . ': ';
+                $description .= ($k != 0 ? ' - ' : '') . ucfirst($v['y']) . ', ';
                 foreach ($v['x'] as $kx => $vx) {
                     $description .= ($kx != 0 ? ', ' : '') . strtoupper($vx[0]) . ' (' . $vx[1] . ')';
                 }
             }
-
-            //error_log('l:216 -> public/class-cg-woo-grid-public-rest-api.php - $description: '.$description);
-
 
             $html = '';
             $addurl = '';

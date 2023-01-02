@@ -32,7 +32,7 @@ define('CG_WOOGRID_URL', plugin_dir_url( __FILE__ ));
 
 
 // Start at version 1.0.0 and use SemVer - https://semver.org
-define( 'CG_WOOGRID_VERSION', '0.6.0' );
+define( 'CG_WOOGRID_VERSION', '0.6.3' );
 
 //Development status (development|production)
 define('CG_WOOGRID_STATUS', 'development');

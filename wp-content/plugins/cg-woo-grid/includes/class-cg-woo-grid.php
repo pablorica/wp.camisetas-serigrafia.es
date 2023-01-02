@@ -325,13 +325,41 @@ class Cg_Woo_Grid
             2
         );
 
-
+        /**
+         * Custom order description field
+         */
+        // Action defined in /woocommerce/templates/cart/cart.php
+        $this->loader->add_action( 
+            'woocommerce_cart_contents', 
+            $plugin_public, 
+            'cdg_add_cart_description'
+        );
         $this->loader->add_action( 
             'woocommerce_review_order_before_payment', 
             $plugin_public, 
-            'cdg_add_checkout_description',
-			15
+            'cdg_add_checkout_description'
         );
+        $this->loader->add_action( 
+            'woocommerce_checkout_update_order_meta', 
+            $plugin_public, 
+            'cdg_checkout_description_update_order_meta'
+        );
+        // Action defined woocommerce/includes/admin/meta-boxes/views/html-order-items.php
+        $this->loader->add_action( 
+            'woocommerce_admin_order_totals_after_discount', 
+            $plugin_public, 
+            'cdg_checkout_description_display_admin_order_meta',
+            10,
+            1
+        );
+        $this->loader->add_filter( 
+            'woocommerce_email_order_meta_fields',
+            $plugin_public, 
+            'cdg_checkout_description_add_order_meta_fields_email',
+            10, 
+            3
+        );
+        
         // $this->loader->add_filter( 
         //     'woocommerce_checkout_fields',
         //     $plugin_public, 

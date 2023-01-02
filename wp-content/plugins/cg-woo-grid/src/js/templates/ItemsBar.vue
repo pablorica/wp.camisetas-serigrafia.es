@@ -46,6 +46,10 @@ export default {
             emitter.on('fireUpdateBar', (purchaseAmount) => {
                 this.displayBar(purchaseAmount);
             }); 
+
+            emitter.on('fireResetBar', (purchaseAmount) => {
+                this.resetAll();
+            }); 
         },
         methods: {
             displayBar: function (purchaseAmount) {

@@ -142,7 +142,8 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
             if( isset($cgWooGrid->totalProducts) 
                 && $cgWooGrid->totalProducts > 0 
             ) {
-                $totalprods = $cgWooGrid->totalProducts;
+                $description = '';
+                $totalprods  = $cgWooGrid->totalProducts;
                 if($this->verbose) {
                     error_log('cdg_alter_regular_price: $totalprods -> '.$totalprods);
                 }
@@ -150,6 +151,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                 if( isset($cgWooGrid->front)) {
                     $priceAdd      = $cgWooGrid->front;
                     $stampingFront = $priceAdd->stamping;
+                    $areaFront     = $priceAdd->area;
                     $regular_price = $this->cdg_get_price_addiction(
                         $regular_price, 
                         $priceAdd, 
@@ -157,13 +159,23 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                         $attr['attribute_pa_color'],  
                         'Front'
                     );
+                    // $description .= '
+                    // '.esc_html__('Estampación en pecho','sadoje')
+                    //  .'('.$stampingFront
+                    //  .' '.$areaFront.') ';
                 }
                 if( isset($cgWooGrid->rear)) {
                     $priceAdd     = $cgWooGrid->rear;
                     $stampingRear = $priceAdd->stamping;
+                    $areaRear     = $priceAdd->area;
                     if($stampingRear == $stampingFront) {
                         $priceAdd->screenPrice = 0; //Only adds once, and it was done previously in the front area
                     }
+
+                    // $description .= '
+                    // '.esc_html__('Estampación en espalda','sadoje')
+                    //  .'('.$stampingRear
+                    //  .' '.$areaRear.') ';
 
                     $regular_price = $this->cdg_get_price_addiction(
                         $regular_price, 
@@ -175,11 +187,16 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                 }
             }
 
-            if($this->verbose) {
-                error_log('cdg_alter_regular_price: baggedPrice -> '.$cgWooGrid->bagged);
+            if($cgWooGrid->bagged) {
+                // $description .= '
+                // '.esc_html__('Embolsado','sadoje');
+
+                if($this->verbose) {
+                    error_log('cdg_alter_regular_price: baggedPrice -> '.$cgWooGrid->bagged);
+                }
+                
+                $regular_price = $regular_price + (float) $cgWooGrid->bagged;
             }
-            
-            $regular_price = $regular_price + (float) $cgWooGrid->bagged;
 
         }
         if($this->verbose) {

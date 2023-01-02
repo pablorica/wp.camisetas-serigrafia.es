@@ -206,7 +206,7 @@ export default {
                         }
                         emitter.emit('firePopulateBox', response.data );
 
-                        
+                        self.updateCookie({ newdescription: response.data.description }) 
 
                         _letSend = false;
 
@@ -269,6 +269,19 @@ export default {
                 if(window.$cookies.isKey(self.cookieName)) {
                     let oldCookieObj = window.$cookies.get(self.cookieName);
                     //console.log(oldCookieObj)
+
+                    if(typeof cookieObj.newdescription !== 'undefined') {
+
+                        if(typeof oldCookieObj.description !== 'undefined') {
+                            oldCookieObj.description[0] = cookieObj.newdescription
+                        } else {
+                            cookieObj.description = [cookieObj.newdescription]
+                        }
+
+                        delete cookieObj.newdescription
+                    }
+
+
                     cookieObj = {...oldCookieObj,...cookieObj};
                 } 
 
@@ -286,6 +299,7 @@ export default {
                 this.empty = false;
                 this.removeCookie();
                 this.buildMatrix();
+                emitter.emit('fireResetBar');
             }
         }
     }
