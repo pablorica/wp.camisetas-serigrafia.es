@@ -369,6 +369,9 @@ class Functions {
     
     /**
      * Show description field in cart
+     * 
+     * // Action defined in /woocommerce/templates/cart/cart.php
+     * add_action( 'woocommerce_cart_contents', 'cdg_add_cart_description' );
      *
      * @return void
      */
@@ -442,6 +445,8 @@ class Functions {
      * @see https://woocommerce.com/document/tutorial-customising-checkout-fields-using-actions-and-filters/
      * @see https://rudrastyh.com/woocommerce/woocommerce_form_field.html
      * 
+     * add_action(  'woocommerce_review_order_before_payment',    'cdg_add_checkout_description'  );
+     * 
      * @return void
      */
     function cdg_add_checkout_description() {
@@ -457,7 +462,7 @@ class Functions {
                     ) 
                 ) 
             );
-            
+
             $description = implode("<br/>", $cgWooGrid->description);
         }
         else {
@@ -484,6 +489,8 @@ class Functions {
     /**
      * Update the order meta with field value
      * @see https://woocommerce.com/document/tutorial-customising-checkout-fields-using-actions-and-filters/
+     * 
+     * add_action( 'woocommerce_checkout_update_order_meta',  'cdg_checkout_description_update_order_meta');
      *
      * @param  int $order_id
      * @return void
@@ -501,6 +508,9 @@ class Functions {
     /**
      * Display field value on the order edit page
      * @see https://woocommerce.com/document/tutorial-customising-checkout-fields-using-actions-and-filters/
+     * 
+     * // Action defined woocommerce/includes/admin/meta-boxes/views/html-order-items.php
+     *  add_action('woocommerce_admin_order_totals_after_discount',  'cdg_checkout_description_display_admin_order_meta', 10, 1 );
      *
      * @param  int  $order_id
      * @return void
@@ -526,6 +536,8 @@ class Functions {
     /**
      * Add the custom field called 'cdg_order_description' to WooCommerce emails
      * @see https://wpbeaches.com/add-a-required-checkbox-field-in-woocommerce-checkout-page/
+     * 
+     * $this->loader->add_filter( 'woocommerce_email_order_meta_fields','cdg_checkout_description_add_order_meta_fields_email',  10,  3 );
      *
      * @param  array $fields
      * @param  bool $sent_to_admin
