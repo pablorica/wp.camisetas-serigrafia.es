@@ -96,7 +96,7 @@ class Cg_Woo_Grid_Admin {
     public function addAdminMenu() {
         //add_menu_page( $page_title, $menu_title, $capability, $menu_slug, $function, $icon_url, $position );
         add_menu_page(  
-            $this->plugin_name, 
+            esc_html__('Attribute Grid', 'cg-woo-grid'), 
             esc_html__('Attribute Grid', 'cg-woo-grid'), 
             'administrator', 
             $this->plugin_name, 
