@@ -118,7 +118,9 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
      */
     function cdg_alter_regular_price( 
         $regular_price,
-        $single_variation
+        $single_variation,
+        $quantity,
+        $totalprods = 0
     ) {
         $attr = $single_variation->get_variation_attributes();
 
@@ -126,6 +128,38 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
             error_log('cdg_alter_regular_price: Product -> '.print_r($single_variation->get_name(),true));
             error_log('cdg_alter_regular_price: Colour -> '.$attr['attribute_pa_color']);
             error_log('cdg_alter_regular_price: Original Price -> '.$regular_price);
+            error_log('cdg_alter_regular_price: Quantity -> '.$quantity);
+        }
+
+        $baseprice = get_option($this->get_element_name().'_budgeteer_baseprice_types');
+        $baseprices = maybe_unserialize($baseprice)[0];
+        if($this->verbose) {
+            //error_log('cdg_alter_regular_price: $baseprices -> '.print_r($baseprices,true));
+        }
+
+        if($quantity >= $baseprices['boxpricemin']) {
+            if($this->verbose) {
+                error_log('cdg_alter_regular_price: The quantity of this item is bigger than  '.$baseprices['boxpricemin'].' , therefore the sale price is the box price');
+            }
+            $regular_price = get_post_meta( 
+                $single_variation->get_id(), 
+                '_box_price', 
+                true 
+            );
+        }
+        elseif($quantity >= $baseprices['packagepricemin']) {
+            if($this->verbose) {
+                error_log('cdg_alter_regular_price: The quantity of this item is bigger than  '.$baseprices['packagepricemin'].' , therefore the sale price is the package price');
+            }
+            $regular_price = get_post_meta( 
+                $single_variation->get_id(), 
+                '_pack_price', 
+                true 
+            );
+        }
+
+        if($this->verbose) {
+            error_log('cdg_alter_regular_price: Altered price due the quantity of this item -> '.$regular_price);
         }
 
         if(isset($_COOKIE['cgWooGrid'])) {
@@ -143,9 +177,57 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                 && $cgWooGrid->totalProducts > 0 
             ) {
                 $description = '';
-                $totalprods  = $cgWooGrid->totalProducts;
+
+                if(!$totalprods) {
+                    $totalprods  = $cgWooGrid->totalProducts;
+                }
+
                 if($this->verbose) {
                     error_log('cdg_alter_regular_price: $totalprods -> '.$totalprods);
+                }
+
+                $profit = 0;
+
+                $profit_types = get_option($this->get_element_name().'_budgeteer_profit_types');
+                if($profit_types) {
+                    $profits = maybe_unserialize($profit_types);
+                    if($this->verbose) {
+                        //error_log('cdg_alter_regular_price: $profits -> '.print_r($profits,true));
+                    }
+
+                    if(is_array($profits) 
+                        && count($profits)
+                    ) {
+                    
+                        $current_profit_type = array_pop(
+                            array_filter(
+                                $profits,
+                                function($obj) use ($totalprods) { 
+                                    return ($obj['min'] <= $totalprods && $obj['max'] >= $totalprods);
+                                }
+                            )
+                        );
+
+                        if($this->verbose) {
+                            error_log('cdg_alter_regular_price: Filtered $profit -> '.print_r($current_profit_type,true));
+                        }
+
+                        if(isset($current_profit_type['profit'])) {
+
+                            if($this->verbose) {
+                                error_log('cdg_alter_regular_price: Filtered $profit -> '.$current_profit_type['profit']);
+                            }
+
+                            $profit = $current_profit_type['profit'];
+                        }
+                    }
+                }
+
+                $regular_price = $regular_price * (1 + $profit/100);
+
+                if($this->verbose) {
+                    error_log('cdg_alter_regular_price: Profit due the number of items -> '.$profit);
+                    error_log('cdg_alter_regular_price: Altered price due the number of items -> '.$regular_price);
                 }
 
                 if( isset($cgWooGrid->front)) {
@@ -242,12 +324,18 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
         if ( did_action( 'woocommerce_before_calculate_totals' ) >= 2 ) return;
 
         //error_log(print_r($cart,true));
+        $totalitems = $cart->get_cart_contents_count();
+        //error_log('$totalitems -> '.$totalitems);
 
         foreach ( $cart->get_cart() as $cart_item_key => $cart_item ) {
-            $product = $cart_item['data'];
+            
+            $product  = $cart_item['data'];
+            $quantity = $cart_item['quantity'];
             $price = $this->cdg_alter_regular_price( 
                 $product->get_price(),
-                $product
+                $product,
+                $quantity,
+                $totalitems
             );
             $cart_item['data']->set_price( $price);
             

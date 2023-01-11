@@ -155,6 +155,9 @@ export default {
 
             if(self.serialized !== ''){
 
+                //console.log('serialized');
+                //console.log(self.serialized);
+
                 axios.post(getURL,{
                         serialized: self.serialized
                     })
@@ -185,9 +188,8 @@ export default {
             let self      = this
             let cookieObj = {}
             console.log('addOn changeCookie')
-
-            
             cookieObj.descStamping = '';
+            cookieObj.baseprices   = self.baseprices;
 
             if( typeof self.indexFront !== 'undefined'
                 && Number.isInteger(self.indexFront) 

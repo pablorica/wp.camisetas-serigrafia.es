@@ -177,7 +177,7 @@ class Customisations_For_Cg_Woo_Grid extends Sadoje_Singleton {
                 'cdg_alter_regular_price' 
             ),
             100,
-            2
+            3
         );
         // add_filter( 
         //     'cg-woo-grid_get_total_price', 

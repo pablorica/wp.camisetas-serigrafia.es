@@ -55,6 +55,7 @@ class Cg_Woo_Grid
     protected $vue_filepath;
     protected $vue_version;
     protected $axios_filepath;
+    protected $vuecookies_filepath;
 
     /**
 	 * Define the core functionality of the plugin.

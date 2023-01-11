@@ -9,7 +9,7 @@ Codigo Woo Grid allows your users to add multiple variations of a product to the
 
 
 
-## Installation
+## Development
 
 The plugin uses [npm](https://www.npmjs.com/) as manager for dependency packages. And it uses tools like [rollup.js](https://www.rollupjs.org/) and [sass](https://sass-lang.com/) as taskrunners to compile .scss code into .css, minify .js code, etc. The following chapter describes the usage and workflow.
 
@@ -38,8 +38,22 @@ npm run watch
 Once the plugin changes are ready, rub this command to create the final distribution
 
 ```
-npm run dist
+npm run dist-build
 ```
+
+Run this command to delete any previous distribution
+
+```
+npm run dist-clean
+```
+## Performance
+
+The plugin builds a matrix of number fields using the attributes selected in he backend (taxonomy X and taxonomy Y)
+
+The user can add quantities to these fields and can simultaneously add them to the cart.
+ To add more than one variation simultaneously we are using the functions `cdg_add_multiple_variations_to_cart()` and  `woo_hack_invoke_private_method()`, following the istructions of [WooCommerce: add multiple products to cart via url](https://www.webroomtech.com/woocommerce-add-multiple-products-to-cart-via-url/)
+
+ The plugin aslos add a new Cookie `cgWooGrid` that can be useful to get information for any custom addon.
 
 ## Required Plugins
 * [WooCommerce](https://woocommerce.com/)

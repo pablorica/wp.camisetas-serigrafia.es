@@ -127,6 +127,8 @@ class Functions {
     
     /**
      * Add multiple product variations to cart
+     * 
+     * @see https://www.webroomtech.com/woocommerce-add-multiple-products-to-cart-via-url/
      *
      * @param boolean $url
      * @return void

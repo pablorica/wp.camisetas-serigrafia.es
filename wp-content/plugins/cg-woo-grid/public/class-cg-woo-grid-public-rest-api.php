@@ -16,6 +16,7 @@ namespace Cg_Woo_Grid_Public;
 class Rest_Api {
 
     protected $plugin_name;
+    protected $version;
 
     /**** Custom Plugin Properties ****/
 
@@ -85,7 +86,7 @@ class Rest_Api {
      * 
      * @param object $request_data
      * 
-     * @return array || \WP_Error
+     * @return object || \WP_Error
      */
     public function build_total_box($request_data) {
 
@@ -211,7 +212,8 @@ class Rest_Api {
                     $uprice = apply_filters( 
                         'cg-woo-grid_get_regular_price', 
                         $single_variation->get_regular_price(),
-                        $single_variation
+                        $single_variation,
+                        $quantity
                     );
 
                     $price  += $quantity * $uprice;

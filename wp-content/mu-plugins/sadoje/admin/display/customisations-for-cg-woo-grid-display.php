@@ -52,7 +52,7 @@
                         class="postbox"
                     >
                         <h2>
-                            <span><?php echo __('Margen de beneficio por cantidades','sadoje'); ?></span>
+                            <span><?php echo __('Precio a aplicar por cantidades','sadoje'); ?></span>
                         </h2>
 						<div class="inside">
                             <form id="formBaseprice"
@@ -508,8 +508,8 @@
                                                     <input type="number" 
                                                         autocomplete="off"
                                                         size="4"
-                                                        v-model="row.quantity"
-                                                        :name="'quantity['+index+']'"
+                                                        v-model="row.profit"
+                                                        :name="'profit['+index+']'"
                                                         @input="updateRows()"
                                                     >
                                                 </th>
