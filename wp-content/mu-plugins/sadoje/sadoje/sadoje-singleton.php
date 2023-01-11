@@ -27,6 +27,7 @@ abstract class Sadoje_Singleton {
 
     protected $plugin_url;
     protected $plugin_path;
+    protected $verbose;
 
 
 	/**
@@ -45,11 +46,11 @@ abstract class Sadoje_Singleton {
 	protected function __construct() {
         //Initialize all the basics components of the plugin
         $this->plugin_name = 'sadoje';
-        $this->version = '0.7.4';
+        $this->version = '0.8.11';
 
         $this->verbose = false;
-        if(defined('SCRIPT_DEBUG')) {
-            $this->verbose = SCRIPT_DEBUG;
+        if(defined('DEVELOPMENT_DEBUG')) {
+            $this->verbose = DEVELOPMENT_DEBUG;
         }
         $this->verbose = false;
 

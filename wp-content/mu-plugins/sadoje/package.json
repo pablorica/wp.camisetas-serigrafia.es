@@ -7,6 +7,7 @@
       "css": "npm-run-all css-compile css-minify",
       "css-compile": "sass --style expanded --source-map --embed-sources --no-error-css --quiet src/sass/sadoje.scss:public/css/sadoje.css",
       "css-minify": "cleancss -O1 --format breakWith=lf --with-rebase --source-map --source-map-inline-sources --output public/css/ --batch --batch-suffix \".min\" \"public/css/*.css\" \"!public/css/*.min.css\" \"!public/css/*rtl*.css\"",
+      "css-admin-colors-compile": "sass --style expanded --source-map --embed-sources --no-error-css --quiet admin/src/sass/yellow.scss:admin/css/colors/yellow.css",
       "js": "npm-run-all js-compile js-minify",
       "js-compile": "rollup --config src/build/rollup.config.js --sourcemap",
       "js-minify": "terser --config-file src/build/terser.config.json --output public/js/sadoje.min.js public/js/sadoje.js",

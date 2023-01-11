@@ -1,0 +1,12 @@
+$scheme-name: "yellow";
+$base-color: #ebaf08;
+$icon-color: #f2fcff;
+$highlight-color: #fbd564;
+$notification-color: #aaa088;
+$menu-submenu-focus-text: lighten( $highlight-color, 35% );
+$low-contrast-theme: "true";
+
+$form-checked: $base-color;
+
+@import "../../../../../../wp-admin/css/colors/admin";
+
