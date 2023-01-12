@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the Codigo Woo Grid plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Codigo Woo Grid 0.1.0\n"
+"Project-Id-Version: Codigo Woo Grid 0.7.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/cg-woo-grid\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-01-02T19:13:12+00:00\n"
+"POT-Creation-Date: 2023-01-12T12:30:57+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: cg-woo-grid\n"
@@ -34,8 +34,10 @@ msgstr ""
 msgid "http://codigo.co.uk/pablo-rica"
 msgstr ""
 
+#: admin/class-cg-woo-grid-admin.php:99
 #: admin/class-cg-woo-grid-admin.php:100
 #: admin/partials/cg-woo-grid-admin-display.php:20
+#: dist/admin/class-cg-woo-grid-admin.php:99
 #: dist/admin/class-cg-woo-grid-admin.php:100
 #: dist/admin/partials/cg-woo-grid-admin-display.php:20
 msgid "Attribute Grid"
@@ -100,61 +102,91 @@ msgstr ""
 
 #: admin/class-cg-woo-grid-admin.php:384
 #: dist/admin/class-cg-woo-grid-admin.php:384
-msgid "Pop Up Message 1"
-msgstr ""
-
-#: admin/class-cg-woo-grid-admin.php:394
-#: dist/admin/class-cg-woo-grid-admin.php:394
-msgid "Continue the purchase"
+msgid "Low stock threshold"
 msgstr ""
 
 #: admin/class-cg-woo-grid-admin.php:401
 #: dist/admin/class-cg-woo-grid-admin.php:401
-msgid "Pop Up Message 2"
-msgstr ""
-
-#: admin/class-cg-woo-grid-admin.php:411
-#: dist/admin/class-cg-woo-grid-admin.php:411
-msgid "Go to cart"
+msgid "Show stock in each field"
 msgstr ""
 
 #: admin/class-cg-woo-grid-admin.php:418
 #: dist/admin/class-cg-woo-grid-admin.php:418
-msgid "Pop Up Success Title"
+msgid "Stock threshold message"
 msgstr ""
 
 #: admin/class-cg-woo-grid-admin.php:428
 #: dist/admin/class-cg-woo-grid-admin.php:428
-msgid "Shopping cart"
+msgid "Sorry, there are only % stocks left for this product"
 msgstr ""
 
 #: admin/class-cg-woo-grid-admin.php:435
 #: dist/admin/class-cg-woo-grid-admin.php:435
-msgid "Pop Up Success Message"
+msgid "Stock zero message"
 msgstr ""
 
 #: admin/class-cg-woo-grid-admin.php:445
 #: dist/admin/class-cg-woo-grid-admin.php:445
+msgid "Sorry, this product is out of stock"
+msgstr ""
+
+#: admin/class-cg-woo-grid-admin.php:460
+#: dist/admin/class-cg-woo-grid-admin.php:460
+msgid "Pop Up Message 1"
+msgstr ""
+
+#: admin/class-cg-woo-grid-admin.php:470
+#: dist/admin/class-cg-woo-grid-admin.php:470
+msgid "Continue the purchase"
+msgstr ""
+
+#: admin/class-cg-woo-grid-admin.php:477
+#: dist/admin/class-cg-woo-grid-admin.php:477
+msgid "Pop Up Message 2"
+msgstr ""
+
+#: admin/class-cg-woo-grid-admin.php:487
+#: dist/admin/class-cg-woo-grid-admin.php:487
+msgid "Go to cart"
+msgstr ""
+
+#: admin/class-cg-woo-grid-admin.php:494
+#: dist/admin/class-cg-woo-grid-admin.php:494
+msgid "Pop Up Success Title"
+msgstr ""
+
+#: admin/class-cg-woo-grid-admin.php:504
+#: dist/admin/class-cg-woo-grid-admin.php:504
+msgid "Shopping cart"
+msgstr ""
+
+#: admin/class-cg-woo-grid-admin.php:511
+#: dist/admin/class-cg-woo-grid-admin.php:511
+msgid "Pop Up Success Message"
+msgstr ""
+
+#: admin/class-cg-woo-grid-admin.php:521
+#: dist/admin/class-cg-woo-grid-admin.php:521
 msgid "The cart has been successfully updated"
 msgstr ""
 
-#: admin/class-cg-woo-grid-admin.php:452
-#: dist/admin/class-cg-woo-grid-admin.php:452
+#: admin/class-cg-woo-grid-admin.php:528
+#: dist/admin/class-cg-woo-grid-admin.php:528
 msgid "Pop Up Error Title"
 msgstr ""
 
-#: admin/class-cg-woo-grid-admin.php:462
-#: dist/admin/class-cg-woo-grid-admin.php:462
+#: admin/class-cg-woo-grid-admin.php:538
+#: dist/admin/class-cg-woo-grid-admin.php:538
 msgid "Insufficient items"
 msgstr ""
 
-#: admin/class-cg-woo-grid-admin.php:469
-#: dist/admin/class-cg-woo-grid-admin.php:469
+#: admin/class-cg-woo-grid-admin.php:545
+#: dist/admin/class-cg-woo-grid-admin.php:545
 msgid "Pop Up Error Message"
 msgstr ""
 
-#: admin/class-cg-woo-grid-admin.php:479
-#: dist/admin/class-cg-woo-grid-admin.php:479
+#: admin/class-cg-woo-grid-admin.php:555
+#: dist/admin/class-cg-woo-grid-admin.php:555
 msgid "There must be a minimum of %1 products"
 msgstr ""
 
@@ -170,92 +202,102 @@ msgstr ""
 
 #: admin/partials/cg-woo-grid-admin-display.php:74
 #: dist/admin/partials/cg-woo-grid-admin-display.php:74
-msgid "Pop-up"
+msgid "Stock options"
 msgstr ""
 
 #: admin/partials/cg-woo-grid-admin-display.php:78
 #: dist/admin/partials/cg-woo-grid-admin-display.php:78
+msgid "The stock threshold will be subtracted from the actual stock value of each product, and the purchase of the item will be allowed if the quantity is below to said final value."
+msgstr ""
+
+#: admin/partials/cg-woo-grid-admin-display.php:96
+#: dist/admin/partials/cg-woo-grid-admin-display.php:96
+msgid "Pop-up"
+msgstr ""
+
+#: admin/partials/cg-woo-grid-admin-display.php:100
+#: dist/admin/partials/cg-woo-grid-admin-display.php:100
 msgid "Messages to show in the pop-up"
 msgstr ""
 
-#: admin/partials/cg-woo-grid-admin-display.php:103
-#: dist/admin/partials/cg-woo-grid-admin-display.php:103
+#: admin/partials/cg-woo-grid-admin-display.php:125
+#: dist/admin/partials/cg-woo-grid-admin-display.php:125
 msgid "General settings"
 msgstr ""
 
-#: admin/partials/cg-woo-grid-admin-display.php:107
-#: dist/admin/partials/cg-woo-grid-admin-display.php:107
+#: admin/partials/cg-woo-grid-admin-display.php:129
+#: dist/admin/partials/cg-woo-grid-admin-display.php:129
 msgid "These settings apply to all Attribute Grid functionality."
 msgstr ""
 
-#: dist/public/class-cg-woo-grid-public-rest-api.php:57
-#: public/class-cg-woo-grid-public-rest-api.php:57
+#: dist/public/class-cg-woo-grid-public-rest-api.php:58
+#: public/class-cg-woo-grid-public-rest-api.php:58
 msgid "ITEMS"
 msgstr ""
 
-#: dist/public/class-cg-woo-grid-public-rest-api.php:109
-#: dist/public/class-cg-woo-grid-public-rest-api.php:330
-#: dist/public/class-cg-woo-grid-public-rest-api.php:444
-#: dist/public/class-cg-woo-grid-public.php:359
-#: public/class-cg-woo-grid-public-rest-api.php:109
-#: public/class-cg-woo-grid-public-rest-api.php:330
-#: public/class-cg-woo-grid-public-rest-api.php:444
-#: public/class-cg-woo-grid-public.php:359
-msgid "No results"
-msgstr ""
-
 #: dist/public/class-cg-woo-grid-public-rest-api.php:115
+#: dist/public/class-cg-woo-grid-public-rest-api.php:338
+#: dist/public/class-cg-woo-grid-public-rest-api.php:456
+#: dist/public/class-cg-woo-grid-public.php:361
 #: public/class-cg-woo-grid-public-rest-api.php:115
-msgid "Your budget"
-msgstr ""
-
-#: dist/public/class-cg-woo-grid-public-rest-api.php:116
-#: public/class-cg-woo-grid-public-rest-api.php:116
-msgid "Unit price"
-msgstr ""
-
-#: dist/public/class-cg-woo-grid-public-rest-api.php:117
-#: public/class-cg-woo-grid-public-rest-api.php:117
-msgid "Price"
-msgstr ""
-
-#: dist/public/class-cg-woo-grid-public-rest-api.php:118
-#: public/class-cg-woo-grid-public-rest-api.php:118
-msgid "Items"
-msgstr ""
-
-#: dist/public/class-cg-woo-grid-public-rest-api.php:119
-#: public/class-cg-woo-grid-public-rest-api.php:119
-msgid "Amount"
-msgstr ""
-
-#: dist/public/class-cg-woo-grid-public-rest-api.php:120
-#: public/class-cg-woo-grid-public-rest-api.php:120
-msgid "Sub-total"
+#: public/class-cg-woo-grid-public-rest-api.php:338
+#: public/class-cg-woo-grid-public-rest-api.php:456
+#: public/class-cg-woo-grid-public.php:361
+msgid "No results"
 msgstr ""
 
 #: dist/public/class-cg-woo-grid-public-rest-api.php:121
 #: public/class-cg-woo-grid-public-rest-api.php:121
-msgid "VAT"
+msgid "Your budget"
 msgstr ""
 
 #: dist/public/class-cg-woo-grid-public-rest-api.php:122
 #: public/class-cg-woo-grid-public-rest-api.php:122
-msgid "Total"
+msgid "Unit price"
 msgstr ""
 
 #: dist/public/class-cg-woo-grid-public-rest-api.php:123
 #: public/class-cg-woo-grid-public-rest-api.php:123
+msgid "Price"
+msgstr ""
+
+#: dist/public/class-cg-woo-grid-public-rest-api.php:124
+#: public/class-cg-woo-grid-public-rest-api.php:124
+msgid "Items"
+msgstr ""
+
+#: dist/public/class-cg-woo-grid-public-rest-api.php:125
+#: public/class-cg-woo-grid-public-rest-api.php:125
+msgid "Amount"
+msgstr ""
+
+#: dist/public/class-cg-woo-grid-public-rest-api.php:126
+#: public/class-cg-woo-grid-public-rest-api.php:126
+msgid "Sub-total"
+msgstr ""
+
+#: dist/public/class-cg-woo-grid-public-rest-api.php:127
+#: public/class-cg-woo-grid-public-rest-api.php:127
+msgid "VAT"
+msgstr ""
+
+#: dist/public/class-cg-woo-grid-public-rest-api.php:128
+#: public/class-cg-woo-grid-public-rest-api.php:128
+msgid "Total"
+msgstr ""
+
+#: dist/public/class-cg-woo-grid-public-rest-api.php:129
+#: public/class-cg-woo-grid-public-rest-api.php:129
 msgid "Add to cart"
 msgstr ""
 
-#: dist/public/class-cg-woo-grid-public-rest-api.php:158
-#: dist/public/class-cg-woo-grid-public-rest-api.php:301
-#: dist/public/class-cg-woo-grid-public-rest-api.php:382
-#: dist/public/class-cg-woo-grid-public.php:339
-#: public/class-cg-woo-grid-public-rest-api.php:158
-#: public/class-cg-woo-grid-public-rest-api.php:301
-#: public/class-cg-woo-grid-public-rest-api.php:382
-#: public/class-cg-woo-grid-public.php:339
+#: dist/public/class-cg-woo-grid-public-rest-api.php:165
+#: dist/public/class-cg-woo-grid-public-rest-api.php:309
+#: dist/public/class-cg-woo-grid-public-rest-api.php:391
+#: dist/public/class-cg-woo-grid-public.php:341
+#: public/class-cg-woo-grid-public-rest-api.php:165
+#: public/class-cg-woo-grid-public-rest-api.php:309
+#: public/class-cg-woo-grid-public-rest-api.php:391
+#: public/class-cg-woo-grid-public.php:341
 msgid "Something went wrong"
 msgstr ""
