@@ -24,6 +24,8 @@ export const config = {
     bar_success:    BAR_SUCCESS,
     bar_itemstitle: BAR_ITEMSTITLE,
 
+    stock_zero_message: STOCK_MESSAGE_ZERO,
+
     popup_message1:     POPUP_MESSAGE1,
     popup_message2:     POPUP_MESSAGE2,
     popup_sucess_title: POPUP_SUCESS_TITLE,

@@ -57,6 +57,8 @@ class Rest_Api {
             const BAR_SUCCESS    = "'.get_option($this->plugin_name.'_bar_success').'";
             const BAR_ITEMSTITLE = "'.esc_html__("ITEMS","cg-woo-grid").'";
 
+            const STOCK_MESSAGE_ZERO = "'.get_option($this->plugin_name.'_stock_zero_message').'";
+
             const POPUP_MESSAGE1       = "'.get_option($this->plugin_name.'_popup_message1').'";
             const POPUP_MESSAGE2       = "'.get_option($this->plugin_name.'_popup_message2').'";
             const POPUP_SUCESS_TITLE   = "'.get_option($this->plugin_name.'_popup_success_title').'";
@@ -91,6 +93,7 @@ class Rest_Api {
     public function build_total_box($request_data) {
 
         global $post;
+        
         $parameters = $request_data->get_params();
         //error_log('l.158 - build_total_box: '.print_r($parameters,true));
         $return = new \stdClass();
@@ -98,7 +101,9 @@ class Rest_Api {
         $return->product_id = null;
         if( isset($parameters['product_id']) ) {
             $return->product_id = $parameters['product_id'];
-        } elseif( isset($post->ID) ) {
+        } elseif( $post instanceof \WP_Post && 
+            isset($post->ID) 
+        ) {
             $return->product_id = $post->ID;
         } elseif(get_queried_object_id()) {
             $return->product_id = get_queried_object_id();
@@ -136,6 +141,7 @@ class Rest_Api {
         $return->taxonomy_x = get_option($this->plugin_name.'_taxonomy_x_setting');
         //$return->taxonomy_x_name = 'Talla';
         $return->taxonomy_x_name = get_option($this->plugin_name.'_taxonomy_x_setting_title');
+        
 
         return rest_ensure_response($return);
     }
@@ -371,9 +377,10 @@ class Rest_Api {
         extract(wp_parse_args(
             $args,
             array(
-                'product' => null,
-                'taxonomy_y' => null,
-                'taxonomy_x' => null,
+                'product'       => null,
+                'taxonomy_y'    => null,
+                'taxonomy_x'    => null,
+                'stock'         => array(),
             )
         ));
 
@@ -411,10 +418,13 @@ class Rest_Api {
                 $currentKey = key($matrix);
             }
             
-            $valueX = new \stdClass();
-            $valueX->name  = strtoupper($varAttributes[$taxonomy_x]);
-            $valueX->slug  = $single_variation->get_slug();
-            $valueX->stock = $single_variation->get_stock_quantity();
+            $valueX       = new \stdClass();
+            $valueX->name = strtoupper($varAttributes[$taxonomy_x]);
+            $valueX->slug = $single_variation->get_slug();
+
+            $valueX->stock        = $single_variation->get_stock_quantity() - $stock['minimum'];
+            $valueX->showStock    = $stock['show'];
+            $valueX->messageStock = str_replace("%",$valueX->stock,$stock['message_threshold']);
 
             $matrix[$currentKey]['x'][] = $valueX;
             //error_log(print_r($matrix[$currentKey], true));
@@ -450,6 +460,12 @@ class Rest_Api {
 
         $args['taxonomy_y'] = get_option($this->plugin_name.'_taxonomy_y_setting');
         $args['taxonomy_x'] = get_option($this->plugin_name.'_taxonomy_x_setting');
+        $args['stock']      = array(
+            'minimum'           => get_option($this->plugin_name.'_minimum_stock'),
+            'show'              => get_option($this->plugin_name.'_show_stock'),
+            'message_threshold' => get_option($this->plugin_name.'_stock_threshold_message')
+        );
+
 
         //$args['taxonomy_y'] = 'pa_color';
         if( isset($parameters['taxonomy_y']) ) {

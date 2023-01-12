@@ -67,6 +67,28 @@ $settings = $wp_settings_sections['cg-woo-grid_general_settings']['cg-woo-grid_g
 						</div><!-- .inside -->
 					</div><!-- .postbox -->
 
+                    <div id="settings-stock"
+                        class="postbox"
+                    >
+                        <h2>
+                            <span><?php echo __('Stock options','cg-woo-grid'); ?></span>
+                        </h2>
+						<div class="inside">
+                            <p><?php 
+                            esc_html_e( 
+                                'The stock threshold will be subtracted from the actual stock value of each product, and the purchase of the item will be allowed if the quantity is below to said final value.', 
+                                'cg-woo-grid'
+                            ); ?></p>
+                            <form method="POST" action="options.php">  
+                                <?php 
+                                    settings_fields( 'cg-woo-grid_stock_settings' );
+                                    do_settings_sections( 'cg-woo-grid_stock_settings' ); 
+                                ?>       
+                                <?php submit_button(); ?>  
+                            </form> 
+						</div><!-- .inside -->
+					</div><!-- .postbox -->
+
                     <div id="settings-popup"
                         class="postbox"
                     >

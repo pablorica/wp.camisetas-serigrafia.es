@@ -47,12 +47,26 @@
                         <input type="number" 
                             placeholder="0"
                             min="0" 
+                            :max="valueX.stock"
                             autocomplete="off"
                             v-model="quantities[valueX.slug]"
-                            @change="updateTotal"
+                            @change="checkifAllowedUpdates(quantities[valueX.slug],valueX.stock, valueX.slug)"
+                            :class="{invalid:quantities[valueX.slug] > valueX.stock}"
+                            :disabled="valueX.stock === 0 || (disableAll && !enableField[valueX.slug] )"
                         >
+                        <div class="invalid-feedback"
+                            :class="{show:quantities[valueX.slug] > valueX.stock}"
+                        >
+                            <div class="arrow"></div>
+                            <span v-html="valueX.messageStock"
+                                :class="{show:quantities[valueX.slug] > valueX.stock && valueX.stock !== 0}"
+                            ></span>
+                            <span v-html="messagezero"
+                                :class="{show:valueX.stock === 0}"
+                            ></span>
+                        </div>
                         <br/>
-                        <i>
+                        <i v-if="valueX.showStock">
                             <small v-html="valueX.stock"></small>
                         </i>
                     </span>
@@ -71,16 +85,19 @@ export default {
         name: 'attributes-matrix',
         data: function() {
             return {
-            	loading: 	    false,
-            	noresults:      config.noresults,
-            	empty: 		    false,
-                product_id:     null,
-                taxonomy_y:     config.taxonomy_y,
-                taxonomy_x:     config.taxonomy_x,
-                min_quantity:   config.min_quantity,
-                matrix: 	    [],
-                quantities: 	{},
-                cookieName:    "cgWooGrid"
+            	loading: 	        false,
+            	noresults:          config.noresults,
+                messagezero:        config.stock_zero_message,
+            	empty: 		        false,
+                disableAll:         false,
+                enableField: 	    [],
+                product_id:         null,
+                taxonomy_y:         config.taxonomy_y,
+                taxonomy_x:         config.taxonomy_x,
+                min_quantity:       config.min_quantity,
+                matrix: 	        [],
+                quantities: 	    {},
+                cookieName:         "cgWooGrid"
             }
         },
         mounted: function () {
@@ -147,119 +164,138 @@ export default {
                     })( jQuery );
                 }
 	        },
-            updateTotal: function(){
-                console.log('updateTotal')
+            checkifAllowedUpdates: function(
+                quantity, 
+                stock,
+                slug
+            ){
+                var self = this;
+                //console.log('checking');
 
+                if(quantity > stock) {
+                    //console.log('no allowed');
+                    self.disableAll = true
+                    self.enableField[slug] = true
+                } else {
+                    //console.log('allowed');
+                    self.disableAll = false,
+                    self.updateTotal();
+                    self.enableField = [];
+                }
+            },
+            updateTotal: function(){
                 var self = this;
 
-                let purchaseAmount = 0, 
+                if(!self.disableAll) {
+
+                    let purchaseAmount = 0, 
                     _letSend = false,
                     _data={}
 
-                _data['product_id'] = self.product_id;
-                _data['taxonomy_y'] = self.taxonomy_y;
-                _data['taxonomy_x'] = self.taxonomy_x;
-                let quantities = Object.assign({}, self.quantities);
-                //console.log(quantities)
-                const removeZeros = item => (
-                    Object
-                    .keys(item)
-                    .filter(key => item[key] > 0 )
-                    .reduce((newObj, key) => Object.assign(newObj, {[key]: item[key]}), {})
-                );
-                _data['quantities'] = removeZeros(quantities);
-                //console.log(_data['quantities'])
+                    _data['product_id'] = self.product_id;
+                    _data['taxonomy_y'] = self.taxonomy_y;
+                    _data['taxonomy_x'] = self.taxonomy_x;
+                    let quantities = Object.assign({}, self.quantities);
 
-                for(var ikey in _data['quantities']){
-                    purchaseAmount += parseInt(_data['quantities'][ikey]);
-                }
-                console.log('Plugin: total products '+purchaseAmount)
+                    const removeZeros = item => (
+                        Object
+                        .keys(item)
+                        .filter(key => item[key] > 0 )
+                        .reduce((newObj, key) => Object.assign(newObj, {[key]: item[key]}), {})
+                    );
+                    _data['quantities'] = removeZeros(quantities);
 
-                self.updateCookie({  totalProducts: purchaseAmount }) 
-
-                if(purchaseAmount > 0) {
-
-                    if(_letSend !== false)	{
-                        _letSend.abort();
+                    for(var ikey in _data['quantities']){
+                        purchaseAmount += parseInt(_data['quantities'][ikey]);
                     }
+                    console.log('Plugin: total products '+purchaseAmount)
 
-                    var postURL = config.api.index + '/updatetotalbox';
-                    
-                    if(purchaseAmount >= self.min_quantity){
-                        //$('.cdg_total').css('display', 'block');
-                        emitter.emit('hideTotalBox');
-                    } 
-                    emitter.emit('fireUpdateBar', purchaseAmount );
+                    self.updateCookie({  totalProducts: purchaseAmount }) 
 
-                    
+                    if(purchaseAmount > 0) {
 
-                    _letSend = axios.post(
-                        postURL,
-                        _data
-                    )
-                    .then(function (response) {
-                        //console.log('then');
-                        if(purchaseAmount >= self.min_quantity){	
-                            response.data.addcartenabled = true;
-                        } else {
-                            response.data.addcartenabled = false;
+                        if(_letSend !== false)	{
+                            _letSend.abort();
                         }
-                        emitter.emit('firePopulateBox', response.data );
 
-                        self.updateCookie({ newdescription: response.data.description }) 
+                        var postURL = config.api.index + '/updatetotalbox';
+                        
+                        if(purchaseAmount >= self.min_quantity){
+                            //$('.cdg_total').css('display', 'block');
+                            emitter.emit('hideTotalBox');
+                        } 
+                        emitter.emit('fireUpdateBar', purchaseAmount );
 
-                        _letSend = false;
+                        
 
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                        //console.log('woops');
-                        self.loading = false;
-                        self.matrix     = [];
-                        self.quantities = {};
-                        self.empty      = true;
-
-                        _letSend = false;
-                    });
-
-                    
-                    
-                    /* *
-                    (function($){
-                        _letSend = $.post( 
+                        _letSend = axios.post(
                             postURL,
                             _data
                         )
-                        .done(function( response ) {
-                            //$('#cdg_form .cdg_total .loading').stop(true).fadeOut(0);
-                                //console.log('firePopulateBox');
-                                if(purchaseAmount >= self.min_quantity){	
-                                    //console.log('firePopulateBox', response);
-                                    response.addcartenabled = true;
-                                } else {
-                                    //console.log('response.addcartenabled: false');
-                                    response.addcartenabled = false;
-                                }
-                                emitter.emit('firePopulateBox', response );
+                        .then(function (response) {
+                            //console.log('then');
+                            if(purchaseAmount >= self.min_quantity){	
+                                response.data.addcartenabled = true;
+                            } else {
+                                response.data.addcartenabled = false;
+                            }
+                            emitter.emit('firePopulateBox', response.data );
 
-                                //total = r[0];
+                            self.updateCookie({ newdescription: response.data.description }) 
+
+                            _letSend = false;
+
                         })
-                        .fail(function() {
-                            console.log('woops');
+                        .catch(function (error) {
+                            console.log(error);
+                            //console.log('woops');
                             self.loading = false;
                             self.matrix     = [];
                             self.quantities = {};
                             self.empty      = true;
-                        })
-                        .always(function() {
-                            //console.log('updateTotal POST finished');
+
                             _letSend = false;
                         });
 
-                    })( jQuery );
-                    /* */
+                        
+                        
+                        /* *
+                        (function($){
+                            _letSend = $.post( 
+                                postURL,
+                                _data
+                            )
+                            .done(function( response ) {
+                                //$('#cdg_form .cdg_total .loading').stop(true).fadeOut(0);
+                                    //console.log('firePopulateBox');
+                                    if(purchaseAmount >= self.min_quantity){	
+                                        //console.log('firePopulateBox', response);
+                                        response.addcartenabled = true;
+                                    } else {
+                                        //console.log('response.addcartenabled: false');
+                                        response.addcartenabled = false;
+                                    }
+                                    emitter.emit('firePopulateBox', response );
+
+                                    //total = r[0];
+                            })
+                            .fail(function() {
+                                console.log('woops');
+                                self.loading = false;
+                                self.matrix     = [];
+                                self.quantities = {};
+                                self.empty      = true;
+                            })
+                            .always(function() {
+                                //console.log('updateTotal POST finished');
+                                _letSend = false;
+                            });
+
+                        })( jQuery );
+                        /* */
+                    }
                 }
-                
+
                 
             },
             updateCookie: function(cookieObj) {

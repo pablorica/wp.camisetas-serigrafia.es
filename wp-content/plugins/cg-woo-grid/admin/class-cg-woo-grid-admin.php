@@ -373,6 +373,82 @@ class Cg_Woo_Grid_Admin {
         array_push($settings_pages,$settings_page);
 
 
+        /* Stock */
+        $settings_page         = new \stdClass();
+        $settings_page->slug   = $this->plugin_name.'_stock_settings';
+        $settings_page->fields = array();
+
+        $field_id = $this->plugin_name.'_minimum_stock';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Low stock threshold","cg-woo-grid"),
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'number',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'min'              => 0, 
+                'required'         => 'required="required"',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'class'            => 'alternate'
+            )
+        );
+        $field_id = $this->plugin_name.'_show_stock';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Show stock in each field","cg-woo-grid"),
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'checkbox',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'placeholder'      => '',
+                'class'            => '',
+                'onchange'         => ''
+            )
+        );
+        $field_id = $this->plugin_name.'_stock_threshold_message';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Stock threshold message","cg-woo-grid").":",
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'text',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'placeholder'      => esc_html__("Sorry, there are only % stocks left for this product","cg-woo-grid"),
+                'class'            => 'alternate',
+            )
+        );
+        $field_id = $this->plugin_name.'_stock_zero_message';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Stock zero message","cg-woo-grid").":",
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'text',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'placeholder'      => esc_html__("Sorry, this product is out of stock","cg-woo-grid"),
+                'class'            => '',
+            )
+        );
+        array_push($settings_pages,$settings_page);
+
+
         /* Pop up */
         $settings_page         = new \stdClass();
         $settings_page->slug   = $this->plugin_name.'_popup_settings';

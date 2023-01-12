@@ -85,6 +85,8 @@ $red: red;
                 display: inline-block;
                 text-align: center;
                 vertical-align: top;
+                position: relative;
+                margin-right: 0.25rem;
             }
 
             input {
@@ -97,6 +99,66 @@ $red: red;
                 padding: 6px 0 6px 14px;
                 text-align: center;
                 width: 80px;
+                &.invalid {
+                    border-color: $red;
+                    color: $red;
+                }
+                &[disabled] {
+                    border-color: $red;
+                    opacity: 0.5;
+                }
+            }
+            .invalid-feedback {
+                color: $red;
+                position: absolute;
+                display: none;
+                z-index: 1060;
+                font-size: .650rem;
+                line-height: 1.5;
+                padding: 3px 1px;
+                max-width: 100%;
+                text-align: left;
+                text-align: start;
+                word-wrap: break-word;
+                background-color: #fff;
+                background-clip: padding-box;
+                border: 1px solid rgba(0,0,0,.2);
+                border-radius: .3rem;
+                &.show {
+                    display: block;
+                }
+                span {
+                    display: none;
+                    &.show {
+                        display: block;
+                    }
+                }
+                .arrow {
+                    position: absolute;
+                    top: calc((.5rem + 1px) * -1);
+                    left:0;
+                    width: 100%;
+                    &::before,
+                    &::after {
+                        position: absolute;
+                        display: block;
+                        content: "";
+                        border-color: transparent;
+                        border-bottom-color: transparent;
+                        border-style: solid;
+                        border-width: 0 .5rem .5rem .5rem;
+                        left:50%;
+                        transform: translateX(-50%);
+                    }
+                    &::before {
+                        top: 0;
+                        border-bottom-color: rgba(0,0,0,.25);
+                    }
+                    &::after {
+                        top: 1px;
+                        border-bottom-color: #fff;
+                    }
+                }
             }
         }
     }
