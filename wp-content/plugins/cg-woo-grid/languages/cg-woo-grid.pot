@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-01-12T12:30:57+00:00\n"
+"POT-Creation-Date: 2023-01-12T12:50:45+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: cg-woo-grid\n"
@@ -206,8 +206,7 @@ msgid "Stock options"
 msgstr ""
 
 #: admin/partials/cg-woo-grid-admin-display.php:78
-#: dist/admin/partials/cg-woo-grid-admin-display.php:78
-msgid "The stock threshold will be subtracted from the actual stock value of each product, and the purchase of the item will be allowed if the quantity is below to said final value."
+msgid "The stock threshold will be subtracted from the actual stock value of each product, and the purchase of the item will be allowed if the customer selects an amount less than said final value."
 msgstr ""
 
 #: admin/partials/cg-woo-grid-admin-display.php:96
@@ -228,6 +227,10 @@ msgstr ""
 #: admin/partials/cg-woo-grid-admin-display.php:129
 #: dist/admin/partials/cg-woo-grid-admin-display.php:129
 msgid "These settings apply to all Attribute Grid functionality."
+msgstr ""
+
+#: dist/admin/partials/cg-woo-grid-admin-display.php:78
+msgid "The stock threshold will be subtracted from the actual stock value of each product, and the purchase of the item will be allowed if the quantity is below to said final value."
 msgstr ""
 
 #: dist/public/class-cg-woo-grid-public-rest-api.php:58

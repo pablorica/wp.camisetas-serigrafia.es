@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Codigo Woo Grid 0.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/cg-woo-grid\n"
-"POT-Creation-Date: 2023-01-12T12:30:57+00:00\n"
-"PO-Revision-Date: 2023-01-12 13:40+0100\n"
+"POT-Creation-Date: 2023-01-12T12:50:45+00:00\n"
+"PO-Revision-Date: 2023-01-12 13:51+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es_ES\n"
@@ -210,15 +210,14 @@ msgid "Stock options"
 msgstr "Opciones de inventario"
 
 #: admin/partials/cg-woo-grid-admin-display.php:78
-#: dist/admin/partials/cg-woo-grid-admin-display.php:78
 msgid ""
 "The stock threshold will be subtracted from the actual stock value of each "
-"product, and the purchase of the item will be allowed if the quantity is "
-"below to said final value."
+"product, and the purchase of the item will be allowed if the customer "
+"selects an amount less than said final value."
 msgstr ""
-"El umbral de pocas existencias se restará del valor real de unidades de cada "
-"producto, y se permitirá la compra del artículo si la cantidad es inferior a "
-"dicho valor final."
+"Al valor de stock real de cada producto se le restará este umbral de stock, "
+"y se permitirá la compra del artículo si el cliente selecciona una cantidad "
+"inferior a dicho valor final."
 
 #: admin/partials/cg-woo-grid-admin-display.php:96
 #: dist/admin/partials/cg-woo-grid-admin-display.php:96
@@ -239,6 +238,16 @@ msgstr "Configuración general"
 #: dist/admin/partials/cg-woo-grid-admin-display.php:129
 msgid "These settings apply to all Attribute Grid functionality."
 msgstr "Esta configuración se aplica a toda la malla de atributos."
+
+#: dist/admin/partials/cg-woo-grid-admin-display.php:78
+msgid ""
+"The stock threshold will be subtracted from the actual stock value of each "
+"product, and the purchase of the item will be allowed if the quantity is "
+"below to said final value."
+msgstr ""
+"El umbral de pocas existencias se restará del valor real de unidades de cada "
+"producto, y se permitirá la compra del artículo si la cantidad es inferior a "
+"dicho valor final."
 
 #: dist/public/class-cg-woo-grid-public-rest-api.php:58
 #: public/class-cg-woo-grid-public-rest-api.php:58

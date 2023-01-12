@@ -76,7 +76,7 @@ $settings = $wp_settings_sections['cg-woo-grid_general_settings']['cg-woo-grid_g
 						<div class="inside">
                             <p><?php 
                             esc_html_e( 
-                                'The stock threshold will be subtracted from the actual stock value of each product, and the purchase of the item will be allowed if the quantity is below to said final value.', 
+                                'The stock threshold will be subtracted from the actual stock value of each product, and the purchase of the item will be allowed if the customer selects an amount less than said final value.', 
                                 'cg-woo-grid'
                             ); ?></p>
                             <form method="POST" action="options.php">  
