@@ -29,17 +29,24 @@
 
     <div class="row sidebar_configurator">
 
+        <?php 
+        $cssGrid = "";
+        if('right' == get_option($this->plugin_name.'_totalbox_position')):
+            $cssGrid = "grid-left";
+        ?>
         <!-- Vue -->
         <div id="appTotalBox"
+            class="box-right"
             data-currentproduct = "<?php echo get_queried_object_id() ?>"
         >
             <total-box></total-box>
         </div>
         <!-- / Vue  -->
+        <?php endif;?>
 
 
-        <div id="cdg_sizes" 
-            class="sw_prize"
+        <div id="cdg_grid" 
+            class="sw_prize <?= $cssGrid?>"
         >
             <!-- Vue -->
             <div id="appBar">

@@ -27,7 +27,9 @@
                 <i class="fa fa-refresh fa-spin"></i>
             </div>
             <div>
-                <h3 v-html="results.boxtitle"></h3>
+                <h3 class="cdg_total_title"
+                    v-html="results.boxtitle"
+                ></h3>
                 <div id="cdg_units" 
                     class="units"
                 >

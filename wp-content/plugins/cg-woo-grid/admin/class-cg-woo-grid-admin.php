@@ -372,6 +372,34 @@ class Cg_Woo_Grid_Admin {
         );
         array_push($settings_pages,$settings_page);
 
+        /* Total box */
+        $settings_page         = new \stdClass();
+        $settings_page->slug   = $this->plugin_name.'_totalbox_settings';
+        $settings_page->fields = array();
+
+        $option_lists = array(
+            'right' => __("Right","cg-woo-grid"),
+            'bottom' => __("Bottom","cg-woo-grid"),
+        );
+        $field_id = $this->plugin_name.'_totalbox_position';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Position","cg-woo-grid").":",
+            'args'  => array (
+                'type'             => 'select',
+                'subtype'          => '',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => 'required="required"',
+                'get_options_list' => $option_lists,
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'class'            => '',
+                'onchange'         => ''
+            )
+        );
+        array_push($settings_pages,$settings_page);
+
 
         /* Stock */
         $settings_page         = new \stdClass();

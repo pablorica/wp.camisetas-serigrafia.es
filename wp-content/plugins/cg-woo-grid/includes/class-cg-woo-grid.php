@@ -294,13 +294,30 @@ class Cg_Woo_Grid
             $plugin_public, 
             'enqueue_scripts' 
         );
-
+        
+        /**
+         * Hook: woocommerce_after_single_product_summary.
+         *
+         * @hooked woocommerce_output_product_data_tabs - 10
+         * @hooked woocommerce_upsell_display - 15
+         * @hooked woocommerce_output_related_products - 20
+         */
         $this->loader->add_action( 
             'woocommerce_after_single_product_summary', 
             $plugin_public, 
             'cdg_products_grid',
-            19
+            16
         );
+        if('bottom' == get_option($this->plugin_name.'_totalbox_position')){
+            $this->loader->add_action( 
+                'woocommerce_after_single_product_summary', 
+                $plugin_public, 
+                'cdg_display_toolbox',
+                19
+            );
+        }
+
+        
 
 		$this->loader->add_action( 
             'wp_loaded', 

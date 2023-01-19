@@ -1,0 +1,23 @@
+#appTotalBox {
+    position: relative;
+    @media screen and (min-width: 768px) {
+        //position: -webkit-sticky; /* Safari */
+        position: sticky;
+        top:110px;
+        z-index: 10;
+    }
+    &.box-right {
+        float: right;
+        @media (min-width: 992px) {
+            width: 41.66666667%;
+        }
+        @media (min-width: 1200px) {
+            width: 33.33333333%;
+        }
+    }
+    &.box-full {
+        h3.cdg_total_title {
+            display:none;
+        }
+    }
+}

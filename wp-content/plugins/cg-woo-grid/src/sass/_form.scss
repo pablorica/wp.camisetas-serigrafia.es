@@ -45,22 +45,15 @@ body.single-product #page {
 	.sidebar_configurator {
 		position: relative;
 	}
-	#appTotalBox {
-		position: relative;
-        float: right;
+    #appBar {
         @media screen and (min-width: 768px) {
 			//position: -webkit-sticky; /* Safari */
 			position: sticky;
 			top:110px;
+            z-index: 10;
 		}
-        @media (min-width: 992px) {
-            width: 41.66666667%;
-        }
-        @media (min-width: 1200px) {
-            width: 33.33333333%;
-        }
-        
     }
+    
     .cdg_total {
         & > div {
             border: 1px solid gray;

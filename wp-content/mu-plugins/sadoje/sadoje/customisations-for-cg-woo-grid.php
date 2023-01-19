@@ -152,14 +152,21 @@ class Customisations_For_Cg_Woo_Grid extends Sadoje_Singleton {
 	private function define_public_hooks() {
 
 		$plugin_public = new Customisations_For_Cg_Woo_Grid_Public();
-
+        /**
+         * Hook: woocommerce_after_single_product_summary.
+         *
+         * @hooked woocommerce_output_product_data_tabs - 10
+         * @hooked woocommerce_upsell_display - 15
+         * @hooked cdg_products_grid - 16
+         * @hooked woocommerce_output_related_products - 20
+         */
         add_action( 
             'woocommerce_after_single_product_summary', 
             array( 
                 $plugin_public, 
                 'cdg_budgeteer' 
             ),
-            18
+            17
         );
 
         // add_action( 

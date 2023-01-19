@@ -237,8 +237,6 @@ class Functions {
         }
     }
     
-    
-    
     /**
      * Invoke class private method
      *
@@ -362,6 +360,15 @@ class Functions {
                 array( 'status' => 404 ) 
             );
         }
+    }
+
+    /**
+     * Display the toolbox outside the grid from
+     *
+     * @return void
+     */
+    function cdg_display_toolbox() {
+        include_once 'partials/'.$this->plugin_name.'-public-display-toolbox.php'; 
     }
 
 
