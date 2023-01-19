@@ -120,6 +120,8 @@ wp-content/plugins/cg-woo-grid/npm-debug.log
 wp-content/plugins/cg-woo-grid/vendor
 
 # Ignore compiled files
+wp-content/plugins/cg-woo-grid/admin/js/cg-woo-grid.*
+wp-content/plugins/cg-woo-grid/admin/css/cg-woo-grid.*
 wp-content/plugins/cg-woo-grid/public/js/cg-woo-grid.*
 wp-content/plugins/cg-woo-grid/public/css/cg-woo-grid.*
 

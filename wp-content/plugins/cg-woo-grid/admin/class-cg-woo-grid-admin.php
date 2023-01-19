@@ -72,7 +72,10 @@ class Cg_Woo_Grid_Admin {
 		wp_enqueue_script( 
             $this->plugin_name, 
             $this->js_filepath,
-            array( 'jquery' ), 
+            array( 
+                'jquery',
+                 $this->plugin_name.'-vue'
+            ),
             $this->version, 
             false 
         );
@@ -258,7 +261,7 @@ class Cg_Woo_Grid_Admin {
                 'value_type'       => 'normal',
                 'wp_data'          => 'option',
                 'class'            => '',
-                'onchange'         => 'changeTextValue(\''.$field_id.'\')'
+                'onchange'         => 'CDGADMIN.changeTextValue(\''.$field_id.'\')'
             )
         );
         $field_id = $this->plugin_name.'_taxonomy_x_setting_title';
@@ -291,7 +294,7 @@ class Cg_Woo_Grid_Admin {
                 'value_type'       => 'normal',
                 'wp_data'          => 'option',
                 'class'            => 'alternate',
-                'onchange'         => 'changeTextValue(\''.$field_id.'\')'
+                'onchange'         => 'CDGADMIN.changeTextValue(\''.$field_id.'\')'
             )
         );
         $field_id = $this->plugin_name.'_taxonomy_y_setting_title';

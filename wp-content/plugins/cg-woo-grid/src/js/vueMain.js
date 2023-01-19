@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Test from './templates/Test.vue';
+//import Test from './templates/Test.vue';
 import Matrix from './templates/Matrix.vue';
 import TotalBox from './templates/TotalBox.vue';
 import ItemsBar from './templates/ItemsBar.vue';
@@ -7,7 +7,7 @@ import PopUp from './templates/PopUp.vue';
 
 import Emitter from 'tiny-emitter';
 
-console.log('VUE Main loaded')
+//console.log('VUE Main loaded')
 
 
 export var emitter = new Emitter();
