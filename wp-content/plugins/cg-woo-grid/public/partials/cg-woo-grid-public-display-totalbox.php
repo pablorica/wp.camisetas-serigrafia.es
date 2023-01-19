@@ -18,7 +18,9 @@
 <div id="cdg_toolbox" 
     class="cdg_box"
 >
-    <h3 class="cdg_title"><?php esc_html_e("Your budget","cg-woo-grid"); ?></h3>
+    <h3 class="cdg_title">
+        <?php echo get_option($this->plugin_name.'_totalbox_title'); ?>
+    </h3>
     <!-- Vue -->
     <div id="appTotalBox"
         class="box-full"

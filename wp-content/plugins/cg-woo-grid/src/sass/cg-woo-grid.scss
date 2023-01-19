@@ -1,6 +1,28 @@
 $red: #c9302c;
 $darkred: #ac2925;
 
+
+@keyframes fade-in {
+    0% {
+        visibility: hidden;
+        opacity: 0;
+    }
+    100% {
+        visibility: visible;
+        opacity: 1;
+    }
+}
+@keyframes fade-out {
+    0% {
+        visibility: visible;
+        opacity: 1;
+    }
+    100% {
+        visibility: hidden;
+        opacity: 0;
+    }
+}
+
 @import "form";
 @import "grid";
 @import "totalbox";

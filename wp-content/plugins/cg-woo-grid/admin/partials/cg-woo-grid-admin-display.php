@@ -91,6 +91,31 @@ $settings = $wp_settings_sections['cg-woo-grid_general_settings']['cg-woo-grid_g
 						</div><!-- .inside -->
 					</div><!-- .postbox -->
 
+
+                    <div id="settings-resumebox"
+                        class="postbox"
+                    >
+                        <h2>
+                            <span><?php echo __('Resume box','cg-woo-grid'); ?></span>
+                        </h2>
+						<div class="inside">
+                            <p><?php 
+                            esc_html_e( 
+                                'Resume box configuration', 
+                                'cg-woo-grid'
+                            ); ?></p>
+                            <form method="POST" 
+                                action="options.php"
+                            >  
+                                <?php 
+                                    settings_fields( 'cg-woo-grid_resumebox_settings' );
+                                    do_settings_sections( 'cg-woo-grid_resumebox_settings' ); 
+                                ?>       
+                                <?php submit_button(); ?>  
+                            </form> 
+						</div><!-- .inside -->
+					</div><!-- .postbox -->
+
                     <div id="settings-stock"
                         class="postbox"
                     >

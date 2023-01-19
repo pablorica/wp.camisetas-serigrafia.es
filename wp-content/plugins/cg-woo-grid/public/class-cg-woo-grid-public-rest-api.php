@@ -55,7 +55,7 @@ class Rest_Api {
 
             const BAR_MESSAGE    = "'.get_option($this->plugin_name.'_bar_message').'";
             const BAR_SUCCESS    = "'.get_option($this->plugin_name.'_bar_success').'";
-            const BAR_ITEMSTITLE = "'.esc_html__("ITEMS","cg-woo-grid").'";
+            const BAR_ITEMSTITLE = "'.esc_html__("items","cg-woo-grid").'";
 
             const STOCK_MESSAGE_ZERO = "'.get_option($this->plugin_name.'_stock_zero_message').'";
 
@@ -118,7 +118,11 @@ class Rest_Api {
         }
 
 
-        $return->boxtitle        = __("Your budget","cg-woo-grid");
+        //$return->boxtitle        = __("Your budget","cg-woo-grid");
+        $return->boxtitle        = get_option($this->plugin_name.'_totalbox_title');
+        $return->rsmdisplay      = get_option($this->plugin_name.'_show_resumebox');
+        $return->rsmpriceunitmsg = get_option($this->plugin_name.'_resumebox_priceunit_message');
+
         $return->unitpricetitle  = __("Unit price","cg-woo-grid");
         $return->pricetitle      = __("Price","cg-woo-grid");
         $return->unitstitle      = __("Items","cg-woo-grid");

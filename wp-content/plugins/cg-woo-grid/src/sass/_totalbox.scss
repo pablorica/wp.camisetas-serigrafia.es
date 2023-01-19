@@ -21,3 +21,15 @@
         }
     }
 }
+
+#boxResume {
+    width: 200px;
+    border: 1px solid black;
+    position: fixed;
+    bottom: 30px;
+    right: 15px;
+    background-color: #f8f8f8;
+    padding:15px;
+    opacity:0;
+    animation: fade-in 0.5s forwards;
+}

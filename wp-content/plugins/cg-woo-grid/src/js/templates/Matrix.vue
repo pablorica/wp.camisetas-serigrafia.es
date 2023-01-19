@@ -294,6 +294,9 @@ export default {
                         })( jQuery );
                         /* */
                     }
+                    else if(purchaseAmount === 0) {
+                        self.setToZero() 
+                    }
                 }
 
                 
@@ -331,11 +334,19 @@ export default {
                 console.log('Remove cookie')
                 window.$cookies.remove(self.cookieName);
             },
+            setToZero: function(){
+                this.empty = false;
+                this.removeCookie();
+                //this.buildMatrix();
+                emitter.emit('fireResetBar');
+                emitter.emit('fireResetTotalBox');
+            },
             resetAll: function(){
                 this.empty = false;
                 this.removeCookie();
                 this.buildMatrix();
                 emitter.emit('fireResetBar');
+                emitter.emit('fireResetTotalBox');
             }
         }
     }

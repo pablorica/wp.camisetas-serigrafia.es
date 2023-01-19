@@ -19,88 +19,108 @@
     </div><!-- /.container -->
 
     <div id="boxTotal"
-            class="cdg_total"
+        class="cdg_total"
+    >
+        <div class="loading" 
+            v-bind:class = "(loading===false)?'hide':''"
         >
-            <div class="loading" 
-                v-bind:class = "(loading===false)?'hide':''"
-            >
-                <i class="fa fa-refresh fa-spin"></i>
-            </div>
-            <div>
-                <h3 class="cdg_total_title"
-                    v-html="results.boxtitle"
-                ></h3>
-                <div id="cdg_units" 
-                    class="units"
-                >
-                    <div style="margin-bottom: 15px;text-transform: none;">
-                        <span v-html="results.unitpricetitle"></span>:
-                        <input id="cdg_unitprice" 
-                            type="text" 
-                            name="unitprice" 
-                            v-bind:value="results.unitprice" 
-                            disabled
-                        >
-                    </div>
-                    <div style="clear: both;"></div>
-                </div>
-                <div id="cdg_prizes_table" 
-                    class="units"
-                >
-                    <table id="prizes_table">
-                        <thead>
-                            <tr>
-                                <th v-html="results.taxonomy_y_name"></th>
-                                <th v-html="results.taxonomy_x_name"></th>
-                                <th v-html="results.pricetitle"></th>
-                                <th v-html="results.unitstitle"></th>
-                                <th v-html="results.amountitle"
-                                    class="text-right"
-                                ></th>
-                            </tr>
-                        </thead>
-                        <tbody v-html="results.html">
-                        </tbody>
-                    </table>
-                </div>
-                <div class="total">
-                    <h5 style="margin-bottom: 15px;">
-                        ( 
-                        <small v-html="results.unitpricetitle + ' :'"></small> 
-                        <span id="span_unitpricetax" 
-                            v-html="results.unitpricetax"
-                        ></span> 
-                        )
-                    </h5>
-                    <h5>
-                        <small v-html="results.subtotaltitle + ' :'"></small> 
-                        <span id="subtotal"
-                            v-html="results.subtotalformatted"
-                        ></span>
-                    </h5>
-                    <h5>
-                        <small v-html="results.vattitle + ' :'"></small> 
-                        <span id="taxes"
-                            v-html="results.taxesformatted"
-                        ></span>
-                    </h5>
-                    <h4>
-                        <small v-html="results.totaltitle + ' :'"></small> 
-                        <span id="total"
-                            v-html="results.totalformatted"
-                        ></span>
-                    </h4>
-                </div>
-            </div>
-            <button id="cdg_add_products" 
-                class="button alt add_to_cart_button"
-                v-bind:disabled="(addcartenabled === false)"
-                v-html="results.addtocarttitle"
-                @click="addtocart"
-            >
-            </button>
-            <p>&nbsp;</p>
+            <i class="fa fa-refresh fa-spin"></i>
         </div>
+        <div>
+            <h3 class="cdg_total_title"
+                v-html="results.boxtitle"
+            ></h3>
+            <div id="cdg_units" 
+                class="units"
+            >
+                <div style="margin-bottom: 15px;text-transform: none;">
+                    <span v-html="results.unitpricetitle"></span>:
+                    <input id="cdg_unitprice" 
+                        type="text" 
+                        name="unitprice" 
+                        v-bind:value="results.unitprice" 
+                        disabled
+                    >
+                </div>
+                <div style="clear: both;"></div>
+            </div>
+            <div id="cdg_prizes_table" 
+                class="units"
+            >
+                <table id="prizes_table">
+                    <thead>
+                        <tr>
+                            <th v-html="results.taxonomy_y_name"></th>
+                            <th v-html="results.taxonomy_x_name"></th>
+                            <th v-html="results.pricetitle"></th>
+                            <th v-html="results.unitstitle"></th>
+                            <th v-html="results.amountitle"
+                                class="text-right"
+                            ></th>
+                        </tr>
+                    </thead>
+                    <tbody v-html="results.html">
+                    </tbody>
+                </table>
+            </div>
+            <div class="total">
+                
+                <h5>
+                    <small v-html="results.subtotaltitle + ' :'"></small> 
+                    <span id="subtotal"
+                        v-html="results.subtotalformatted"
+                    ></span>
+                </h5>
+                <h5>
+                    <small v-html="results.vattitle + ' :'"></small> 
+                    <span id="taxes"
+                        v-html="results.taxesformatted"
+                    ></span>
+                </h5>
+                <h5 style="margin-bottom: 15px;">
+                    ( 
+                    <small v-html="results.unitpricetitle + ' :'"></small> 
+                    <span id="span_unitpricetax" 
+                        v-html="results.unitpricetax"
+                    ></span> 
+                    )
+                </h5>
+                <h4>
+                    <small v-html="results.totaltitle + ' :'"></small> 
+                    <span id="total"
+                        v-html="results.totalformatted"
+                    ></span>
+                </h4>
+            </div>
+        </div>
+        <button id="cdg_add_products" 
+            class="button alt add_to_cart_button"
+            v-bind:disabled="(addcartenabled === false)"
+            v-html="results.addtocarttitle"
+            @click="addtocart"
+        >
+        </button>
+        <p>&nbsp;</p>
+    </div>
+
+    <div id="boxResume"
+        class="cdg_resume"
+        style="opacity:1"
+        v-if="! empty 
+            && results.rsmdisplay
+            && results.numberofprods > 0"
+    >
+            <div class="total">
+                
+                <h5 v-html="results.numberofprods + ' ' +itemsTitle"></h5>
+                <h5>
+                    <small v-html="results.rsmpriceunitmsg + ': '"></small> 
+                    <div v-html="results.unitpricetax"></div> 
+                </h5>
+                <h4 v-html="results.totaltitle + '<br/>' + results.totalformatted"></h4>
+            </div>
+    </div>
+
   </template>
 
 <script>  
@@ -114,6 +134,7 @@ export default {
             return {
             	loading: 	    false,
             	noresults:      config.noresults,
+                itemsTitle:     config.bar_itemstitle,
             	empty: 		    false,
                 product_id:     null,
                 addcartenabled: false,
@@ -132,6 +153,10 @@ export default {
             emitter.on('fireReset', () => {
                 this.resetAll();
             });   
+            emitter.on('fireResetTotalBox', () => {
+                this.resetAll();
+            }); 
+            
             
             emitter.on('firePopulateBox', ($response) => {
                 this.populateBox($response);

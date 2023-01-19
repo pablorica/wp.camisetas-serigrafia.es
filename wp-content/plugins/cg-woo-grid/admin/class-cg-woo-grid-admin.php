@@ -372,6 +372,7 @@ class Cg_Woo_Grid_Admin {
         );
         array_push($settings_pages,$settings_page);
 
+        
         /* Total box */
         $settings_page         = new \stdClass();
         $settings_page->slug   = $this->plugin_name.'_totalbox_settings';
@@ -394,11 +395,71 @@ class Cg_Woo_Grid_Admin {
                 'get_options_list' => $option_lists,
                 'value_type'       => 'normal',
                 'wp_data'          => 'option',
-                'class'            => '',
+                'class'            => 'alternate',
                 'onchange'         => ''
             )
         );
+        $field_id = $this->plugin_name.'_totalbox_title';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Title","cg-woo-grid").":",
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'text',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'placeholder'      => esc_html__("Your budget","cg-woo-grid"),
+                'class'            => '',
+            )
+        );
         array_push($settings_pages,$settings_page);
+
+
+        /* Resume box */
+        $settings_page         = new \stdClass();
+        $settings_page->slug   = $this->plugin_name.'_resumebox_settings';
+        $settings_page->fields = array();
+
+        $field_id = $this->plugin_name.'_show_resumebox';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Display resume box","cg-woo-grid"),
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'checkbox',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'placeholder'      => '',
+                'class'            => 'alternate',
+                'onchange'         => ''
+            )
+        );
+        $field_id = $this->plugin_name.'_resumebox_priceunit_message';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Price unit message","cg-woo-grid").":",
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'text',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'placeholder'      => esc_html__("The unit price is","cg-woo-grid"),
+                'class'            => '',
+            )
+        );
+        array_push($settings_pages,$settings_page);
+
 
 
         /* Stock */

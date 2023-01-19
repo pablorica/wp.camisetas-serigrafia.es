@@ -363,12 +363,12 @@ class Functions {
     }
 
     /**
-     * Display the toolbox outside the grid from
+     * Display the totalbox outside the grid from
      *
      * @return void
      */
-    function cdg_display_toolbox() {
-        include_once 'partials/'.$this->plugin_name.'-public-display-toolbox.php'; 
+    function cdg_display_totalbox() {
+        include_once 'partials/'.$this->plugin_name.'-public-display-totalbox.php'; 
     }
 
 

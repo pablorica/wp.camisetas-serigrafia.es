@@ -312,7 +312,7 @@ class Cg_Woo_Grid
             $this->loader->add_action( 
                 'woocommerce_after_single_product_summary', 
                 $plugin_public, 
-                'cdg_display_toolbox',
+                'cdg_display_totalbox',
                 19
             );
         }
