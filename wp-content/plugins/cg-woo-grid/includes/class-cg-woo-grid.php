@@ -56,6 +56,8 @@ class Cg_Woo_Grid
     protected $vue_version;
     protected $axios_filepath;
     protected $vuecookies_filepath;
+    protected $vueselectjs_filepath;
+    protected $vueselectcss_filepath;
 
     /**
 	 * Define the core functionality of the plugin.
@@ -95,8 +97,9 @@ class Cg_Woo_Grid
         }
         $this->vue_version = '3.2.45';
 
-        $this->axios_filepath      = "https://unpkg.com/axios/dist/axios.min.js";
-        $this->vuecookies_filepath = "https://unpkg.com/vue-cookies@1.8.2/vue-cookies.js";
+        $this->axios_filepath         = "https://unpkg.com/axios/dist/axios.min.js";
+        $this->vuecookies_filepath    = "https://unpkg.com/vue-cookies@1.8.2/vue-cookies.js";
+        
 
 		$this->load_dependencies();
         $this->define_global_hooks();
@@ -140,6 +143,8 @@ class Cg_Woo_Grid
             '', 
             false
         );
+
+        
 	}
 
     
@@ -266,6 +271,12 @@ class Cg_Woo_Grid
             'admin_enqueue_scripts', 
             $plugin_admin, 
             'enqueue_scripts' 
+        );
+
+        $this->loader->add_action( 
+            'admin_enqueue_scripts', 
+            $plugin_admin, 
+            'enqueue_styles' 
         );
 
 	}

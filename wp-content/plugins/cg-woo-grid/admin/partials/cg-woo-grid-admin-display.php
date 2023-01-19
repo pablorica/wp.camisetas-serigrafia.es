@@ -27,6 +27,12 @@ $settings = $wp_settings_sections['cg-woo-grid_general_settings']['cg-woo-grid_g
 </div>
 <!-- / Vue  -->
 
+    <!-- Vue -->
+<div id="appAdminSelectTest">
+    <dynselect></dynselect>
+</div>
+<!-- / Vue  -->
+
     <div id="poststuff">
         <!-- Main settings -->
 		<div id="post-body" 

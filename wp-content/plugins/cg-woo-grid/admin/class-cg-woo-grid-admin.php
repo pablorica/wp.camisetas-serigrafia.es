@@ -46,9 +46,9 @@ class Cg_Woo_Grid_Admin {
     ) {
 
 		$this->plugin_name = $plugin_name;
-		$this->version = $version;
+		$this->version     = $version;
 
-        $this->js_filepath = CG_WOOGRID_URL.'admin/js/cg-woo-grid-admin.js';
+        $this->js_filepath         = CG_WOOGRID_URL.'admin/js/cg-woo-grid-admin.js';
 
 	}
 
@@ -69,18 +69,30 @@ class Cg_Woo_Grid_Admin {
 		 * class.
 		 */
 
-		wp_enqueue_script( 
+
+        wp_enqueue_script( 
             $this->plugin_name, 
             $this->js_filepath,
             array( 
                 'jquery',
-                 $this->plugin_name.'-vue'
+                 $this->plugin_name.'-vue',
             ),
             $this->version, 
             false 
         );
 
 	}
+
+    /**
+	 * Register the stylesheets for the admin area.
+	 *
+	 * @since    1.0.0
+	 */
+	public function enqueue_styles() {
+
+        // 
+	}
+
 
 
     public function sayHello($msg = null){
