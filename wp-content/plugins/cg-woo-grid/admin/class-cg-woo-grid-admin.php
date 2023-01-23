@@ -31,6 +31,7 @@ class Cg_Woo_Grid_Admin {
 
     /**** Custom Plugin Properties ****/
 
+    protected $css_filepath;
     protected $js_filepath;
 
 	/**
@@ -48,8 +49,26 @@ class Cg_Woo_Grid_Admin {
 		$this->plugin_name = $plugin_name;
 		$this->version     = $version;
 
-        $this->js_filepath         = CG_WOOGRID_URL.'admin/js/cg-woo-grid-admin.js';
+        $this->css_filepath = CG_WOOGRID_URL.'admin/css/cg-woo-grid-admin.css';
+        $this->js_filepath  = CG_WOOGRID_URL.'admin/js/cg-woo-grid-admin.js';
 
+
+	}
+
+    /**
+	 * Register the stylesheets for the admin area.
+	 *
+	 * @since    1.0.0
+	 */
+	public function enqueue_styles() {
+
+        wp_enqueue_style( 
+            $this->plugin_name, 
+            $this->css_filepath, 
+            array(),
+            $this->version, 
+            'all' 
+        );
 	}
 
     /**
@@ -83,15 +102,7 @@ class Cg_Woo_Grid_Admin {
 
 	}
 
-    /**
-	 * Register the stylesheets for the admin area.
-	 *
-	 * @since    1.0.0
-	 */
-	public function enqueue_styles() {
-
-        // 
-	}
+    
 
 
 
