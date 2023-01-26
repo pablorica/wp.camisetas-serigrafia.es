@@ -321,12 +321,34 @@ class Functions {
         $args
     ) {
         $options = maybe_unserialize($serialized);
+        //error_log(print_r($options,true));
+        $categories = wp_get_object_terms( 
+            $product_id, 
+            'product_cat', 
+            array( 'fields' => 'ids' ) 
+        );
+        //error_log('categories');
+        //error_log(print_r($categories,true));
+
         foreach($options as $option) {
             if($args['profit']) {
                 $profit = $option['profit'];
-                foreach($option['items'] as $item) {
-                    if($item['id'] == $product_id) {
-                        return $profit;
+
+                if($option['type'] == 'product') {
+                    foreach($option['items'] as $item) {
+                        if($item['id'] == $product_id) {
+                            return $profit;
+                        }
+                    }
+                }
+                
+                if($option['type'] == 'product_cat') {
+                    
+                    foreach($option['items'] as $item) {
+                        //error_log('checking '.$item['id']);
+                        if(in_array($item['id'], $categories)) {
+                            return $profit;
+                        }
                     }
                 }
             }

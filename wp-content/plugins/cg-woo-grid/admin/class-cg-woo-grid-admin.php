@@ -408,7 +408,7 @@ class Functions {
             'title' => __("Customised options","cg-woo-grid").":",
             'args'  => array (
                 'type'             => 'input',
-                'subtype'          => 'text',
+                'subtype'          => 'hidden',
                 'id'               => $field_id,
                 'name'             => $field_id,
                 'required'         => '',

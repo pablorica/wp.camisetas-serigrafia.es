@@ -23,7 +23,6 @@ function _buildTable(self) {
             self.rows = response.data
             //console.log('self.rows');
             //console.log(self.rows);
-            self.defrows = self.rows
         })
         .catch(function (error) {
             console.log(error);
@@ -33,6 +32,7 @@ function _buildTable(self) {
 
 function _updateRows(self) {
     let getURL = self.apiurl+'/serialize';
+    //console.log('_updateRows');
     //console.log(self.frows);
     if(self.frows.length) {
         axios.post(getURL,{
@@ -50,10 +50,9 @@ function _updateRows(self) {
 }
 
 function _addRow(event, self) {
-    console.log('_addRow')
+    //console.log('_addRow')
     event.preventDefault()
-    let row = {}
-    self.rows.push(row);
+    self.rows.push(self.derow);
 }
 function _deleteRow(event, self, row) {
     event.preventDefault()

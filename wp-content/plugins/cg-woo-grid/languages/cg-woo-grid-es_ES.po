@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Codigo Woo Grid 0.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/cg-woo-grid\n"
-"POT-Creation-Date: 2023-01-19T14:16:16+00:00\n"
-"PO-Revision-Date: 2023-01-19 15:22+0100\n"
+"POT-Creation-Date: 2023-01-26T23:36:38+00:00\n"
+"PO-Revision-Date: 2023-01-27 00:40+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es_ES\n"
@@ -36,12 +36,12 @@ msgstr ""
 msgid "http://codigo.co.uk/pablo-rica"
 msgstr ""
 
-#: admin/class-cg-woo-grid-admin.php:99 admin/class-cg-woo-grid-admin.php:100
+#: admin/class-cg-woo-grid-admin.php:125 admin/class-cg-woo-grid-admin.php:126
 #: admin/partials/cg-woo-grid-admin-display.php:20
 msgid "Attribute Grid"
 msgstr "Malla de atributos"
 
-#: admin/class-cg-woo-grid-admin.php:144
+#: admin/class-cg-woo-grid-admin.php:176
 msgid ""
 "There was an error adding this setting. Please try again.  If this persists, "
 "shoot us an email."
@@ -49,179 +49,212 @@ msgstr ""
 "Se ha producido un error al añadir esta configuración. Inténtalo de nuevo.  "
 "Si el error persiste, envíanos un correo electrónico."
 
-#: admin/class-cg-woo-grid-admin.php:233
+#: admin/class-cg-woo-grid-admin.php:265
 msgid "Header"
 msgstr "Cabecera"
 
-#: admin/class-cg-woo-grid-admin.php:243
+#: admin/class-cg-woo-grid-admin.php:275
 msgid "Choose colors and sizes to make your budget"
 msgstr "Elige colores y tamaños y elabora tu presupuesto"
 
-#: admin/class-cg-woo-grid-admin.php:250
+#: admin/class-cg-woo-grid-admin.php:282
 msgid "Taxonomy X"
 msgstr "Taxonomía X"
 
-#: admin/class-cg-woo-grid-admin.php:267 admin/class-cg-woo-grid-admin.php:300
+#: admin/class-cg-woo-grid-admin.php:299 admin/class-cg-woo-grid-admin.php:332
 msgid "Rename"
 msgstr "Renombrar"
 
-#: admin/class-cg-woo-grid-admin.php:283
+#: admin/class-cg-woo-grid-admin.php:315
 msgid "Taxonomy Y"
 msgstr "Taxonomía Y"
 
-#: admin/class-cg-woo-grid-admin.php:325
+#: admin/class-cg-woo-grid-admin.php:357
+#: admin/partials/cg-woo-grid-admin-display.php:81
 msgid "Minimum amount"
 msgstr "Cantidad mínima"
 
-#: admin/class-cg-woo-grid-admin.php:342
+#: admin/class-cg-woo-grid-admin.php:374
 msgid "Bar message"
 msgstr "Mensaje en la barra"
 
-#: admin/class-cg-woo-grid-admin.php:352
+#: admin/class-cg-woo-grid-admin.php:384
 msgid "Minimum amount to order"
 msgstr "Cantidad mínima para realizar un pedido"
 
-#: admin/class-cg-woo-grid-admin.php:359
+#: admin/class-cg-woo-grid-admin.php:391
 msgid "Bar success"
 msgstr "Mensaje de éxito en la barra"
 
-#: admin/class-cg-woo-grid-admin.php:369
+#: admin/class-cg-woo-grid-admin.php:401
 msgid "You can now place your order"
 msgstr "Ya puedes hacer tu pedido"
 
-#: admin/class-cg-woo-grid-admin.php:382
+#: admin/class-cg-woo-grid-admin.php:408
+msgid "Customised options"
+msgstr "Opciones personalizadas"
+
+#: admin/class-cg-woo-grid-admin.php:431
 msgid "Right"
 msgstr "Derecha"
 
-#: admin/class-cg-woo-grid-admin.php:383
+#: admin/class-cg-woo-grid-admin.php:432
 msgid "Bottom"
 msgstr "Inferior"
 
-#: admin/class-cg-woo-grid-admin.php:388
+#: admin/class-cg-woo-grid-admin.php:437
 msgid "Position"
 msgstr "Posición"
 
-#: admin/class-cg-woo-grid-admin.php:405
+#: admin/class-cg-woo-grid-admin.php:454
 msgid "Title"
 msgstr "Título"
 
-#: admin/class-cg-woo-grid-admin.php:415
+#: admin/class-cg-woo-grid-admin.php:464
 msgid "Your budget"
 msgstr "Tu presupuesto"
 
-#: admin/class-cg-woo-grid-admin.php:430
+#: admin/class-cg-woo-grid-admin.php:479
 msgid "Display resume box"
 msgstr "Mostrar caja resumen"
 
-#: admin/class-cg-woo-grid-admin.php:447
+#: admin/class-cg-woo-grid-admin.php:496
 msgid "Price unit message"
 msgstr "Mensaje de precio unidad"
 
-#: admin/class-cg-woo-grid-admin.php:457
+#: admin/class-cg-woo-grid-admin.php:506
 msgid "The unit price is"
 msgstr "La unidad sale a"
 
-#: admin/class-cg-woo-grid-admin.php:473
+#: admin/class-cg-woo-grid-admin.php:522
 msgid "Low stock threshold"
 msgstr "Umbral de pocas existencias"
 
-#: admin/class-cg-woo-grid-admin.php:490
+#: admin/class-cg-woo-grid-admin.php:539
 msgid "Show stock in each field"
 msgstr "Mostrar existencias en cada campo"
 
-#: admin/class-cg-woo-grid-admin.php:507
+#: admin/class-cg-woo-grid-admin.php:556
 msgid "Stock threshold message"
 msgstr "Mostrar mensaje de umbral de pocas existencias"
 
-#: admin/class-cg-woo-grid-admin.php:517
+#: admin/class-cg-woo-grid-admin.php:566
 msgid "Sorry, there are only % stocks left for this product"
 msgstr "Lo sentimos, sólo quedan % unidades de este producto"
 
-#: admin/class-cg-woo-grid-admin.php:524
+#: admin/class-cg-woo-grid-admin.php:573
 msgid "Stock zero message"
 msgstr "Mensaje de producto agotado"
 
-#: admin/class-cg-woo-grid-admin.php:534
+#: admin/class-cg-woo-grid-admin.php:583
 msgid "Sorry, this product is out of stock"
 msgstr "Lo sentimos, este producto está agotado"
 
-#: admin/class-cg-woo-grid-admin.php:549
+#: admin/class-cg-woo-grid-admin.php:598
 msgid "Pop Up Message 1"
 msgstr "Mensaje 1 del pop-up"
 
-#: admin/class-cg-woo-grid-admin.php:559
+#: admin/class-cg-woo-grid-admin.php:608
 msgid "Continue the purchase"
 msgstr "Continuar comprando"
 
-#: admin/class-cg-woo-grid-admin.php:566
+#: admin/class-cg-woo-grid-admin.php:615
 msgid "Pop Up Message 2"
 msgstr "Mensaje 2 del pop-up"
 
-#: admin/class-cg-woo-grid-admin.php:576
+#: admin/class-cg-woo-grid-admin.php:625
 msgid "Go to cart"
 msgstr "Ir al carrito"
 
-#: admin/class-cg-woo-grid-admin.php:583
+#: admin/class-cg-woo-grid-admin.php:632
 msgid "Pop Up Success Title"
 msgstr "Titulo del pop-up"
 
-#: admin/class-cg-woo-grid-admin.php:593
+#: admin/class-cg-woo-grid-admin.php:642
 msgid "Shopping cart"
 msgstr "Carrito de compras"
 
-#: admin/class-cg-woo-grid-admin.php:600
+#: admin/class-cg-woo-grid-admin.php:649
 msgid "Pop Up Success Message"
 msgstr "Mensaje del pop-up"
 
-#: admin/class-cg-woo-grid-admin.php:610
+#: admin/class-cg-woo-grid-admin.php:659
 msgid "The cart has been successfully updated"
 msgstr "El carrito ha sido actualizado"
 
-#: admin/class-cg-woo-grid-admin.php:617
+#: admin/class-cg-woo-grid-admin.php:666
 msgid "Pop Up Error Title"
 msgstr "Título de error del pop-up"
 
-#: admin/class-cg-woo-grid-admin.php:627
+#: admin/class-cg-woo-grid-admin.php:676
 msgid "Insufficient items"
 msgstr "Productos insuficientes"
 
-#: admin/class-cg-woo-grid-admin.php:634
+#: admin/class-cg-woo-grid-admin.php:683
 msgid "Pop Up Error Message"
 msgstr "Mensaje de error del pop-up"
 
-#: admin/class-cg-woo-grid-admin.php:644
+#: admin/class-cg-woo-grid-admin.php:693
 msgid "There must be a minimum of %1 products"
 msgstr "Tiene que haber %1 productos como mínimo"
 
-#: admin/partials/cg-woo-grid-admin-display.php:52
+#: admin/partials/cg-woo-grid-admin-display.php:60
 msgid "Minimum bar"
 msgstr "Barra de cantidad mínima"
 
-#: admin/partials/cg-woo-grid-admin-display.php:56
+#: admin/partials/cg-woo-grid-admin-display.php:64
 msgid "Messages to show in the minimum bar"
 msgstr "Mensajes de la barra"
 
-#: admin/partials/cg-woo-grid-admin-display.php:74
+#: admin/partials/cg-woo-grid-admin-display.php:79
+msgid "Type"
+msgstr "Tipo"
+
+#: admin/partials/cg-woo-grid-admin-display.php:80
+msgid "Item"
+msgstr "Elementos"
+
+#: admin/partials/cg-woo-grid-admin-display.php:83
+msgid "Delete"
+msgstr "Borrar"
+
+#: admin/partials/cg-woo-grid-admin-display.php:84
+msgid "Add items"
+msgstr "Añadir elementos"
+
+#: admin/partials/cg-woo-grid-admin-display.php:85
+msgid "Type a value"
+msgstr "Escriba un valor"
+
+#: admin/partials/cg-woo-grid-admin-display.php:86
+msgid "Product"
+msgstr "Producto"
+
+#: admin/partials/cg-woo-grid-admin-display.php:87
+msgid "Category"
+msgstr "Categoría"
+
+#: admin/partials/cg-woo-grid-admin-display.php:103
 msgid "Total box"
 msgstr "Caja de totales"
 
-#: admin/partials/cg-woo-grid-admin-display.php:78
+#: admin/partials/cg-woo-grid-admin-display.php:107
 msgid "Total box configuration"
 msgstr "Configuración de la caja de totales"
 
-#: admin/partials/cg-woo-grid-admin-display.php:99
+#: admin/partials/cg-woo-grid-admin-display.php:128
 msgid "Resume box"
 msgstr "Caja resumen"
 
-#: admin/partials/cg-woo-grid-admin-display.php:103
+#: admin/partials/cg-woo-grid-admin-display.php:132
 msgid "Resume box configuration"
 msgstr "Configuración de la caja resumen"
 
-#: admin/partials/cg-woo-grid-admin-display.php:123
+#: admin/partials/cg-woo-grid-admin-display.php:152
 msgid "Stock options"
 msgstr "Opciones de inventario"
 
-#: admin/partials/cg-woo-grid-admin-display.php:127
+#: admin/partials/cg-woo-grid-admin-display.php:156
 msgid ""
 "The stock threshold will be subtracted from the actual stock value of each "
 "product, and the purchase of the item will be allowed if the customer "
@@ -231,69 +264,69 @@ msgstr ""
 "y se permitirá la compra del artículo si el cliente selecciona una cantidad "
 "inferior a dicho valor final."
 
-#: admin/partials/cg-woo-grid-admin-display.php:145
+#: admin/partials/cg-woo-grid-admin-display.php:174
 msgid "Pop-up"
 msgstr ""
 
-#: admin/partials/cg-woo-grid-admin-display.php:149
+#: admin/partials/cg-woo-grid-admin-display.php:178
 msgid "Messages to show in the pop-up"
 msgstr "Mensajes del pop-up"
 
-#: admin/partials/cg-woo-grid-admin-display.php:174
+#: admin/partials/cg-woo-grid-admin-display.php:203
 msgid "General settings"
 msgstr "Configuración general"
 
-#: admin/partials/cg-woo-grid-admin-display.php:178
+#: admin/partials/cg-woo-grid-admin-display.php:207
 msgid "These settings apply to all Attribute Grid functionality."
 msgstr "Esta configuración se aplica a toda la malla de atributos."
 
-#: public/class-cg-woo-grid-public-rest-api.php:58
+#: public/class-cg-woo-grid-public-rest-api.php:57
 msgid "items"
 msgstr "uds"
 
-#: public/class-cg-woo-grid-public-rest-api.php:115
-#: public/class-cg-woo-grid-public-rest-api.php:342
-#: public/class-cg-woo-grid-public-rest-api.php:460
-#: public/class-cg-woo-grid-public.php:359
+#: public/class-cg-woo-grid-public-rest-api.php:114
+#: public/class-cg-woo-grid-public-rest-api.php:341
+#: public/class-cg-woo-grid-public-rest-api.php:459
+#: public/class-cg-woo-grid-public.php:416
 msgid "No results"
 msgstr "Sin resultados"
 
-#: public/class-cg-woo-grid-public-rest-api.php:126
+#: public/class-cg-woo-grid-public-rest-api.php:125
 msgid "Unit price"
 msgstr "Precio unitario"
 
-#: public/class-cg-woo-grid-public-rest-api.php:127
+#: public/class-cg-woo-grid-public-rest-api.php:126
 msgid "Price"
 msgstr "Precio"
 
-#: public/class-cg-woo-grid-public-rest-api.php:128
+#: public/class-cg-woo-grid-public-rest-api.php:127
 msgid "Items"
 msgstr "Productos"
 
-#: public/class-cg-woo-grid-public-rest-api.php:129
+#: public/class-cg-woo-grid-public-rest-api.php:128
 msgid "Amount"
 msgstr "Cantidad"
 
-#: public/class-cg-woo-grid-public-rest-api.php:130
+#: public/class-cg-woo-grid-public-rest-api.php:129
 msgid "Sub-total"
 msgstr "Subtotal"
 
-#: public/class-cg-woo-grid-public-rest-api.php:131
+#: public/class-cg-woo-grid-public-rest-api.php:130
 msgid "VAT"
 msgstr "IVA"
 
-#: public/class-cg-woo-grid-public-rest-api.php:132
+#: public/class-cg-woo-grid-public-rest-api.php:131
 msgid "Total"
 msgstr "Total"
 
-#: public/class-cg-woo-grid-public-rest-api.php:133
+#: public/class-cg-woo-grid-public-rest-api.php:132
 msgid "Add to cart"
 msgstr "Añadir al carrito"
 
-#: public/class-cg-woo-grid-public-rest-api.php:169
-#: public/class-cg-woo-grid-public-rest-api.php:313
-#: public/class-cg-woo-grid-public-rest-api.php:395
-#: public/class-cg-woo-grid-public.php:339
+#: public/class-cg-woo-grid-public-rest-api.php:168
+#: public/class-cg-woo-grid-public-rest-api.php:312
+#: public/class-cg-woo-grid-public-rest-api.php:394
+#: public/class-cg-woo-grid-public.php:385
 msgid "Something went wrong"
 msgstr "Algo ha ido mal"
 

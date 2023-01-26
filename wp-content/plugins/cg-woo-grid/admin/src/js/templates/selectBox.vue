@@ -6,10 +6,10 @@
             ref="selectedoptions"
         >
             <li v-for="(option) in selected"
-                :title="option.title"
+                :title="option.title?option.title:option.name"
                 class="cg-selection" 
             >
-                <span v-html="option.title"
+                <span v-html="option.title?option.title:option.name"
                 ></span>
                 <span class="cg-selection__remove" 
                     role="presentation"
@@ -31,7 +31,7 @@
         >
             <li v-for="(option) in options"
                 :class="{ selected: isSelected(option.id) }"
-                v-html="option.title"
+                v-html="option.title?option.title:option.name"
                 @click="(!isSelected(option.id)?selectOption(option):'')"
             ></li>
         </ul>
@@ -40,18 +40,28 @@
 
 <script>  
 
-console.log('VUE admin Test Select loaded')
+//console.log('VUE admin  Select Box loaded')
 
 export default {
     name: 'cdgselect',
-    props: ['selectgeturl','defrows'],
+    props: ['selectgeturl','defrows','resethis','proplaceholder'],
     watch: {
-        // This would be called anytime the value of title changes
         defrows(newValue, oldValue) {
-        // you can do anything here with the new value or old/previous value
-            //console.log("this.defrows");
+            //console.log("watch defrows");
             //console.log(newValue);
             this.getDefaultSelected();
+        },
+        selectgeturl(newValue, oldValue) {
+            this.geturl = this.selectgeturl
+            //console.log('watch geturl' )
+            //console.log(this.geturl )
+            this.getItemList();
+        },
+        resethis(newValue, oldValue) {
+            //console.log('watch resethis' )
+            //console.log(this.resethis )
+            this.getDefaultSelected();
+
         }
     },
     data: function() {
@@ -59,28 +69,31 @@ export default {
             geturl:             '',
             dropdownClass:      '',
             filtering:          '',
+            placeholder:        '',
             selected:           [],
-            placeholder:        'Type a value',
             options:            null
         }
     },
     mounted: function () {
 
         this.geturl = this.selectgeturl
+        
+        //console.log('mounted' )
+        //console.log(this.geturl )
 
         let element = this.$el;
         if(element.parentElement.dataset.geturl){
             this.geturl = element.parentElement.dataset.geturl;
         }
 
-        if(typeof this.defrows !== 'undefined' 
-            && this.defrows.length
-        ) {
+        
+
+        if(typeof this.defrows !== 'undefined') {
+            //console.log("mounted defrows");
+            //console.log(this.defrows);
             this.getDefaultSelected();
         }
 
-
-        
         if(this.geturl) {
             this.getItemList();
         }        
@@ -149,7 +162,7 @@ export default {
             //console.log('Remove '+indx);
             self.selected.splice(indx, indx >= 0 ? 1 : 0);
             if (self.selected.length === 0) {
-                self.placeholder = 'Type a value';
+                self.placeholder = self.proplaceholder
             }
             self.$emit('changeSelectedOptions',self.selected );
         },
@@ -199,32 +212,29 @@ export default {
         getDefaultSelected: function() {
             var self = this;
 
+            self.selected = [];
+
             //console.log('getDefaultSelected')
             //console.log(self.defrows)
 
-            for (var i=0; i < self.defrows.length; ++i) {
-                let row = self.defrows[i]
+            let row = self.defrows
                 //console.log('row')
                 //console.log(row)
-
-
-                if(typeof row.items[0] !== 'undefined'
-                   && typeof row.items[0].id !== 'undefined'
-                ) {
-                    for (var j=0; j < row.items.length; ++j) {
-                        self.selected[j] = row.items[j]
-                    }
-                } 
-                
-            }
-
+            if(typeof row.items[0] !== 'undefined'
+                && typeof row.items[0].id !== 'undefined'
+            ) {
+                for (var j=0; j < row.items.length; ++j) {
+                    self.selected[j] = row.items[j]
+                }
+            } 
+            //console.log(self.selected)
         },
     },
     created(){
         const listener = (event) => {
             //console.log(event.target.closest('.cg-dyn-selected'));
             if(!event.target.closest('.cg-dyn-selected')) {
-                console.log('clicked out');
+                //console.log('clicked out');
                 this.closeDropdown();
             }
         }

@@ -74,15 +74,19 @@ $settings = $wp_settings_sections['cg-woo-grid_general_settings']['cg-woo-grid_g
                                     settings_fields( 'cg-woo-grid_bar_settings' );
                                     do_settings_sections( 'cg-woo-grid_bar_settings' ); 
                                 ?>    
-                                <p>&nbsp;</p>
-
+              
                                 <div id="tableMinimumBar"
+                                    data-theadertype    = "<?php esc_html_e('Type','cg-woo-grid'); ?>"
                                     data-theaderitem    = "<?php esc_html_e('Item','cg-woo-grid'); ?>"
                                     data-theaderminimum = "<?php esc_html_e('Minimum amount','cg-woo-grid'); ?>"
-                                    data-selectgeturl   = "<?php echo esc_url_raw( rest_url( 'wp/v2/search/?subtype=product') ); ?>"
+                                    data-selectgeturl   = "<?php echo esc_url_raw( rest_url( 'wp/v2/') ); ?>"
                                     data-deletetitle    = "<?php esc_html_e('Delete','cg-woo-grid');  ?>"
-                                    data-tfootaddrow    = "<?php esc_html_e('Añadir margen','sadoje'); ?>"
+                                    data-tfootaddrow    = "<?php esc_html_e('Add items','cg-woo-grid'); ?>"
+                                    data-selctplachldr  = "<?php esc_html_e('Type a value','cg-woo-grid'); ?>";
+                                    data-producttitle   = "<?php esc_html_e('Product','cg-woo-grid'); ?>";
+                                    data-categorytitle  = "<?php esc_html_e('Category','cg-woo-grid'); ?>";
                                     data-apiurl         = "<?php echo $urlspace ?>"
+                                    data-hiddenboxid    = "cg-woo-grid_minimum_options"
                                 >
                                     <cdg-minimumbar></cdg-minimumbar>
                                 </div>
