@@ -35,12 +35,20 @@ export default {
                 success:        config.bar_success,
                 items:          0,
                 itemsTitle:     config.bar_itemstitle,
-                min_quantity:   config.min_quantity,
+                min_quantity:   0,
                 barWidth:       0,
                 barClass:       ''
             }
         },
         mounted: function () {
+
+            let element = this.$el;
+            //console.log(element)
+            //console.log(element.parentElement.dataset)
+            if (typeof element.parentElement.dataset.customminimum !== 'undefined') {
+                this.min_quantity = element.parentElement.dataset.customminimum
+            }
+
         	this.displayBar(0); 
 
             emitter.on('fireUpdateBar', (purchaseAmount) => {

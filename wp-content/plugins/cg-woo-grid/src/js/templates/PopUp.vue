@@ -34,8 +34,7 @@ export default {
                 message2:      config.popup_message2,
                 title:         config.popup_sucess_title,
                 body:          config.popup_sucess_msg,
-                cartPermalink: config.cartPermalink,
-                minQuantity:   config.min_quantity
+                cartPermalink: config.cartPermalink
             }
         },
         mounted: function () {

@@ -41,6 +41,7 @@ class Functions {
     protected $css_filepath;
     protected $js_filepath;
     protected $template_filepath;
+    protected $current_product_id;
     //protected $vue_filepath;
     //protected $vue_version;
 
@@ -313,6 +314,28 @@ class Functions {
         return $template;
     }
 
+
+    public function cdg_filter_serialized_option(
+        $serialized, 
+        $product_id,
+        $args
+    ) {
+        $options = maybe_unserialize($serialized);
+        foreach($options as $option) {
+            if($args['profit']) {
+                $profit = $option['profit'];
+                foreach($option['items'] as $item) {
+                    if($item['id'] == $product_id) {
+                        return $profit;
+                    }
+                }
+            }
+
+        }
+
+        return false;
+    }
+
     /**
 	 * Build the products attributes grid
 	 *
@@ -331,7 +354,8 @@ class Functions {
         $args = array();
         
         if( null !== get_queried_object_id()) {
-            $args['product'] = wc_get_product(get_queried_object_id());
+            $this->current_product_id = get_queried_object_id();
+            $args['product'] = wc_get_product($this->current_product_id);
         } else {
             // If the code somehow executes to here something bad happened return a 500.
             return new \WP_Error( 
@@ -348,7 +372,18 @@ class Functions {
         
 
         if($matrix = $rest_api->build_product_matrix($args)) {
-            $minimum    = 0;
+            
+            $custom_minimum  = $this->cdg_filter_serialized_option(
+                get_option($this->plugin_name.'_minimum_options'),
+                $this->current_product_id,
+                array('profit' => true)
+            );
+            if(!$custom_minimum) {
+                $custom_minimum  = get_option($this->plugin_name.'_minimum_setting');
+            }
+            
+            //error_log(print_r($custom_minimum ,true));
+            //$minimum    = 0;
             include_once 'partials/'.$this->plugin_name.'-public-display.php'; 
         } 
 

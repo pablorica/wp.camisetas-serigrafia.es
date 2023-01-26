@@ -49,7 +49,6 @@ class Rest_Api {
     function custom_constants_js() {
         echo '
         <script>
-            const MINIMUM_QUANTITY = "'.get_option($this->plugin_name.'_minimum_setting').'";
             const TAXONOMY_X       = "'.get_option($this->plugin_name.'_taxonomy_x_setting').'";
             const TAXONOMY_Y       = "'.get_option($this->plugin_name.'_taxonomy_y_setting').'";
 

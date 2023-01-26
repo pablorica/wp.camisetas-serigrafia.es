@@ -20,7 +20,6 @@ export const config = {
     taxonomy_x: TAXONOMY_X,
     taxonomy_y: TAXONOMY_Y,
 
-    min_quantity:   MINIMUM_QUANTITY,
     bar_message:    BAR_MESSAGE,
     bar_success:    BAR_SUCCESS,
     bar_itemstitle: BAR_ITEMSTITLE,

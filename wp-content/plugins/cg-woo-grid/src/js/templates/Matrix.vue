@@ -94,7 +94,7 @@ export default {
                 product_id:         null,
                 taxonomy_y:         config.taxonomy_y,
                 taxonomy_x:         config.taxonomy_x,
-                min_quantity:       config.min_quantity,
+                min_quantity:       0,
                 matrix: 	        [],
                 quantities: 	    {},
                 cookieName:         "cgWooGrid"
@@ -105,6 +105,9 @@ export default {
             let element = this.$el;
             this.product_id = element.parentElement.dataset.currentproduct;
             //console.log(this.product_id);
+            if (typeof element.parentElement.dataset.customminimum !== 'undefined') {
+                this.min_quantity = element.parentElement.dataset.customminimum
+            }
             
             emitter.on('fireReset', () => {
                 this.resetAll();

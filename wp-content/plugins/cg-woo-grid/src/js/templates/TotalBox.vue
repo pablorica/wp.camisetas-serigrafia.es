@@ -244,7 +244,7 @@ export default {
                         baseURL = window.location.href.split('?')[0]
                     }
 
-                    console.log('baseURL: ', baseURL);
+                    //console.log('baseURL: ', baseURL);
                     
                     var getURL = baseURL + 
                     '?add-to-cart='+

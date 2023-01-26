@@ -11,6 +11,8 @@
  * @author     Pablo Rica <pablo@codigo.co.uk>
  */
 
+
+//error_log(print_r($this->current_product_id ,true));
 ?>
 
 <!-- Vue -->
@@ -37,7 +39,7 @@
         <!-- Vue -->
         <div id="appTotalBox"
             class="box-right"
-            data-currentproduct = "<?php echo get_queried_object_id() ?>"
+            data-currentproduct = "<?=$this->current_product_id?>"
         >
             <total-box></total-box>
         </div>
@@ -49,14 +51,17 @@
             class="sw_prize <?= $cssGrid?>"
         >
             <!-- Vue -->
-            <div id="appBar">
+            <div id="appBar"
+                data-customminimum = "<?=$custom_minimum?>"
+            >
                 <items-bar></items-bar>
             </div>
             <!-- / Vue  -->
 
             <!-- Vue -->
             <div id="appMatrix" 
-                data-currentproduct = "<?php echo get_queried_object_id() ?>"
+                data-currentproduct = "<?=$this->current_product_id?>"
+                data-customminimum  = "<?=$custom_minimum?>"
             >
                 <attributes-matrix></attributes-matrix>
             </div>
