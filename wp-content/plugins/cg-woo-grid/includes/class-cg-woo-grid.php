@@ -183,6 +183,7 @@ class Cg_Woo_Grid
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
 		require_once CG_WOOGRID_PATH . '/admin/class-cg-woo-grid-admin.php';
+        require_once CG_WOOGRID_PATH . '/admin/class-cg-woo-grid-admin-rest-api.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
@@ -248,7 +249,7 @@ class Cg_Woo_Grid
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Cg_Woo_Grid_Admin( 
+		$plugin_admin = new Cg_Woo_Grid_Admin\Functions( 
             $this->get_plugin_name(), 
             $this->get_version() 
         );
@@ -277,6 +278,20 @@ class Cg_Woo_Grid
             'admin_enqueue_scripts', 
             $plugin_admin, 
             'enqueue_styles' 
+        );
+
+
+        /* */
+
+        $plugin_public_restapi = new Cg_Woo_Grid_Admin\Rest_Api( 
+            $this->get_plugin_name(), 
+            $this->get_version() 
+        );
+
+        $this->loader->add_action( 
+            'rest_api_init', 
+            $plugin_public_restapi, 
+            'add_routes_api'
         );
 
 	}

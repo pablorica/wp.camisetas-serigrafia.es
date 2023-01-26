@@ -9,7 +9,9 @@
  * @subpackage cg-woo-grid/admin
  * @author     Pablo Rica <pablo@codigo.co.uk>
  */
-class Cg_Woo_Grid_Admin {
+namespace Cg_Woo_Grid_Admin;
+
+class Functions {
 
 	/**
 	 * The ID of this plugin.
@@ -104,8 +106,6 @@ class Cg_Woo_Grid_Admin {
 
     
 
-
-
     public function sayHello($msg = null){
         error_log('Cg_Woo_Grid_Admin: Hello! '.$msg);
     }
@@ -155,6 +155,12 @@ class Cg_Woo_Grid_Admin {
                 $_GET['error_message'] 
             );
         }
+        require_once CG_WOOGRID_PATH . '/admin/class-cg-woo-grid-admin-rest-api.php';
+        $plugin_admin_restapi = new Rest_Api( 
+            $this->plugin_name, 
+            $this->version 
+        );
+        $urlspace = $plugin_admin_restapi->get_url_space();
 		require_once 'partials/'.$this->plugin_name.'-admin-display.php';
     }
 
@@ -394,6 +400,23 @@ class Cg_Woo_Grid_Admin {
                 'wp_data'          => 'option',
                 'placeholder'      => esc_html__("You can now place your order","cg-woo-grid"),
                 'class'            => 'alternate',
+            )
+        );
+        $field_id = $this->plugin_name.'_minimum_options';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Customised options","cg-woo-grid").":",
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'text',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'placeholder'      => '',
+                'class'            => '',
             )
         );
         array_push($settings_pages,$settings_page);

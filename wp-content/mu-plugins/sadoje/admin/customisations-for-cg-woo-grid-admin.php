@@ -36,7 +36,7 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
         $cgWooGrid = new \Cg_Woo_Grid();
 
         require_once WP_PLUGIN_DIR . '/cg-woo-grid/admin/class-cg-woo-grid-admin.php';
-        $cgWooGridAdmin = new \Cg_Woo_Grid_Admin( 
+        $cgWooGridAdmin = new \Cg_Woo_Grid_Admin\Functions( 
             $cgWooGrid->get_plugin_name(), 
             $cgWooGrid->get_version() 
         );

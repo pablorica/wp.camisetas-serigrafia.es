@@ -10,7 +10,7 @@
 console.log('VUE admin Test loaded')
 
 export default {
-  name: 'counter',
+  name: 'cdg-test',
   data() {
     return {
       // Initialized to zero to begin

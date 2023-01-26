@@ -21,7 +21,14 @@ export default  {
             // 'bundled' option is by default. It is recommended to configure this option explicitly, read more here: https://github.com/rollup/plugins/tree/master/packages/babel#babelhelpers
             babelHelpers: 'bundled'
         }),
-        vue(),
+        vue({
+            template: {
+                compilerOptions: {
+                  // treat all components starting with `cdg` as custom elements
+                  isCustomElement: tag => tag.startsWith('cdg'),
+                },
+              },
+        }),
         nodeResolve(),
         commonjs(),
         multi(),

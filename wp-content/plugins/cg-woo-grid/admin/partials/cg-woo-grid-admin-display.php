@@ -22,16 +22,12 @@ $settings = $wp_settings_sections['cg-woo-grid_general_settings']['cg-woo-grid_g
     <?php settings_errors(); ?> 
     
     <!-- Vue -->
-<div id="appAdminTest">
-    <counter></counter>
-</div>
+    <div id="appAdminTest">
+        <cdg-test></cdg-test>
+    </div>
 <!-- / Vue  -->
 
-    <!-- Vue -->
-<div id="appAdminSelectTest">
-    <dynselect></dynselect>
-</div>
-<!-- / Vue  -->
+
 
     <div id="poststuff">
         <!-- Main settings -->
@@ -69,63 +65,27 @@ $settings = $wp_settings_sections['cg-woo-grid_general_settings']['cg-woo-grid_g
                                 'Messages to show in the minimum bar', 
                                 'cg-woo-grid'
                             ); ?></p>
-                            <form method="POST" action="options.php">  
+                            <form id="formMinimumBar"
+                                method="POST" 
+                                action="options.php"
+                                
+                            >  
                                 <?php 
                                     settings_fields( 'cg-woo-grid_bar_settings' );
                                     do_settings_sections( 'cg-woo-grid_bar_settings' ); 
                                 ?>    
                                 <p>&nbsp;</p>
-                                <table id="tableMinimumBar"
-                                    class="widefat"
+
+                                <div id="tableMinimumBar"
+                                    data-theaderitem    = "<?php esc_html_e('Item','cg-woo-grid'); ?>"
+                                    data-theaderminimum = "<?php esc_html_e('Minimum amount','cg-woo-grid'); ?>"
+                                    data-selectgeturl   = "<?php echo esc_url_raw( rest_url( 'wp/v2/search/?subtype=product') ); ?>"
+                                    data-deletetitle    = "<?php esc_html_e('Delete','cg-woo-grid');  ?>"
+                                    data-tfootaddrow    = "<?php esc_html_e('Añadir margen','sadoje'); ?>"
+                                    data-apiurl         = "<?php echo $urlspace ?>"
                                 >
-                                    <thead>
-                                        <tr>
-                                            <th class="row-title"><?php esc_html_e('Item','cg-woo-grid'); ?></th>
-                                            <th><?php esc_html_e('Minimum amount','cg-woo-grid'); ?></th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr v-for="(row, index) in minimumbarrows"
-                                            v-bind:id="'row_'+index" 
-                                            v-bind:class = "(index % 2 === 0)?'alternate':''"
-                                        >
-                                                <th>
-                                                    <input type="number" 
-                                                        autocomplete="off"
-                                                        size="8"
-                                                        v-model="row.min"
-                                                        @input="updateRows()"
-                                                    >
-                                                </th>
-                                                <th>
-                                                    <input type="number" 
-                                                        autocomplete="off"
-                                                        size="4"
-                                                        v-model="row.profit"
-                                                        @input="updateRows()"
-                                                    >
-                                                </th>
-                                                <th style="text-align:right">
-                                                    <button class="button button-secondary button-delete" 
-                                                        style="background:#DC3232;color:#FFF;border-color:#FFF;"
-                                                        @click="deleteRow(index, $event)"
-                                                    ><?php esc_html_e('Delete','cg-woo-grid');  ?></button>
-                                                </th>
-                                        </tr>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th colspan="5">
-                                                <p style="text-align:right">
-                                                    <button class="button button-secondary" 
-                                                        @click="addRow($event)"
-                                                    ><?php echo __('Añadir margen','sadoje'); ?></button>
-                                                </p>
-                                            </th>
-                                        </tr>
-                                    </tfoot>
-                                </table>
+                                    <cdg-minimumbar></cdg-minimumbar>
+                                </div>
 
                                 <?php submit_button(); ?>  
                             </form> 
