@@ -94,7 +94,46 @@ $settings = $wp_settings_sections['cg-woo-grid_general_settings']['cg-woo-grid_g
                                 <?php submit_button(); ?>  
                             </form> 
 						</div><!-- .inside -->
-					</div><!-- .postbox -->
+					</div><!-- #settings-bar.postbox -->
+
+                    <div id="settings-stock"
+                        class="postbox"
+                    >
+                        <h2>
+                            <span><?php echo __('Stock options','cg-woo-grid'); ?></span>
+                        </h2>
+						<div class="inside">
+                            <p><?php 
+                            esc_html_e( 
+                                'The stock threshold will be subtracted from the actual stock value of each product, and the purchase of the item will be allowed if the customer selects an amount less than said final value.', 
+                                'cg-woo-grid'
+                            ); ?></p>
+                            <form method="POST" action="options.php">  
+                                <?php 
+                                    settings_fields( 'cg-woo-grid_stock_settings' );
+                                    do_settings_sections( 'cg-woo-grid_stock_settings' ); 
+                                ?> 
+                                
+                                <div id="tableCustomisedStock"
+                                    data-theadertype    = "<?php esc_html_e('Type','cg-woo-grid'); ?>"
+                                    data-theaderitem    = "<?php esc_html_e('Item','cg-woo-grid'); ?>"
+                                    data-theaderminimum = "<?php esc_html_e('Low stock threshold','cg-woo-grid'); ?>"
+                                    data-selectgeturl   = "<?php echo esc_url_raw( rest_url( 'wp/v2/') ); ?>"
+                                    data-deletetitle    = "<?php esc_html_e('Delete','cg-woo-grid');  ?>"
+                                    data-tfootaddrow    = "<?php esc_html_e('Add items','cg-woo-grid'); ?>"
+                                    data-selctplachldr  = "<?php esc_html_e('Type a value','cg-woo-grid'); ?>";
+                                    data-producttitle   = "<?php esc_html_e('Product','cg-woo-grid'); ?>";
+                                    data-categorytitle  = "<?php esc_html_e('Category','cg-woo-grid'); ?>";
+                                    data-apiurl         = "<?php echo $urlspace ?>"
+                                    data-hiddenboxid    = "cg-woo-grid_customised_stock"
+                                >
+                                    <cdg-minimumbar></cdg-minimumbar>
+                                </div>
+
+                                <?php submit_button(); ?>  
+                            </form> 
+						</div><!-- .inside -->
+					</div><!-- #settings-stock.postbox -->
 
                     <div id="settings-totalbox"
                         class="postbox"
@@ -139,28 +178,6 @@ $settings = $wp_settings_sections['cg-woo-grid_general_settings']['cg-woo-grid_g
                                 <?php 
                                     settings_fields( 'cg-woo-grid_resumebox_settings' );
                                     do_settings_sections( 'cg-woo-grid_resumebox_settings' ); 
-                                ?>       
-                                <?php submit_button(); ?>  
-                            </form> 
-						</div><!-- .inside -->
-					</div><!-- .postbox -->
-
-                    <div id="settings-stock"
-                        class="postbox"
-                    >
-                        <h2>
-                            <span><?php echo __('Stock options','cg-woo-grid'); ?></span>
-                        </h2>
-						<div class="inside">
-                            <p><?php 
-                            esc_html_e( 
-                                'The stock threshold will be subtracted from the actual stock value of each product, and the purchase of the item will be allowed if the customer selects an amount less than said final value.', 
-                                'cg-woo-grid'
-                            ); ?></p>
-                            <form method="POST" action="options.php">  
-                                <?php 
-                                    settings_fields( 'cg-woo-grid_stock_settings' );
-                                    do_settings_sections( 'cg-woo-grid_stock_settings' ); 
                                 ?>       
                                 <?php submit_button(); ?>  
                             </form> 

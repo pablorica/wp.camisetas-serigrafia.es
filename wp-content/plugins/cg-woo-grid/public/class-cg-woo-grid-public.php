@@ -355,7 +355,7 @@ class Functions {
 
         }
 
-        return false;
+        return -1;
     }
 
     /**
@@ -400,7 +400,7 @@ class Functions {
                 $this->current_product_id,
                 array('profit' => true)
             );
-            if(!$custom_minimum) {
+            if($custom_minimum == -1) {
                 $custom_minimum  = get_option($this->plugin_name.'_minimum_setting');
             }
             

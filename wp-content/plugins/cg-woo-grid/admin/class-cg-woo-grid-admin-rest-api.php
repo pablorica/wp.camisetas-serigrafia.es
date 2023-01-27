@@ -101,7 +101,7 @@ class Rest_Api {
         //error_log(print_r($parameters,true));
         if($object = $parameters['object']) {
             $serialized = maybe_serialize($object);
-            //$json = json_encode($unserialized);
+            //error_log(print_r($serialized,true));
             return rest_ensure_response(
                 $serialized
             );

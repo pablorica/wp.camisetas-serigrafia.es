@@ -377,6 +377,8 @@ class Rest_Api {
      */
     public function build_product_matrix($args) {
 
+        //error_log('build_product_matrix ');
+        
         extract(wp_parse_args(
             $args,
             array(
@@ -395,6 +397,23 @@ class Rest_Api {
                 array( 'status' => 500 ) 
             );
         }
+
+        $functions = new Functions( 
+            $this->plugin_name, 
+            $this->version
+        );
+
+        $stock_minimum  = $functions->cdg_filter_serialized_option(
+            get_option($this->plugin_name.'_customised_stock'),
+            $product->get_id(),
+            array('profit' => true)
+        );
+        //error_log('global stock_minimum -> '.$stock['minimum']);
+        //error_log('custom stock_minimum -> '.$stock_minimum);
+        if($stock_minimum == -1) {
+            $stock_minimum  = $stock['minimum'];
+        }
+        //error_log('stock_minimum -> '.$stock_minimum);
 
         $_children  = $product->get_children();
         $matrix     = array();
@@ -425,7 +444,7 @@ class Rest_Api {
             $valueX->name = strtoupper($varAttributes[$taxonomy_x]);
             $valueX->slug = $single_variation->get_slug();
 
-            $valueX->stock        = $single_variation->get_stock_quantity() - $stock['minimum'];
+            $valueX->stock        = $single_variation->get_stock_quantity() - $stock_minimum;
             $valueX->showStock    = $stock['show'];
             $valueX->messageStock = str_replace("%",$valueX->stock,$stock['message_threshold']);
 

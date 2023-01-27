@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-import Test from './templates/Test.vue';
+//import Test from './templates/Test.vue';
 import selectBox from './templates/selectBox.vue';
 import minimumBarTable from './templates/minimumBarTable.vue';
 
@@ -8,7 +8,11 @@ import minimumBarTable from './templates/minimumBarTable.vue';
 
 console.log('VUE Admin loaded')
 
-
+/**
+ * Build the table
+ * 
+ * @param {Object} self 
+ */
 function _buildTable(self) {
 
     let getURL = self.apiurl+'/encode';
@@ -30,10 +34,19 @@ function _buildTable(self) {
     }
 }
 
+
+/**
+ * Updarte all rows in table
+ * 
+ * @param {Object} self 
+ */
 function _updateRows(self) {
     let getURL = self.apiurl+'/serialize';
     //console.log('_updateRows');
+    //console.log(typeof self.frows);
     //console.log(self.frows);
+    //console.log(self.rows);
+    
     if(self.frows.length) {
         axios.post(getURL,{
             object: self.frows
@@ -42,22 +55,53 @@ function _updateRows(self) {
             //console.log(response);
             self.serialized = response.data
             document.getElementById(self.hiddenboxid).value = self.serialized
+            self.disabletable = false;
         })
         .catch(function (error) {
             console.log(error);
         });
+    } else {
+        self.serialized = ''
+        document.getElementById(self.hiddenboxid).value = '';
+        self.disabletable = false;
     }
 }
 
-function _addRow(event, self) {
+/**
+ * Add new row in table
+ * 
+ * @param {document#event:mousedown} event
+ * @param {Object} self 
+ */
+function _addRow(
+    event, 
+    self
+) {
+    event.preventDefault()
     //console.log('_addRow')
-    event.preventDefault()
+    //console.log(self.rows)
+    //console.log('adding derow')
+    //console.log(self.derow)
     self.rows.push(self.derow);
+    //console.log('derow added')
+    //console.log(self.rows)
 }
-function _deleteRow(event, self, row) {
+
+/**
+ * Delete row in table
+ * 
+ * @param {document#event:mousedown} event
+ * @param {Object} self 
+ * @param {number} rowIndex 
+ */
+function _deleteRow(
+    event, 
+    self, 
+    rowIndex
+) {
     event.preventDefault()
-    //alert('Delete ' + row)
-    self.rows.splice(row, 1)
+    //console.log('Delete ' + rowIndex)
+    self.rows.splice(rowIndex, 1)
     self.updateRows()
 }
 
@@ -104,7 +148,7 @@ window.onload = function(event) {
     if(document.getElementById("tableMinimumBar")) {
         const appTest = Vue.createApp(minimumBarTable).mount('#tableMinimumBar')
     }
-
-
-    
+    if(document.getElementById("tableCustomisedStock")) {
+        const appTest = Vue.createApp(minimumBarTable).mount('#tableCustomisedStock')
+    }
 };

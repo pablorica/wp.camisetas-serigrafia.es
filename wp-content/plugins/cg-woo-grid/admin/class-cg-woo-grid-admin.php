@@ -351,6 +351,41 @@ class Functions {
         $settings_page->slug   = $this->plugin_name.'_bar_settings';
         $settings_page->fields = array();
 
+        
+        $field_id = $this->plugin_name.'_bar_message';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Bar message","cg-woo-grid").":",
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'text',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'placeholder'      => esc_html__("Minimum amount to order","cg-woo-grid"),
+                'class'            => 'alternate',
+            )
+        );
+        $field_id = $this->plugin_name.'_bar_success';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Bar success","cg-woo-grid").":",
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'text',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'placeholder'      => esc_html__("You can now place your order","cg-woo-grid"),
+                'class'            => '',
+            )
+        );
         $field_id = $this->plugin_name.'_minimum_setting';
         $settings_page->fields[] = array(
             'id'    => $field_id,
@@ -368,44 +403,103 @@ class Functions {
                 'class'            => 'alternate'
             )
         );
-        $field_id = $this->plugin_name.'_bar_message';
-        $settings_page->fields[] = array(
-            'id'    => $field_id,
-            'title' => __("Bar message","cg-woo-grid").":",
-            'args'  => array (
-                'type'             => 'input',
-                'subtype'          => 'text',
-                'id'               => $field_id,
-                'name'             => $field_id,
-                'required'         => '',
-                'get_options_list' => '',
-                'value_type'       => 'normal',
-                'wp_data'          => 'option',
-                'placeholder'      => esc_html__("Minimum amount to order","cg-woo-grid"),
-                'class'            => '',
-            )
-        );
-        $field_id = $this->plugin_name.'_bar_success';
-        $settings_page->fields[] = array(
-            'id'    => $field_id,
-            'title' => __("Bar success","cg-woo-grid").":",
-            'args'  => array (
-                'type'             => 'input',
-                'subtype'          => 'text',
-                'id'               => $field_id,
-                'name'             => $field_id,
-                'required'         => '',
-                'get_options_list' => '',
-                'value_type'       => 'normal',
-                'wp_data'          => 'option',
-                'placeholder'      => esc_html__("You can now place your order","cg-woo-grid"),
-                'class'            => 'alternate',
-            )
-        );
         $field_id = $this->plugin_name.'_minimum_options';
         $settings_page->fields[] = array(
             'id'    => $field_id,
-            'title' => __("Customised options","cg-woo-grid").":",
+            'title' => __("Customised minimum amount","cg-woo-grid").":",
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'hidden',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'placeholder'      => '',
+                'class'            => '',
+            )
+        );
+        array_push($settings_pages,$settings_page);
+
+        /* Stock */
+        $settings_page         = new \stdClass();
+        $settings_page->slug   = $this->plugin_name.'_stock_settings';
+        $settings_page->fields = array();
+
+        
+        $field_id = $this->plugin_name.'_show_stock';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Show stock in each field","cg-woo-grid"),
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'checkbox',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'placeholder'      => '',
+                'class'            => 'alternate',
+                'onchange'         => ''
+            )
+        );
+        $field_id = $this->plugin_name.'_stock_threshold_message';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Stock threshold message","cg-woo-grid").":",
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'text',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'placeholder'      => esc_html__("Sorry, there are only % stocks left for this product","cg-woo-grid"),
+                'class'            => '',
+            )
+        );
+        $field_id = $this->plugin_name.'_stock_zero_message';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Stock zero message","cg-woo-grid").":",
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'text',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'placeholder'      => esc_html__("Sorry, this product is out of stock","cg-woo-grid"),
+                'class'            => 'alternate',
+            )
+        );
+        $field_id = $this->plugin_name.'_minimum_stock';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Low stock threshold","cg-woo-grid"),
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'number',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'min'              => 0, 
+                'required'         => 'required="required"',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'class'            => ''
+            )
+        );
+        $field_id = $this->plugin_name.'_customised_stock';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Customised low stock threshold","cg-woo-grid").":",
             'args'  => array (
                 'type'             => 'input',
                 'subtype'          => 'hidden',
@@ -504,83 +598,6 @@ class Functions {
                 'value_type'       => 'normal',
                 'wp_data'          => 'option',
                 'placeholder'      => esc_html__("The unit price is","cg-woo-grid"),
-                'class'            => '',
-            )
-        );
-        array_push($settings_pages,$settings_page);
-
-
-
-        /* Stock */
-        $settings_page         = new \stdClass();
-        $settings_page->slug   = $this->plugin_name.'_stock_settings';
-        $settings_page->fields = array();
-
-        $field_id = $this->plugin_name.'_minimum_stock';
-        $settings_page->fields[] = array(
-            'id'    => $field_id,
-            'title' => __("Low stock threshold","cg-woo-grid"),
-            'args'  => array (
-                'type'             => 'input',
-                'subtype'          => 'number',
-                'id'               => $field_id,
-                'name'             => $field_id,
-                'min'              => 0, 
-                'required'         => 'required="required"',
-                'get_options_list' => '',
-                'value_type'       => 'normal',
-                'wp_data'          => 'option',
-                'class'            => 'alternate'
-            )
-        );
-        $field_id = $this->plugin_name.'_show_stock';
-        $settings_page->fields[] = array(
-            'id'    => $field_id,
-            'title' => __("Show stock in each field","cg-woo-grid"),
-            'args'  => array (
-                'type'             => 'input',
-                'subtype'          => 'checkbox',
-                'id'               => $field_id,
-                'name'             => $field_id,
-                'required'         => '',
-                'value_type'       => 'normal',
-                'wp_data'          => 'option',
-                'placeholder'      => '',
-                'class'            => '',
-                'onchange'         => ''
-            )
-        );
-        $field_id = $this->plugin_name.'_stock_threshold_message';
-        $settings_page->fields[] = array(
-            'id'    => $field_id,
-            'title' => __("Stock threshold message","cg-woo-grid").":",
-            'args'  => array (
-                'type'             => 'input',
-                'subtype'          => 'text',
-                'id'               => $field_id,
-                'name'             => $field_id,
-                'required'         => '',
-                'get_options_list' => '',
-                'value_type'       => 'normal',
-                'wp_data'          => 'option',
-                'placeholder'      => esc_html__("Sorry, there are only % stocks left for this product","cg-woo-grid"),
-                'class'            => 'alternate',
-            )
-        );
-        $field_id = $this->plugin_name.'_stock_zero_message';
-        $settings_page->fields[] = array(
-            'id'    => $field_id,
-            'title' => __("Stock zero message","cg-woo-grid").":",
-            'args'  => array (
-                'type'             => 'input',
-                'subtype'          => 'text',
-                'id'               => $field_id,
-                'name'             => $field_id,
-                'required'         => '',
-                'get_options_list' => '',
-                'value_type'       => 'normal',
-                'wp_data'          => 'option',
-                'placeholder'      => esc_html__("Sorry, this product is out of stock","cg-woo-grid"),
                 'class'            => '',
             )
         );

@@ -85,9 +85,7 @@ export default {
         if(element.parentElement.dataset.geturl){
             this.geturl = element.parentElement.dataset.geturl;
         }
-
         
-
         if(typeof this.defrows !== 'undefined') {
             //console.log("mounted defrows");
             //console.log(this.defrows);

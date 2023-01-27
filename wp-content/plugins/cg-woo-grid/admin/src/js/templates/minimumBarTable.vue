@@ -54,6 +54,7 @@
                     </th>
                     <th style="text-align:right">
                         <button class="button button-secondary button-delete" 
+                            :disabled="disabletable"
                             style="background:#DC3232;color:#FFF;border-color:#FFF;"
                             @click="deleteRow(index, $event)"
                             v-html="deletetitle"
@@ -78,7 +79,7 @@
 
 <script>  
 
-console.log('VUE admin Table Minimum Bar loaded')
+//console.log('VUE admin Table Minimum Bar loaded')
 
 import { config } from '../vueAdmin.js';
 import selectBox from './selectBox.vue';
@@ -100,6 +101,7 @@ export default {
             selectgeturl:       '',
             serialized:         '',
             apiurl:             '',
+            disabletable:       false,
             typeoptions: [
                 {
                     slug:       'product',
@@ -112,12 +114,7 @@ export default {
             ],
             rows:               [],
             frows:              [],
-            derow: {
-                resturl:        'search/?subtype=product',
-                type:           'product',
-                items:          '',
-                profit:         0,
-            }      
+            derow:              {}   
         }
     },
     mounted: function () {
@@ -139,7 +136,8 @@ export default {
         //this.serialized     = this.$refs[this.refId].value; <-- this.$refs no working with SFCs
         this.serialized     = document.getElementById(this.hiddenboxid).value;
 
-        this.rows.push(this.derow);
+
+        
         this.typeoptions = this.typeoptions.map(function (typeoption) { 
             if(typeoption.slug == 'product') {
                 typeoption.title = parentEl.dataset.producttitle;
@@ -157,7 +155,7 @@ export default {
     
     methods: {
         resetRow: function (index) {
-            //console.log('resetRow')
+            console.log('resetRow')
             //console.log('index: ' + index)
             var self = this;
 
@@ -174,11 +172,25 @@ export default {
             //console.log(self.rows)
             self.updateRows(); 
         },
+        resetDerow: function () {
+            this.derow = {
+                resturl:        'search/?subtype=product',
+                type:           'product',
+                items:          '',
+                profit:         0,
+            }
+        },
         buildTable: function () {
+            this.resetDerow(); 
+            this.rows.push(this.derow);
             config.buildTable(this);
         },
         updateRows: function () {
 
+            //console.log('updateRows: rows')
+            //console.log(this.rows)
+
+            this.frows = [];
             for (var i=0; i < this.rows.length; ++i) {
                 let row = this.rows[i]
                 //console.log('row')
@@ -196,17 +208,24 @@ export default {
                     this.frows[i] = row
                     row.reset = false;
                 } 
-                //console.log('frows')
-                //console.log(this.frows)
+                
             }
+            //console.log('updateRows: frows')
+            //console.log(this.frows)
+
             config.updateRows(this)
             
         },
         addRow: function(event) {
+            this.resetDerow(); 
+            //console.log('addRow')
+            //console.log(' derow to add')
+            //console.log(this.derow)
             config.addRow(event, this)
         },
-        deleteRow(row, event) {
-            config.deleteRow(event, this, row)
+        deleteRow(rowIndex, event) {
+            this.disabletable = true;
+            config.deleteRow(event, this, rowIndex)
         }
     },
 }
