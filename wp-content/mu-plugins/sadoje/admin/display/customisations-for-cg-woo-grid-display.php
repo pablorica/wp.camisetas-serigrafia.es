@@ -164,7 +164,7 @@
                         class="postbox"
                     >
                         <h2>
-                            <span><?php echo __('Estampación','sadoje'); ?></span>
+                            <span><?php echo __('Estampación Viejo','sadoje'); ?></span>
                         </h2>
 						<div class="inside">
                             <form id="formStamping"
@@ -445,6 +445,93 @@
                                             </td>
                                         </tr>
                                     </tbody>
+                                </table>
+
+                                <?php submit_button(); ?>  
+                            </form> 
+						</div><!-- .inside -->
+					</div><!-- #settings-stamping -->
+
+
+                    <div id="settings-imprint"
+                        class="postbox"
+                    >
+                        <h2>
+                            <span><?php echo __('Estampación','sadoje'); ?></span>
+                        </h2>
+						<div class="inside">
+                            <form id="formImprint"
+                                method="POST" 
+                                action="options.php"
+                                data-apiurl = "<?php echo $urlspace; ?>"
+                                class="hide-form-table"
+                            >
+                                <?php 
+                                    settings_fields( 'customisations-for-cg-woo-grid_budgeteer_imprint' );
+                                    do_settings_sections( 'customisations-for-cg-woo-grid_budgeteer_imprint' ); 
+                                ?>
+
+                                <table id="tableImprint"
+                                    class="widefat"
+                                >
+                                    <thead>
+                                        <tr>
+                                            <th class="row-title"><?php _e('Variable','sadoje'); ?></th>
+                                            <th><?php _e('Etiqueta','sadoje'); ?></th>
+                                            <th><?php _e('Valores','sadoje'); ?></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <template v-for="(row, index) in rows">
+                                            <tr v-bind:id="'row_'+index" 
+                                                v-bind:class = "(index % 2 == 1)?'':'alternate'"
+                                            >
+                                                <th>
+                                                    <input type="text" 
+                                                        autocomplete="off"
+                                                        size="30"
+                                                        v-model="row.imprint"
+                                                        :name="'imprint['+index+']'"
+                                                        @input="updateRows()"
+                                                    >
+                                                </th>
+                                                <th>
+                                                    <input type="text" 
+                                                        autocomplete="off"
+                                                        size="30"
+                                                        v-model="row.imprint_label"
+                                                        :name="'imprint_label['+index+']'"
+                                                        @input="updateRows()"
+                                                    >
+                                                </th>
+                                                <th>
+                                                    <textarea
+                                                        v-model="row.imprint_values"
+                                                        :name="'imprint_values['+index+']'"
+                                                        @input="sanitize(index)"
+                                                    ></textarea>
+                                                </th>
+                                                <th style="text-align:right">
+                                                    <button class="button button-secondary button-delete" 
+                                                        style="background:#DC3232;color:#FFF;border-color:#FFF;"
+                                                        @click="deleteRow(index, $event)"
+                                                    ><?php echo __('Borrar','sadoje'); ?></button>
+                                                </th>
+                                            </tr>
+                                        </template>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="6">
+                                                <p style="text-align:right">
+                                                    <button class="button button-secondary" 
+                                                        @click="addRow($event)"
+                                                    ><?php echo __('Añadir variable','sadoje'); ?></button>
+                                                </p>
+                                            </th>
+                                        </tr>
+                                    </tfoot>
                                 </table>
 
                                 <?php submit_button(); ?>  

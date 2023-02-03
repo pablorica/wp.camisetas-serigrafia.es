@@ -162,6 +162,64 @@ if(document.getElementById("formStamping")) {
     }).mount('#formStamping')
 }
 
+if(document.getElementById("formImprint")) {
+    createApp({
+        data() {
+            return {
+                serialized: '',
+                apiurl:'',
+                rows: [],
+                refId: 'customisationsforcgwoogridbudgeteerimprinttypes',
+            }
+        },
+        mounted: function () {
+            
+            let element     = this.$el;
+            this.apiurl     = element.parentElement.dataset.apiurl;
+            this.serialized = this.$refs[this.refId].value
+            
+            this.buildTable(); 
+
+        },
+        methods: {
+            buildTable: function () {
+                gBuildTable(this);
+            },
+            
+            sanitize: function(index) {
+
+                let ele = this.rows[index].imprint_values;
+                //console.log(ele)
+
+                const replacements = {
+                    ":": "|"
+                }
+                Object.keys(replacements).forEach(k => {
+                    ele = ele.replace(k, replacements[k])
+                })
+
+                ele = ele.replace(/(?:\r\n|\r|\n)/g, '<br>');
+
+                this.rows[index].imprint_values = ele;
+
+                //console.log(ele)
+
+                gUpdateRows(this)
+            },
+            updateRows: function () {
+                  
+                gUpdateRows(this)
+            },
+            addRow: function(event) {
+                gAddRow(event, this)
+            },
+            deleteRow(row, event) {
+                gDeleteRow(event, this, row)
+            }
+        }
+    }).mount('#formImprint')
+}
+
 if(document.getElementById("formProfit")) {
     createApp({
         data() {

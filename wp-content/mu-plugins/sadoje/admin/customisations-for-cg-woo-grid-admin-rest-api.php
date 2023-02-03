@@ -41,9 +41,12 @@ class Customisations_For_Cg_Woo_Grid_Admin_Rest_Api extends Customisations_For_C
 
         $parameters = $request_data->get_params();
         //error_log(print_r($parameters,true));
+        
         if($serialized = $parameters['serialized']) {
             $unserialized = maybe_unserialize($serialized);
             //$json = json_encode($unserialized);
+            //error_log(print_r($unserialized,true));
+            //error_log(print_r(json_encode($unserialized),true));
             return rest_ensure_response(
                 $unserialized
             );
