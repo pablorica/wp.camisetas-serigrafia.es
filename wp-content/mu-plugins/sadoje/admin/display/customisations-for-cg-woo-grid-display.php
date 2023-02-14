@@ -141,7 +141,7 @@
                             </form> 
 
 						</div><!-- .inside -->
-					</div><!-- #settings-profit -->
+					</div><!-- #settings-baseprice -->
 
                     <div id="settings-bagged"
                         class="postbox"
@@ -528,6 +528,134 @@
                                                     <button class="button button-secondary" 
                                                         @click="addRow($event)"
                                                     ><?php echo __('Añadir variable','sadoje'); ?></button>
+                                                </p>
+                                            </th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+
+                                <?php submit_button(); ?>  
+                            </form> 
+						</div><!-- .inside -->
+
+                        <h2>
+                            <span><?php echo __('Configuración general','sadoje'); ?></span>
+                        </h2>
+						<div class="inside">
+                            <form id="formPrices"
+                                method="POST" 
+                                action="options.php"
+                                data-apiurl = "<?php echo $urlspace; ?>"
+                                class="hide-form-table"
+                            >
+                                <?php 
+                                    settings_fields( 'customisations-for-cg-woo-grid_budgeteer_prices' );
+                                    do_settings_sections( 'customisations-for-cg-woo-grid_budgeteer_prices' ); 
+                                ?>
+
+                                <table id="tablePrices"
+                                    class="widefat"
+                                >
+                                    <thead>
+                                        <tr>
+                                            <template v-for="(column, index) in columns">
+                                                <th class="row-title"
+                                                    v-text="column.title"
+                                                ></th>
+                                            </template>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <template v-for="(row, index) in rows">
+                                            <tr v-bind:id="'row_a_'+index" 
+                                                v-bind:class = "(index % 2 == 1)?'':'alternate'"
+                                            >
+                                                <th v-for="(column, index) in columns">
+                                                    <select v-model="row[column.slug]"
+                                                        @change="updateRows()">
+                                                        <option disabled 
+                                                            value="">
+                                                            <?php echo __('Seleccione un valor','sadoje'); ?>
+                                                        </option>
+                                                        <option  value="all">
+                                                            <?php echo __('Todos','sadoje'); ?>
+                                                        </option>
+                                                        <option v-for="value in column.values" :value="value">
+                                                            {{ value}}
+                                                        </option>
+                                                    </select>
+                                                </th>
+
+
+                                                <th style="text-align:right" rowspan="2">
+                                                    <button class="button button-secondary button-delete" 
+                                                        style="background:#DC3232;color:#FFF;border-color:#FFF;"
+                                                        @click="deleteRow(index, $event)"
+                                                    ><?php echo __('Borrar','sadoje'); ?></button>
+                                                </th>
+                                            </tr>
+                                            <tr v-bind:id="'row_b_'+index" 
+                                                v-bind:class = "(index % 2 == 1)?'':'alternate'"
+                                            >
+                                                <th colspan="5" >
+                                                    <div style="display:flex; justify-content: flex-start">
+                                                        <ul>
+                                                            <li>
+                                                                <input type="checkbox" 
+                                                                    v-bind:id="'pricescreen_'+index" 
+                                                                    v-model="row.pricescreen" 
+                                                                    value="screen" 
+                                                                    @change="updateRows()"
+                                                                />
+                                                                <label v-bind:for="'pricescreen_'+index">
+                                                                    <?php esc_html_e('Precio adicional por pantalla y fotolitos','sadoje'); ?>
+                                                                </label>
+                                                            </li>
+                                                        </ul>
+                                                        <ul>
+                                                            <li><input type="text" 
+                                                                autocomplete="off"
+                                                                size="10"
+                                                                v-model="row.pricescreenval"
+                                                                @input="updateRows()"
+                                                                :disabled="!row.pricescreen"
+                                                            ></li>
+                                                        </ul>
+                                                        <ul>
+                                                            <li>
+                                                                <input type="checkbox" 
+                                                                    v-bind:id="'pricecloth_'+index"
+                                                                    v-model="row.pricecloth" 
+                                                                    value="cloth" 
+                                                                    @change="updateRows()"
+                                                                />
+                                                                <label v-bind:for="'pricecloth_'+index">
+                                                                    <?php esc_html_e('Precio estampación por prenda ','sadoje'); ?>
+                                                                </label>
+                                                            </li>
+                                                        </ul>
+                                                        <ul>
+                                                            <li><input type="text" 
+                                                                autocomplete="off"
+                                                                size="10"
+                                                                v-model="row.priceclothval"
+                                                                @input="updateRows()"
+                                                                :disabled="!row.pricecloth"
+                                                            ></li>
+                                                        </ul>
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                        </template>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="6">
+                                                <p style="text-align:right">
+                                                    <button class="button button-secondary" 
+                                                        @click="addRow($event)"
+                                                    ><?php echo __('Añadir configuración','sadoje'); ?></button>
                                                 </p>
                                             </th>
                                         </tr>

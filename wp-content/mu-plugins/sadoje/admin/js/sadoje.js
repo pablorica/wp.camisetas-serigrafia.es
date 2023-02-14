@@ -220,6 +220,91 @@ if(document.getElementById("formImprint")) {
     }).mount('#formImprint')
 }
 
+if(document.getElementById("formPrices")) {
+    createApp({
+        data() {
+            return {
+                serialized: '',
+                apiurl:'',
+                rows: [],
+                columns: [
+                    {
+                        slug:'estampacion',
+                        title:'Tipo de estampación',
+                        values:['Serigrafía','Bordados']
+                    },
+                    {
+                        slug:'tamano',
+                        title:'Tamaño',
+                        values:['Tamaño Pequeño 10x15 cm aprox.','Tamaño Grande 20x30 cm aprox.']
+                    },
+                    {
+                        slug:'tintas',
+                        title:'Tintas',
+                        values:['1 Tinta','2 Tintas','3 Tintas','4 tintas']
+                    },
+                    {
+                        slug:'ubicacion',
+                        title:'Ubicación',
+                        values:['Pecho','Espalda','Manga derecha','Manga izquierda']
+                    },
+                    {
+                        slug:'color',
+                        title:'Tipo de prenda',
+                        values:['Prendas blancas','Prendas de color']
+                    },
+                ],
+                refId: 'customisationsforcgwoogridbudgeteerpricestypes',
+            }
+        },
+        mounted: function () {
+            
+            let element     = this.$el;
+            this.apiurl     = element.parentElement.dataset.apiurl;
+            this.serialized = this.$refs[this.refId].value
+            
+            this.buildTable(); 
+
+        },
+        methods: {
+            buildTable: function () {
+                gBuildTable(this);
+            },
+            
+            sanitize: function(index) {
+
+                let ele = this.rows[index].imprint_values;
+                //console.log(ele)
+
+                const replacements = {
+                    ":": "|"
+                }
+                Object.keys(replacements).forEach(k => {
+                    ele = ele.replace(k, replacements[k])
+                })
+
+                ele = ele.replace(/(?:\r\n|\r|\n)/g, '<br>');
+
+                this.rows[index].imprint_values = ele;
+
+                //console.log(ele)
+
+                gUpdateRows(this)
+            },
+            updateRows: function () {
+                  
+                gUpdateRows(this)
+            },
+            addRow: function(event) {
+                gAddRow(event, this)
+            },
+            deleteRow(row, event) {
+                gDeleteRow(event, this, row)
+            }
+        }
+    }).mount('#formPrices')
+}
+
 if(document.getElementById("formProfit")) {
     createApp({
         data() {

@@ -290,6 +290,29 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
         );
         array_push($settings_pages,$settings_page);
 
+        /* Imprint prices*/
+        $settings_page         = new \stdClass();
+        $settings_page->slug   = $this->get_element_name().'_budgeteer_prices';
+        $settings_page->fields = array();
+        $field_id = $this->get_element_name().'_budgeteer_prices_types';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => '',
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'text',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'serialized',
+                'wp_data'          => 'option',
+                'class'            => '',
+            )
+        );
+        array_push($settings_pages,$settings_page);
+
+
 
         /* Profit margins: */
         $settings_page         = new \stdClass();
