@@ -53,7 +53,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
 
             global $product;
 
-            //TODO: Make this configurable in backend
+            // TODO: Make this configurable in backend
             $quantities   = [1000,500,400,200,100,50,30,10,6,1];
             $objectPrices = Array();
             foreach($quantities as $quantity) {

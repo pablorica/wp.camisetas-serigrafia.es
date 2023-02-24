@@ -234,10 +234,12 @@ if(document.getElementById("formImprint")) {
 if(document.getElementById("formPrices")) {
     createApp({
         data() {
+
             return {
                 serialized: '',
                 apiurl:'',
                 rows: [],
+                //TODO:  THis must be dinamically populated. Take a look at the function addRow() in mu-plugins/sadoje/src/js/templates/Estimator.vue, it¡s loading this content via AJAX
                 columns: [
                     {
                         slug:'estampacion',

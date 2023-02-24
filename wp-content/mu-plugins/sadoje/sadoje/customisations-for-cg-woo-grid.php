@@ -23,7 +23,7 @@ class Customisations_For_Cg_Woo_Grid extends Sadoje_Singleton {
     //The init method is defined by the singleton abstract and it starts the execution of the plugin. Usually, calls all the following methods needed.
     function init() {
 
-        //TODO: Check if cg-woo-grid is enabled before init()!!!!!
+        // TODO: Check if cg-woo-grid is enabled before init()!!!!!
          
         $this->get_element_name();
         //$this->add_actions();
