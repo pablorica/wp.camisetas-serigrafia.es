@@ -1,4 +1,15 @@
-
+/*
+*
+* ==== DEV notes ====
+*
+* ---- $refs
+* this line in all mounted functions:
+* this.serialized = this.$refs[this.refId].value 
+* is reading an HTML attribute "ref" in input types. 
+* That ref attribute is not showed by some browser inspectors (Chrome), but VUE understands it. 
+* It was added to the input tag in the render_settings_field() function defined in plugins/cg-woo-grid/admin/class-cg-woo-grid-admin.php l.829
+* 
+*/
 
 
 const { createApp } = Vue
@@ -231,12 +242,12 @@ if(document.getElementById("formPrices")) {
                     {
                         slug:'estampacion',
                         title:'Tipo de estampación',
-                        values:['Serigrafía','Bordados']
+                        values:['Serigrafía','Bordados', 'Digital todo color']
                     },
                     {
                         slug:'tamano',
                         title:'Tamaño',
-                        values:['Tamaño Pequeño 10x15 cm aprox.','Tamaño Grande 20x30 cm aprox.']
+                        values:['Pequeño','Grande']
                     },
                     {
                         slug:'tintas',
@@ -261,7 +272,7 @@ if(document.getElementById("formPrices")) {
             
             let element     = this.$el;
             this.apiurl     = element.parentElement.dataset.apiurl;
-            this.serialized = this.$refs[this.refId].value
+            this.serialized = this.$refs[this.refId].value 
             
             this.buildTable(); 
 

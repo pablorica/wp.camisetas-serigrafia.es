@@ -169,6 +169,22 @@ class Customisations_For_Cg_Woo_Grid extends Sadoje_Singleton {
             17
         );
 
+        /**
+         * Hook: woocommerce_share
+         *
+         * @hooked none
+         */
+        add_action( 
+            'woocommerce_share', 
+            array( 
+                $plugin_public, 
+                'cdg_pricetable' 
+            ),
+            17
+        );
+
+        
+
         // add_action( 
         //     'wp_loaded', 
         //     array( 

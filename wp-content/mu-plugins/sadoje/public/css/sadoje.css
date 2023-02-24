@@ -4,6 +4,9 @@
 .cdg_box table.cdg_table {
   width: 100%;
 }
+.cdg_box table.cdg_table tr.alternate td, .cdg_box table.cdg_table tr.alternate th {
+  background-color: #f8f8f8;
+}
 .cdg_box table.cdg_table th {
   font-size: 16px;
   font-weight: bold;

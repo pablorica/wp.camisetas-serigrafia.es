@@ -31,6 +31,39 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
 	}
 
     /**
+	 * Build the price table
+	 *
+	 * @since    1.0.0
+     * 
+     * @return void || WP_Error
+	 */
+    function cdg_pricetable() {
+
+        //error_log('cdg_budgeteer -> Element Name: '.$this->get_element_name());
+
+        $args = array();
+        
+        if( null !== get_queried_object_id()) {
+
+            $elementName = $this->get_element_name();
+            
+            require_once $this->plugin_path. 'admin/'.$elementName.'-admin-rest-api.php';
+            $plugin_admin_restapi = new Customisations_For_Cg_Woo_Grid_Admin_Rest_Api();
+            $urlspace = $plugin_admin_restapi->get_url_space();
+
+            require_once $this->plugin_path.'public/display/'.$elementName.'-product-price-table.php'; 
+
+        } else {
+            // If the code somehow executes to here something bad happened return a 500.
+            return new \WP_Error( 
+                $this->get_element_name().'_error', 
+                esc_html__( 'Something went wrong', "cg-woo-grid" ), 
+                array( 'status' => 500 ) 
+            );
+        }
+    }
+
+    /**
 	 * Build the budgeteer
 	 *
 	 * @since    1.0.0

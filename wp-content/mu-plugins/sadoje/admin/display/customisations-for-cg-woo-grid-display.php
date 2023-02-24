@@ -479,6 +479,7 @@
                                             <th class="row-title"><?php _e('Variable','sadoje'); ?></th>
                                             <th><?php _e('Etiqueta','sadoje'); ?></th>
                                             <th><?php _e('Valores','sadoje'); ?></th>
+                                            <th><?php _e('Ocultar en el front-end','sadoje'); ?></th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -511,6 +512,14 @@
                                                         :name="'imprint_values['+index+']'"
                                                         @input="sanitize(index)"
                                                     ></textarea>
+                                                </th>
+                                                <th>
+                                                    <input type="checkbox" 
+                                                        v-bind:disabled="index===0" 
+                                                        v-model="row.imprint_hide" 
+                                                        value="true" 
+                                                        @change="updateRows()"
+                                                    />
                                                 </th>
                                                 <th style="text-align:right">
                                                     <button class="button button-secondary button-delete" 
@@ -582,7 +591,7 @@
                                                             <?php echo __('Todos','sadoje'); ?>
                                                         </option>
                                                         <option v-for="value in column.values" :value="value">
-                                                            {{ value}}
+                                                            {{value}}
                                                         </option>
                                                     </select>
                                                 </th>
