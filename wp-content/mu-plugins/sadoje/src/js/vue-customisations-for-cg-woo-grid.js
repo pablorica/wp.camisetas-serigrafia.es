@@ -6,6 +6,7 @@ import VueCookies from 'vue-cookies'
 import Test from './templates/Test.vue';
 import Budgeteer from './templates/Budgeteer.vue';
 import Estimator from './templates/Estimator.vue';
+import Tableprices from './templates/Tableprices.vue';
 
 import Emitter from 'tiny-emitter';
 
@@ -21,5 +22,6 @@ export const config = {
 };
 
 //const appTest      = Vue.createApp(Test).mount('#appTest')
-const appBudgeteer = Vue.createApp(Budgeteer).use(VueCookies).mount('#appBudgeteer')
-const appEstimator = Vue.createApp(Estimator).use(VueCookies).mount('#appEstimator')
+const appBudgeteer   = Vue.createApp(Budgeteer).use(VueCookies).mount('#appBudgeteer')
+const appEstimator   = Vue.createApp(Estimator).use(VueCookies).mount('#appEstimator')
+const appTableprices = Vue.createApp(Tableprices).mount('#appTableprices')

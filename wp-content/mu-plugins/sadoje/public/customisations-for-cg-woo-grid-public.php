@@ -51,6 +51,28 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
             $plugin_admin_restapi = new Customisations_For_Cg_Woo_Grid_Admin_Rest_Api();
             $urlspace = $plugin_admin_restapi->get_url_space();
 
+            global $product;
+
+            $quantities   = [1000,500,400,200,100,50,30,10,6,1];
+            $objectPrices = Array();
+            foreach($quantities as $quantity) {
+                $objectPrice = new \stdClass();
+                $objectPrice->quantity = $quantity;
+                $objectPrice->price = strip_tags(
+                    wc_price(
+                        $this->cdg_alter_regular_price( 
+                            $product->get_price(),
+                            $product,
+                            $quantity
+                        )
+                    )
+                );
+                $objectPrices[] = $objectPrice;
+                
+            }
+            //error_log(print_r($objectPrices,true));
+            $jsPrices = json_encode($objectPrices);
+            //error_log(print_r($jsPrices,true));
             require_once $this->plugin_path.'public/display/'.$elementName.'-product-price-table.php'; 
 
         } else {
