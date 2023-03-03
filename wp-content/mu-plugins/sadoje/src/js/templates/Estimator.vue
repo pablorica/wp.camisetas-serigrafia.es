@@ -425,7 +425,7 @@ export default {
             console.log('AddOn cookie')
             console.log(window.$cookies.get(self.cookieName))
 
-            /* TODO this works and trigers the updateTotal function, 
+            /*  TODO this works and trigers the updateTotal function, 
             but it would be better to find a way to triger that function 
             using VUE elements , or tiny-emitter */
             document.getElementById("updateTotal").click();
