@@ -13,7 +13,7 @@
 
 //import selectBox from './templates/selectBox.vue';
 
-//import { emitter } from '../../src/js/vue-customisations-for-cg-woo-grid.js';
+//import { emitter } from '../../../src/js/vue-customisations-for-cg-woo-grid.js';
 
 console.log('CG_WOOGRID_PATH:' + CG_WOOGRID_PATH);
 
