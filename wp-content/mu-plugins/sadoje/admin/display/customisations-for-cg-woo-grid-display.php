@@ -759,6 +759,22 @@
                                 </table>
                                 <?php submit_button(); ?>  
                             </form> 
+                        </div><!-- .inside -->
+
+                        <h2>
+                            <span><?php echo __('Tabla de precios','sadoje'); ?></span>
+                        </h2>
+                        <div class="inside">
+                            <form method="POST" 
+                                action="options.php"
+                            >  
+
+                                <?php 
+                                    settings_fields( 'customisations-for-cg-woo-grid_budgeteer_tableprices' );
+                                    do_settings_sections( 'customisations-for-cg-woo-grid_budgeteer_tableprices' ); 
+                                ?>     
+                                <?php submit_button(); ?>  
+                            </form> 
 
 						</div><!-- .inside -->
 					</div><!-- #settings-profit -->

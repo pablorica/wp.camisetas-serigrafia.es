@@ -12,7 +12,7 @@
  * Plugin Name:     Sadoje
  * Plugin URI:      http://codigo.co.uk/
  * Description:     Adds custom features asked by Sadoje to theme and plugins
- * Version:         0.9.7
+ * Version:         0.12.2
  * Author:          Pablo Rica <pablo@codigo.co.uk>
  * Author URI:      http://codigo.co.uk/pablo-rica
  * Text Domain:     sadoje

@@ -111,6 +111,7 @@ export const config = {
     addRow:     _addRow,
     deleteRow:  _deleteRow,
 };
+//export var vueselectbox = new selectBox;
 
 
 window.onload = function(event) {

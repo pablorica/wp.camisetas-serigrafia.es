@@ -933,6 +933,105 @@ class Functions {
                 }
             break;
 
+            case 'selectbox':
+
+                $prependStart = $prependEnd = null;
+                if(isset($args['prepend_value'])) {
+                    $prependStart = '<div class="editor-prepend"> 
+                                        <span class="add-on">'.
+                                            $args['prepend_value'].
+                                        '</span>';
+                    $prependEnd   = '</div>';
+                }
+
+                $placeholder = (isset($args['placeholder'])) ? 'placeholder="'.$args['placeholder'].'"' : '';
+                $selectgeturl = (isset($args['selectgeturl'])) ? $args['selectgeturl']: esc_url_raw( rest_url( 'wp/v2/') ).'search/?subtype=product';
+                $ref         = 'ref="'.
+                    str_replace(
+                        "_",
+                        "",
+                        str_replace(
+                            "-",
+                            "",
+                            $args['id']
+                        )
+                    ).
+                '"';
+
+                echo $prependStart.'
+                <selectBox
+                    :selectgeturl          = "'.$selectgeturl.'"
+                    :defrows               = "null"
+                    :resethis              = "true"
+                    :proplaceholder        = "'.$placeholder.'"
+                    @changeSelectedOptions = "updateRows()"
+                >
+                </selectBox>'.
+                    $prependEnd.
+                    $after;
+            break;
+
+            case 'textarea':
+
+                $prependStart = $prependEnd = null;
+                if(isset($args['prepend_value'])) {
+                    $prependStart = '<div class="input-prepend"> 
+                                        <span class="add-on">'.
+                                            $args['prepend_value'].
+                                        '</span>';
+                    $prependEnd   = '</div>';
+                }
+
+                $size        = (isset($args['size'])) ? 'size="'.$args['size'].'"' : 'size="40"';
+                $placeholder = (isset($args['placeholder'])) ? 'placeholder="'.$args['placeholder'].'"' : '';
+                $ref         = 'ref="'.
+                    str_replace(
+                        "_",
+                        "",
+                        str_replace(
+                            "-",
+                            "",
+                            $args['id']
+                        )
+                    ).
+                '"';
+                
+                $inputAttr  = $placeholder.' 
+                            '.$ref.' 
+                            '.$attr_data.'
+                            '.$size;
+                
+                if(isset($args['disabled'])){
+                    // hide the actual input bc if it was just a disabled input the information saved in the database would be wrong - bc it would pass empty values and wipe the actual information
+                    echo $prependStart.
+                        '<textarea id="'.$args['id'].'_disabled" 
+                            name="'.$args['name'].'_disabled" 
+                            disabled 
+                            '.$inputAttr.' 
+                        >' . esc_attr($value) . '</textarea>
+                        <input type="hidden" 
+                            id="'.$args['id'].'" 
+                            name="'.$args['name'].'" 
+                            value="' . esc_attr($value) . '"
+                            '.$inputAttr.' 
+                        />'.
+                        $prependEnd.
+                        $after;
+                } else {
+                    echo $prependStart.
+                        '<textarea id="'.$args['id'].'" 
+                                name="'.$args['name'].'" 
+                                '.$args['required'].'
+                                '.$inputAttr.' 
+                            >' . esc_attr($value) . '</textarea>'.
+                            $prependEnd.
+                            $after;
+                }
+            
+                
+            break;
+
+
             case 'wp_editor':
 
                 $prependStart = $prependEnd = null;

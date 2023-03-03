@@ -111,7 +111,14 @@ package-lock.json
 !wp-content/plugins/theme-customisations-master
 !wp-content/plugins/cg-woo-grid
 
-# Ignore build folders of theme
+# Ignore build folders of plugin
+wp-content/plugins/mu-plugins/sadoje/.babelrc
+wp-content/plugins/mu-plugins/sadoje/node_modules/
+wp-content/plugins/mu-plugins/sadoje/dist
+wp-content/plugins/mu-plugins/sadoje/dist-product
+wp-content/plugins/mu-plugins/sadoje/npm-debug.log
+wp-content/plugins/mu-plugins/sadoje/vendor
+
 wp-content/plugins/cg-woo-grid/.babelrc
 wp-content/plugins/cg-woo-grid/node_modules/
 wp-content/plugins/cg-woo-grid/dist
@@ -120,6 +127,11 @@ wp-content/plugins/cg-woo-grid/npm-debug.log
 wp-content/plugins/cg-woo-grid/vendor
 
 # Ignore compiled files
+wp-content/plugins/mu-plugins/sadoje/admin/js/sadoje.*
+wp-content/plugins/mu-plugins/sadoje/admin/css/sadoje.*
+wp-content/plugins/mu-plugins/sadoje/public/js/sadoje.*
+wp-content/plugins/mu-plugins/sadoje/public/css/sadoje.*
+
 wp-content/plugins/cg-woo-grid/admin/js/cg-woo-grid-admin.*
 wp-content/plugins/cg-woo-grid/admin/css/cg-woo-grid-admin.*
 wp-content/plugins/cg-woo-grid/public/js/cg-woo-grid.*

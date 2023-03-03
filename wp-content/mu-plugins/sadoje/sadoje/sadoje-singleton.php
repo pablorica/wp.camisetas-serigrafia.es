@@ -46,8 +46,9 @@ abstract class Sadoje_Singleton {
 	protected function __construct() {
         //Initialize all the basics components of the plugin
         $this->plugin_name = 'sadoje';
-        $this->version = '0.12.2';
+        $this->version = '0.12.9';
 
+        
         $this->verbose = false;
         if(defined('DEVELOPMENT_DEBUG')) {
             $this->verbose = DEVELOPMENT_DEBUG;
@@ -66,6 +67,7 @@ abstract class Sadoje_Singleton {
         ); 
 
         $this->load_hooks();
+        
 	}
 
     /**
@@ -90,7 +92,7 @@ abstract class Sadoje_Singleton {
                 $this, 
                 'enqueue_backend_scripts' 
             )
-        );        
+        ); 
     }
 
     /**
@@ -141,6 +143,8 @@ abstract class Sadoje_Singleton {
             $this->version, 
             true 
         );
+
+        
 	}
 
 
@@ -155,6 +159,9 @@ abstract class Sadoje_Singleton {
 	 *
 	 */
 	public static function getInstance() {
+        //error_log('LOAD SINGLETON');
+       //error_log(print_r(self::$instances,true));
+
 		if ( ! isset( self::$instances[ static::class ] ) ) {
 			self::$instances[ static::class ] = new static();
             //self::$instance = new Singleton();

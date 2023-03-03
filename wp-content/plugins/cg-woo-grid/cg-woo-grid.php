@@ -11,7 +11,7 @@
  * Plugin Name:     Codigo Woo Grid
  * Plugin URI:      http://codigo.co.uk/cg-woo-grid
  * Description:     Adds a matrix of Woocommerce Products variations
- * Version:         0.10.0
+ * Version:         0.10.1
  * Author:          Pablo Rica <pablo@codigo.co.uk>
  * Author URI:      http://codigo.co.uk/pablo-rica
  * Text Domain:     cg-woo-grid

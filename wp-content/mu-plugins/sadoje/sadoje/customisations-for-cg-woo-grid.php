@@ -31,6 +31,7 @@ class Customisations_For_Cg_Woo_Grid extends Sadoje_Singleton {
         $this->load_dependencies();
         $this->define_admin_hooks();
         $this->define_public_hooks();
+
     }
 
     /**** Plugin methods ****/
@@ -102,13 +103,22 @@ class Customisations_For_Cg_Woo_Grid extends Sadoje_Singleton {
 
 		$plugin_admin = new Customisations_For_Cg_Woo_Grid_Admin();
 
+        add_action( 
+            'admin_enqueue_scripts', 
+            array( 
+                $plugin_admin, 
+                'enqueue_admin_inline_js' 
+            ),
+            30
+        ); 
+
         add_action(
             'admin_menu',
             array( 
                 $plugin_admin, 
                 'cdg_add_admin_submenu' 
             ),
-            10
+            40
         );  
 
         add_action(
@@ -117,7 +127,7 @@ class Customisations_For_Cg_Woo_Grid extends Sadoje_Singleton {
                 $plugin_admin, 
                 'registerAndBuildBudgeteer' 
             ),
-            20
+            50
         ); 
 
 

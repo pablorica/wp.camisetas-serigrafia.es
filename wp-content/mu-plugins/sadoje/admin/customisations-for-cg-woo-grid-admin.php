@@ -18,6 +18,29 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
      ** ** ** ** ** ** **/
 
      /**
+     * Define JS constants
+     *
+     * @return void
+     */
+    public function enqueue_admin_inline_js() {
+
+        if (!defined('CG_WOOGRID_PATH')) {
+            define('CG_WOOGRID_PATH', WP_PLUGIN_DIR . '/cg-woo-grid');
+        }
+
+        wp_register_script( 
+            $this->plugin_name.'-admin-constants',
+            '' 
+        );
+        wp_enqueue_script($this->plugin_name.'-admin-constants');
+        wp_add_inline_script( 
+            $this->plugin_name.'-admin-constants', 
+            'const CG_WOOGRID_PATH = "'.CG_WOOGRID_PATH.'";' 
+        );
+        //error_log('enqueue_admin_inline_js');
+    }
+
+     /**
       * Get the Codigo Woo Grid functions
       *
       * @param string           $function
@@ -29,13 +52,10 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
         $var
     ) {
 
-
-        //error_log('cdg_woo_grid_admin: '.$function." ".print_r($var,true));
-
-        require_once WP_PLUGIN_DIR . '/cg-woo-grid/includes/class-cg-woo-grid.php';
+        require_once CG_WOOGRID_PATH . '/includes/class-cg-woo-grid.php';
         $cgWooGrid = new \Cg_Woo_Grid();
 
-        require_once WP_PLUGIN_DIR . '/cg-woo-grid/admin/class-cg-woo-grid-admin.php';
+        require_once CG_WOOGRID_PATH . '/admin/class-cg-woo-grid-admin.php';
         $cgWooGridAdmin = new \Cg_Woo_Grid_Admin\Functions( 
             $cgWooGrid->get_plugin_name(), 
             $cgWooGrid->get_version() 
@@ -335,6 +355,81 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
                 'class'            => '',
             )
         );
+        array_push($settings_pages,$settings_page);
+
+        /* Table prices */
+        $settings_page         = new \stdClass();
+        $settings_page->slug   = $this->get_element_name().'_budgeteer_tableprices';
+        $settings_page->fields = array();
+
+        
+
+        $option_lists = array();
+
+        $sizes = get_terms( array(
+            'taxonomy' => 'pa_tamano',
+            'hide_empty' => false,
+        ) );
+        if($sizes) {
+            foreach( $sizes as $size ) {
+                //error_log(print_r($size,true));
+                $option_lists[$size->slug] = $size->name;
+            }
+        }
+        //error_log( print_r($option_lists,true));
+
+        $field_id = $this->get_element_name().'_budgeteer_tableprices_sizes_adults';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __('Tallas adultos','sadoje').":",
+            'args'  => array (
+                'type'             => 'selectbox',
+                'subtype'          => '',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => $option_lists,
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'class'            => 'alternate',
+            )
+        );
+        $field_id = $this->get_element_name().'_budgeteer_tableprices_sizes_kids';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __('Tallas niños','sadoje').":",
+            'args'  => array (
+                'type'             => 'select',
+                'subtype'          => '',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => $option_lists,
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'class'            => '',
+            )
+        );
+        $field_id = $this->get_element_name().'_budgeteer_tableprices_columns';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __('Columnas','sadoje').":",
+            'args'  => array (
+                'type'             => 'textarea',
+                'subtype'          => '',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'serialized',
+                'wp_data'          => 'option',
+                'class'            => 'alternate',
+            )
+        );
+
+
+
+
         array_push($settings_pages,$settings_page);
 
 
