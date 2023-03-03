@@ -24,6 +24,7 @@ import consoleHello from './modules/consoleHello';
 
     $(window).on('load', function() {
         CDG.onloadFunctions();
+        
     });
 
 })( jQuery );

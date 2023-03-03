@@ -17,9 +17,7 @@
 
 console.log('CG_WOOGRID_PATH:' + CG_WOOGRID_PATH);
 
-
 const { createApp } = Vue
-
 
 function gBuildTable(self) {
 
