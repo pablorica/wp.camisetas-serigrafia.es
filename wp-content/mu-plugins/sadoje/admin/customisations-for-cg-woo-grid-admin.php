@@ -377,7 +377,7 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
             }
         }
         //error_log( print_r($option_lists,true));
-
+        // TODO: MAke SELECTBOX works
         $field_id = $this->get_element_name().'_budgeteer_tableprices_sizes_adults';
         $settings_page->fields[] = array(
             'id'    => $field_id,
