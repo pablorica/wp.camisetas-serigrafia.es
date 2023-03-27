@@ -3,8 +3,7 @@
 * ==== DEV notes ====
 *
 * ---- $refs
-* this line in all mounted functions:
-* this.serialized = this.$refs[this.refId].value 
+* this piece of code in all mounted functions: << this.serialized = this.$refs[this.refId].value >>
 * is reading an HTML attribute "ref" in input types. 
 * That ref attribute is not showed by some browser inspectors (Chrome), but VUE understands it. 
 * It was added to the input tag in the render_settings_field() function defined in plugins/cg-woo-grid/admin/class-cg-woo-grid-admin.php l.829

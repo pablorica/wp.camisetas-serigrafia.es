@@ -3,21 +3,34 @@
         <tbody>
             <tr v-for="(row, rindex) in rows"
                 v-bind:id="'row_'+rindex" 
-                v-bind:class = "(index % 2 == 0)?'':'alternate'"
+                v-bind:class = "[(rindex % 2 == 1)?'':'alternate', (loading===true && rindex == rows.length - 1)?'rowloading':''] "
             >
-                <td v-for="(column, cindex) in columns[rindex]">
-                    {{column.title}}
-                    <select v-model="row[cindex]"
-                        @change="updateSelects(rindex,cindex,column.slug)"
-                        >
-                        <option disabled 
-                            value="">
-                            Seleccione un valor
-                        </option>
-                        <option v-for="(option, vindex) in column.options" 
-                            :value="option"
-                        >{{option}}</option>
-                    </select>
+                <td style="text-align:right">
+                    <table>
+                        <tr>
+                            <td v-for="(column, cindex) in columns[rindex]">
+                                {{column.title}}
+                                <select v-model="row[cindex]"
+                                    @change="updateSelects(rindex,cindex,column.slug)"
+                                    >
+                                    <option disabled 
+                                        value="">
+                                        Seleccione un valor
+                                    </option>
+                                    <option v-for="(option, vindex) in column.options" 
+                                        :value="option"
+                                    >{{option}}</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td :colspan="columns[rindex].length">
+                                <label>Subir archivo
+                                    <input type="file" @change="handleFileUpload( $event )"/>
+                                </label>
+                            </td>
+                        </tr>
+                    </table>
                 </td>
                 <td style="text-align:right">
                     <button class="button button-secondary button-delete" 
@@ -26,10 +39,18 @@
                     >Borrar</button>
                 </td>
             </tr>
+            <tr v-bind:class = "(loading===false)?'hide':''">
+                <th colspan='2'>
+                    <div class="loading">
+                        <i class="fa fa-refresh fa-spin"></i>
+                    </div>
+                </th>
+            </tr>
+            
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="6">
+                <th colspan='2'>
                     <p style="text-align:right">
                         <button class="button button-secondary" 
                             @click="addRow($event)"
@@ -38,6 +59,30 @@
                 </th>
             </tr>
         </tfoot>
+    </table>
+    <table class="cdg_table">
+        <tr>
+            <th>{{baggedtitle}} </th>
+            <td class="cdg_radio">
+                <input type="radio" 
+                    id="yes" 
+                    v-bind:value="baggedprice" 
+                    v-model="bagged" 
+                    @change="changeCookie()"
+                />
+                <label for="yes">Si</label>
+
+                <input type="radio" 
+                    id="no" 
+                    value="0" 
+                    v-model="bagged"
+                    @change="changeCookie()" 
+                />
+                <label for="no">No</label>
+                &nbsp;
+                <small v-html="baggedwording"></small>
+            </td>
+        </tr>
     </table>
 </template>
 
@@ -50,6 +95,7 @@ export default {
     data() {
         return {
             apiurl:             '',
+            loading:            false,
             serwording:         '',
             wording:            {},
             prices:             '',
@@ -123,22 +169,16 @@ export default {
                         console.log(error);
                     });
             }
-
         },
         updateSelects: function(
             rowindex,
             colindex,
             colslug
         ) {
-
-            console.log("updateSelects row:"+rowindex+" col:"+colindex+" "+colslug);
             let self   = this
-            console.log("selected "+colslug+": "+self.rows[rowindex][colindex]);
-
-            console.log("Current saved rows");
-            console.log(self.rows);
-
-            let nextColumnIndex = colindex+1;
+            //console.log("updateSelects row:"+rowindex+" col:"+colindex+" "+colslug);
+            //console.log("selected "+colslug+": "+self.rows[rowindex][colindex]);
+            let nextColumnIndex = colindex + 1;
             if(nextColumnIndex < self.columns[rowindex].length) {
                 //delete values of selects on the right of the current element, if any
                 for( let i = nextColumnIndex; i < self.columns[rowindex].length; i++) {
@@ -185,8 +225,19 @@ export default {
                     });
                 }
                 self.selectoptionsinrow = selected;
-                
 
+                //Add prices by color to row
+                self.rows[rowindex].pricecolors = [];
+                self.selectoptionsinrow.forEach(function(selrow){
+                    self.rows[rowindex].pricecolors.push({
+                        color: selrow.color,
+                        pricecloth: selrow.pricecloth,
+                        priceclothval: selrow.priceclothval,
+                        pricescreen: selrow.pricescreen,
+                        pricescreenval: selrow.pricescreenval
+                    }); 
+                });
+                
                 let nextuniqueoptions = [...new Set(selected.map(item => item[nextColumn.slug]))];
                 
                 console.log('next column values');
@@ -198,14 +249,15 @@ export default {
                     nextColumn.options = nextuniqueoptions;
                 }
                 self.columns[rowindex][nextColumnIndex] = nextColumn;
-
-                console.log("Current saved columns");
-                console.log(self.columns);
             }
+            //console.log("Current saved columns");
+            //console.log(self.columns);
+            self.changeCookie();
         },
         addRow: function(event) {
             event.preventDefault()
             let self = this
+            self.loading = true;
 
             let getURL = self.apiurl+'/encode';
 
@@ -225,15 +277,14 @@ export default {
                         for (let i = 0; i < response.data.length; i++) {
                             const item = response.data[i];
 
+                            const defaultValues = item.imprint_values
+                                                        .split('|')
+                                                        .map(function(ele) {
+                                                            return ele.trim();
+                                                        });
                             if(item.imprint_hide) {
                                 continue;
                             }
-
-                            const defaultValues = item.imprint_values
-                                                .split('|')
-                                                .map(function(ele) {
-                                                    return ele.trim();
-                                                });
 
                             let imprintObject = {
                                 slug:       item.imprint,
@@ -250,9 +301,10 @@ export default {
                         }
 
                         console.log('defaultSelects');
-                        console.log(defaultSelects);
-
+                        //console.log(defaultSelects);
                         self.columns.push(defaultSelects);
+                        console.log(self.columns);
+                        self.loading = false;
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -308,8 +360,152 @@ export default {
             //self.updateRows()
             console.log("Current saved rows");
             console.log(self.rows);
+            self.changeCookie();
         },
         changeCookie: function() {
+            let self      = this
+            let cookieObj = {}
+
+            console.log("Current saved rows");
+            console.log(self.rows);
+            if(typeof self.columns[0] !== 'undefined') {
+                let slugs = self.columns[0].map(a => a.slug);
+                console.log('addOn new changeCookie')
+                //console.log('slugs:')
+                //console.log(slugs);
+                cookieObj.stamping = [];
+                self.rows.forEach(function(row){
+                let rowkeys = Object.keys(row);
+                let rowvalues = Object.values(row);
+                //console.log('rowkeys:')
+                //console.log(rowkeys)
+                //console.log('rowvalues:')
+                //console.log(rowvalues)
+                let stamping = {};
+                rowkeys.forEach(function(key){
+                    //console.log('slug: '+ slugs[key])
+                    //console.log('value: '+ rowvalues[key])
+                    if( typeof slugs[key] !== 'undefined'){
+                        stamping[slugs[key]] = rowvalues[key]
+                    }
+                })
+
+                stamping.pricecolors = row.pricecolors
+
+                cookieObj.stamping.push(stamping); 
+                
+            });
+            }
+            if(self.bagged > 0 ) {
+                cookieObj.bagged = {
+                    baggedtitle: self.baggedtitle,
+                    baggedprice: self.baggedprice
+                }
+            }
+
+            if(typeof document.getElementById("cdg_total").innerHTML !== 'undefined'){
+                self.totalProducts  = parseInt(
+                    document
+                    .getElementById("cdg_total")
+                    .innerHTML
+                );
+                //console.log('AddOn: total products '+self.totalProducts)
+                cookieObj.totalProducts = self.totalProducts
+            }
+
+            console.log('current cookie object');
+            console.log(cookieObj);
+
+            //console.log('Is cookie? '+window.$cookies.isKey(self.cookieName))
+            /*
+            if(window.$cookies.isKey(self.cookieName)) {
+                let oldCookieObj = window.$cookies.get(self.cookieName);
+                
+
+                if(typeof oldCookieObj.description !== 'undefined') {
+
+                    cookieObj.description = [
+                        oldCookieObj.description,
+                        cookieObj.descStamping
+                    ]
+                    delete oldCookieObj.description
+                } else {
+                    cookieObj.description = [
+                        '',
+                        cookieObj.descStamping
+                    ]
+                }
+                
+
+                delete oldCookieObj.front
+                delete oldCookieObj.rear
+                
+
+
+                cookieObj = {...oldCookieObj,...cookieObj};
+            } else {
+                cookieObj.description = [
+                    '',
+                    cookieObj.descStamping
+                ]
+            }
+            delete cookieObj.descStamping
+            */
+           if(window.$cookies.isKey(self.cookieName)) {
+                let oldCookieObj = window.$cookies.get(self.cookieName);
+                cookieObj = {...oldCookieObj,...cookieObj};
+           }
+
+            const cookieJSON = JSON.stringify(cookieObj);
+            window.$cookies.set(self.cookieName,cookieJSON);
+            console.log('AddOn cookie')
+            console.log(window.$cookies.get(self.cookieName))
+
+            /*  TODO this works and trigers the updateTotal function, 
+            but it would be better to find a way to triger that function 
+            using VUE elements , or tiny-emitter */
+            document.getElementById("updateTotal").click();
+
+            /*{
+  "stamping": [
+    {
+      "estampacion": "Serigrafía",
+      "tintas": "1 Tinta",
+      "tamano": "Pequeño",
+      "ubicacion": "Pecho",
+      "pricecolors": [
+        {
+          "color": "Prendas blancas",
+          "pricecloth": true,
+          "priceclothval": "0.5",
+          "pricescreen": true,
+          "pricescreenval": "30"
+        },
+        {
+          "color": "Prendas de color",
+          "pricecloth": true,
+          "priceclothval": "0.6",
+          "pricescreen": true,
+          "pricescreenval": "30"
+        }
+      ]
+    }
+  ],
+  "totalProducts": 40
+}
+            */
+            
+
+
+            
+            /*
+            {\"totalProducts\":40,
+            \"bagged\":0,
+            \"front\":{\"screenPrice\":30,\"stamping\":\"Serigrafía 1 color\",\"area\":\"Tamaño Pequeño 10x15 cm aprox.\",\"whitePrice\":0.5,\"colorPrice\":0.6},
+            \"description\":[[\"\",\"\\nEstampación en pecho (Serigrafía 1 color undefined) \"],\"\\nEstampación en pecho (Serigrafía 1 color Tamaño Pequeño 10x15 cm aprox.) \"]}
+            */
+        },
+        changeCookieB: function() {
             let self      = this
             let cookieObj = {}
             console.log('addOn changeCookie')

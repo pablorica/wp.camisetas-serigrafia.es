@@ -3,7 +3,7 @@ import Vue from 'vue'
 import VueCookies from 'vue-cookies'
 // default options config: { expires: '1d', path: '/', domain: '', secure: '', sameSite: 'Lax' }
 
-import Test from './templates/Test.vue';
+//import Test from './templates/Test.vue';
 import Budgeteer from './templates/Budgeteer.vue';
 import Estimator from './templates/Estimator.vue';
 import Tableprices from './templates/Tableprices.vue';

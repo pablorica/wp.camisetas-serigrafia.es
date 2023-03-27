@@ -17,6 +17,17 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
      ** ** ** ** ** ** **/
 
      /**
+	 * The arrays with saved stampings
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      array    $saved_stamping_titles
+     * @var      array    $saved_price_screenvals
+	 */
+	protected $saved_stamping_titles  = [];
+    protected $saved_price_screenvals = [];
+
+     /**
 	 * Hello World (for testing purposes)
 	 *
 	 * @access public
@@ -123,14 +134,109 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
      * Updates the regular price based on parameters
      *
      * @param  float  $regular_price
+     * @param  array  $pricecolors
+     * @param  int    $totalprods
+     * @param  string $color
+     * @param  bool   $addScreenVal
+     * @return float
+     */
+    private function cdg_get_price_addiction(
+        $regular_price, 
+        $pricecolors, 
+        $totalprods, 
+        $color,
+        $addScreenVal
+    ) {
+
+        //Default configuration (any colour)
+        $priceelement = array_pop(
+            array_filter(
+                $pricecolors,
+                function($obj){ 
+                    return strtolower($obj->color) ==  'all';
+                }
+            )
+        );
+
+        if( ! $priceelement ) {
+            if ($color == 'blanco') { 
+                $priceelement = array_pop(
+                    array_filter(
+                        $pricecolors,
+                        function($obj){ 
+                            return str_contains(
+                                strtolower($obj->color), 
+                                'blanc'
+                            );
+                        }
+                    )
+                );
+            } else {
+                $priceelement = array_pop(
+                    array_filter(
+                        $pricecolors,
+                        function($obj){ 
+                            return str_contains(
+                                strtolower($obj->color), 
+                                'color'
+                            );
+                        }
+                    )
+                );
+            }
+        }
+
+        if($this->verbose) {
+           //error_log('cdg_get_price_addiction: priceelement '.print_r($priceelement, true));
+        }
+
+        $photolithNormal = 0;
+        $photolithTotal = 0;
+        if( $addScreenVal
+            && isset($priceelement->pricescreen)
+            && $priceelement->pricescreen === true
+            && isset($priceelement->pricescreenval) 
+        ) {
+            $photolithTotal = $priceelement->pricescreenval;
+            $photolithNormal = (float) $photolithTotal/$totalprods;
+        }
+
+        if( isset($priceelement->pricecloth)
+            && $priceelement->pricecloth === true
+            && isset($priceelement->priceclothval)
+        ) {
+            $priceclothval = (float) $priceelement->priceclothval;
+        }
+        
+        if($this->verbose) {
+            error_log('cdg_get_price_addiction: Regular price -> '.$regular_price);
+            error_log('cdg_get_price_addiction: Total products -> '.$totalprods);
+            $comment = '';
+            if($photolithNormal == 0) {
+                $comment = " (".__('The photolith was added before', 'sadoje').")";
+            }
+            error_log('cdg_get_price_addiction: photolithTotal -> '.$photolithTotal.$comment);
+            error_log('cdg_get_price_addiction: photolithNormal -> '.$photolithNormal.$comment);
+            error_log('cdg_get_price_addiction: Color '.$color.': priceclothval -> '.$priceclothval);
+            error_log('cdg_get_price_addiction: Total -> (regular_price + photolithNormal + priceclothval) = '.($regular_price + $photolithNormal + $priceclothval));
+        }
+        
+
+        return $regular_price + $photolithNormal + $priceclothval;
+    }
+
+    /**
+     * OLD:
+     * Updates the regular price based on parameters
+     *
+     * @param  float  $regular_price
      * @param  object $priceAdd
      * @param  int    $totalprods
      * @param  string $color
      * @param  string $position
-     * @param  bool   $verbose
      * @return float
      */
-    private function cdg_get_price_addiction(
+    private function cdg_get_price_addictionOLD(
         $regular_price, 
         $priceAdd, 
         $totalprods, 
@@ -149,15 +255,17 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                 $areaPrice = (float) $priceAdd->colorPrice;
             }
         }
-
         if($this->verbose) {
+            error_log('cdg_get_price_addiction: Here we apply the price changes due to colour and stamping ');
+            error_log('cdg_get_price_addiction: Regular price -> '.$regular_price);
             error_log('cdg_get_price_addiction: '.$position.' $stamping -> '.$priceAdd->stamping);
             $comment = '';
             if($photolithNormal == 0) {
                 $comment = " (".__('The photolith was added before', 'sadoje').")";
             }
             error_log('cdg_get_price_addiction: '.$position.' $photolithNormal -> '.$photolithNormal.$comment);
-            error_log('cdg_get_price_addiction: '.$position.'  areaPrice -> '.$areaPrice);
+            error_log('cdg_get_price_addiction: Color '.$color.' $areaPrice -> '.$areaPrice);
+            error_log('cdg_get_price_addiction: Total -> (regular_price + photolithNormal + areaPrice) = '.($regular_price + $photolithNormal + $areaPrice));
         }
         
 
@@ -220,6 +328,11 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
 
         if(isset($_COOKIE['cgWooGrid'])) {
 
+            if($this->verbose) {
+                //error_log('cdg_alter_regular_price: Reading the COOKIE to get the estimator configuration -> '.print_r($_COOKIE['cgWooGrid'] , true));
+                //error_log('cdg_alter_regular_price: This COOKIE was populated in  src/js/templates/Estimator.vue (previously in src/js/templates/Budgetter.vue)');
+            }
+
             $cgWooGrid = json_decode( 
                 html_entity_decode( 
                     stripslashes (
@@ -265,13 +378,13 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                         );
 
                         if($this->verbose) {
-                            error_log('cdg_alter_regular_price: Filtered $profit -> '.print_r($current_profit_type,true));
+                            //error_log('cdg_alter_regular_price: Filtered $profit -> '.print_r($current_profit_type,true));
                         }
 
                         if(isset($current_profit_type['profit'])) {
 
                             if($this->verbose) {
-                                error_log('cdg_alter_regular_price: Filtered $profit -> '.$current_profit_type['profit']);
+                                //error_log('cdg_alter_regular_price: Filtered $profit -> '.$current_profit_type['profit']);
                             }
 
                             $profit = $current_profit_type['profit'];
@@ -284,6 +397,166 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                 if($this->verbose) {
                     error_log('cdg_alter_regular_price: Profit due the number of items -> '.$profit);
                     error_log('cdg_alter_regular_price: Altered price due the number of items -> '.$regular_price);
+                }
+
+                if( isset($cgWooGrid->stamping)) {
+                    foreach($cgWooGrid->stamping as $stamping) {
+                        $addScreenVal           = false;
+                        $objIterator            = new \ArrayIterator($stamping);
+                        $current_stamping_title = $objIterator->current();
+                        $pricecolors            = $stamping->pricecolors;
+
+                        if($this->verbose) {
+                            error_log('cdg_alter_regular_price: Is this is a new stamping ('.$current_stamping_title.')? ');
+                        }
+
+                        if( ! $addScreenVal 
+                            && ! in_array(
+                                $current_stamping_title, 
+                                $this->saved_stamping_titles
+                            ) 
+                        ) {
+                            if($this->verbose) {
+                                error_log('cdg_alter_regular_price: This is a new stamping ('.$current_stamping_title.') so we must add a new photolite and save the stamping name and color value ('.$pricecolors[0]->pricescreenval.') to avoid duplicates in the next loops');
+                            }
+                            $addScreenVal = true;
+                            $this->saved_stamping_titles[]  = $current_stamping_title;
+                            $this->saved_price_screenvals[] = $pricecolors[0]->pricescreenval;
+                        }
+
+                        
+                        if( ! $addScreenVal ) {
+                            foreach($pricecolors as $pricecolor) {
+                                if( ! in_array(
+                                        $pricecolor->pricescreenval, 
+                                        $this->saved_price_screenvals
+                                    )
+                                ) {
+                                    if($this->verbose) {
+                                        error_log('cdg_alter_regular_price: Something has changed with the configuration of this stamping ('.$current_stamping_title.'), probably the number of tints, ther is a new color value ('.$pricecolor->pricescreenval.') so we must add a new photolite');
+                                    }
+                                    $addScreenVal = true;
+                                    $this->saved_price_screenvals[] = $pricecolor->pricescreenval;
+                                    break;
+                                }
+                            }
+                        } 
+
+                        
+                        if( ! $addScreenVal ) {
+                            if($this->verbose) {
+                                error_log('cdg_alter_regular_price: This is not a new stamping title ('.$current_stamping_title.') so there will not be a new photolite.');
+                            }
+                        }
+
+                        if($this->verbose) {
+                            error_log('cdg_alter_regular_price: Calculating the new price for stamping: '.print_r($stamping, true));
+                        }
+
+                        $regular_price = $this->cdg_get_price_addiction(
+                            $regular_price, 
+                            $pricecolors, 
+                            $totalprods, 
+                            $attr['attribute_pa_color'],
+                            $addScreenVal
+                        );
+
+                    }
+
+                    // $description .= '
+                    // '.esc_html__('Estampación en pecho','sadoje')
+                    //  .'('.$stampingFront
+                    //  .' '.$areaFront.') ';
+                }
+
+            }
+
+            if($cgWooGrid->bagged) {
+                // $description .= '
+                // '.esc_html__('Embolsado','sadoje');
+
+                if($this->verbose) {
+                    error_log('cdg_alter_regular_price: baggedPrice -> '.print_r($cgWooGrid->bagged,true));
+                }
+                
+                $regular_price = $regular_price + (float) $cgWooGrid->bagged;
+            }
+
+        }
+
+        //OLD
+        if(isset($_COOKIE['cgWooGridOLD'])) {
+
+            if($this->verbose) {
+                error_log('cdg_alter_regular_price: Reading the COOKIE to get the budgeterr configuration -> '.print_r($_COOKIE['cgWooGrid'] , true));
+                error_log('cdg_alter_regular_price: This COOKIE was populated in  src/js/templates/Estimator.vue (prevoously in src/js/templates/Budgetter.vue)');
+                
+            }
+
+            $cgWooGrid = json_decode( 
+                html_entity_decode( 
+                    stripslashes (
+                        $_COOKIE['cgWooGrid'] 
+                    ) 
+                ) 
+            );
+            //error_log('cdg_alter_regular_price: COOKIE -> '.print_r($_COOKIE['cgWooGrid'],true));
+            //error_log('cdg_alter_regular_price: JSON -> '.print_r($cgWooGrid,true));
+            if( isset($cgWooGrid->totalProducts) 
+                && $cgWooGrid->totalProducts > 0 
+            ) {
+                $description = '';
+
+                if(!$totalprods) {
+                    $totalprods  = $cgWooGrid->totalProducts;
+                }
+
+                if($this->verbose) {
+                    error_log('cdg_alter_regular_price: $totalprods -> '.$totalprods);
+                }
+
+                $profit = 0;
+
+                $profit_types = get_option($this->get_element_name().'_budgeteer_profit_types');
+                if($profit_types) {
+                    $profits = maybe_unserialize($profit_types);
+                    if($this->verbose) {
+                        //error_log('cdg_alter_regular_price: $profits -> '.print_r($profits,true));
+                    }
+
+                    if(is_array($profits) 
+                        && count($profits)
+                    ) {
+                    
+                        $current_profit_type = array_pop(
+                            array_filter(
+                                $profits,
+                                function($obj) use ($totalprods) { 
+                                    return ($obj['min'] <= $totalprods && $obj['max'] >= $totalprods);
+                                }
+                            )
+                        );
+
+                        if($this->verbose) {
+                            //error_log('cdg_alter_regular_price: Filtered $profit -> '.print_r($current_profit_type,true));
+                        }
+
+                        if(isset($current_profit_type['profit'])) {
+
+                            if($this->verbose) {
+                                //error_log('cdg_alter_regular_price: Filtered $profit -> '.$current_profit_type['profit']);
+                            }
+
+                            $profit = $current_profit_type['profit'];
+                        }
+                    }
+                }
+
+                $regular_price = $regular_price * (1 + $profit/100);
+
+                if($this->verbose) {
+                    //error_log('cdg_alter_regular_price: Profit due the number of items -> '.$profit);
+                    //error_log('cdg_alter_regular_price: Altered price due the number of items -> '.$regular_price);
                 }
 
                 if( isset($cgWooGrid->front)) {
@@ -337,8 +610,11 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
             }
 
         }
+
+        
         if($this->verbose) {
             error_log('cdg_alter_regular_price: Modified Price -> '.$regular_price);
+            error_log('');
             error_log('++++++++++++++++++++');
             error_log('');
         }

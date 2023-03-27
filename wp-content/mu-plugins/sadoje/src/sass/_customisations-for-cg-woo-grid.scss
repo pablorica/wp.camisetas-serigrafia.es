@@ -5,9 +5,17 @@
     
 	table.cdg_table {
 		width: 100%;
-        tr.alternate {
+        tr {
             td, th {
-                background-color: #f8f8f8;
+                background-color: transparent;
+            }
+            &.alternate {
+                td, th {
+                    background-color: #f8f8f8;
+                }
+            }
+            &.rowloading {
+                display: none;
             }
         }
 		 th {
