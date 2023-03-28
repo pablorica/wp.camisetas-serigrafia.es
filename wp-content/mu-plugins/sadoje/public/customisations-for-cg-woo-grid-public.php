@@ -41,6 +41,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
         error_log('Element Name: '.$this->get_element_name());
 	}
 
+
     /**
 	 * Build the price table
 	 *
@@ -479,7 +480,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                     error_log('cdg_alter_regular_price: baggedPrice -> '.print_r($cgWooGrid->bagged,true));
                 }
                 
-                $regular_price = $regular_price + (float) $cgWooGrid->bagged;
+                $regular_price = $regular_price + (float) $cgWooGrid->bagged->baggedprice;
             }
 
         }
@@ -611,7 +612,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
 
         }
 
-        
+
         if($this->verbose) {
             error_log('cdg_alter_regular_price: Modified Price -> '.$regular_price);
             error_log('');

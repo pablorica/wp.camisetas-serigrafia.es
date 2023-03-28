@@ -24,9 +24,12 @@
                             </td>
                         </tr>
                         <tr>
-                            <td :colspan="columns[rindex].length">
+                            <td :colspan="columns[rindex]?columns[rindex].length:4">
                                 <label>Subir archivo
-                                    <input type="file" @change="handleFileUpload( $event )"/>
+                                    <input type="file" 
+                                        @change="handleFileUpload( $event, rindex )"
+                                        accept="image/png, image/jpeg"
+                                    />
                                 </label>
                             </td>
                         </tr>
@@ -90,6 +93,7 @@
 console.log('customisations-for-cg-woo-grid: VUE Estimator loaded')
 import { emitter } from '../vue-customisations-for-cg-woo-grid.js';
 
+
 export default {
     name: 'estimator',
     data() {
@@ -129,6 +133,16 @@ export default {
         this.baggedwording = element.parentElement.dataset.baggedwording;
         
         this.buildEstimator(); 
+
+        let self = this
+        document.getElementById("cdg_add_products").addEventListener(
+            'click',
+            function() {
+                self.submitFile()
+                
+            }
+        )
+
         
     },
     methods: {
@@ -362,6 +376,11 @@ export default {
             console.log(self.rows);
             self.changeCookie();
         },
+        resetEstimator: function() {
+            this.rows = []
+            this.columns= []
+            this.changeCookie();
+        },
         changeCookie: function() {
             let self      = this
             let cookieObj = {}
@@ -375,33 +394,41 @@ export default {
                 //console.log(slugs);
                 cookieObj.stamping = [];
                 self.rows.forEach(function(row){
-                let rowkeys = Object.keys(row);
-                let rowvalues = Object.values(row);
-                //console.log('rowkeys:')
-                //console.log(rowkeys)
-                //console.log('rowvalues:')
-                //console.log(rowvalues)
-                let stamping = {};
-                rowkeys.forEach(function(key){
-                    //console.log('slug: '+ slugs[key])
-                    //console.log('value: '+ rowvalues[key])
-                    if( typeof slugs[key] !== 'undefined'){
-                        stamping[slugs[key]] = rowvalues[key]
+                    let rowkeys = Object.keys(row);
+                    let rowvalues = Object.values(row);
+                    console.log('rowkeys:')
+                    console.log(rowkeys)
+                    console.log('rowvalues:')
+                    console.log(rowvalues)
+                    let stamping = {};
+                    rowkeys.forEach(function(key){
+                        //console.log('slug: '+ slugs[key])
+                        //console.log('value: '+ rowvalues[key])
+                        if( typeof slugs[key] !== 'undefined'){
+                            stamping[slugs[key]] = rowvalues[key]
+                        }
+                    })
+
+                    stamping.pricecolors = row.pricecolors
+
+                    if(typeof row.imageid !== 'undefined' ) {
+                        stamping.imageid = row.imageid
                     }
-                })
 
-                stamping.pricecolors = row.pricecolors
-
-                cookieObj.stamping.push(stamping); 
-                
-            });
+                    cookieObj.stamping.push(stamping); 
+                    
+                });
             }
             if(self.bagged > 0 ) {
                 cookieObj.bagged = {
                     baggedtitle: self.baggedtitle,
                     baggedprice: self.baggedprice
                 }
+            } else {
+                 cookieObj.bagged = null
             }
+
+            
 
             if(typeof document.getElementById("cdg_total").innerHTML !== 'undefined'){
                 self.totalProducts  = parseInt(
@@ -505,7 +532,51 @@ export default {
             \"description\":[[\"\",\"\\nEstampación en pecho (Serigrafía 1 color undefined) \"],\"\\nEstampación en pecho (Serigrafía 1 color Tamaño Pequeño 10x15 cm aprox.) \"]}
             */
         },
-        changeCookieB: function() {
+        handleFileUpload( event, rindex ){
+            this.rows[rindex].file = event.target.files[0];
+        },
+        /**
+         * @see https://serversideup.net/uploading-files-vuejs-axios/
+         * @see https://github.com/serversideup/uploading-files-vuejs-axios/blob/main/src/components/SingleFile.vue
+         */
+        submitFile(){
+            
+            let self = this;
+            let getURL = this.apiurl+'/upload-image';
+            
+            this.rows.forEach(function(row){
+                if(row.file) {
+                    
+                    let formData = new FormData();
+                    
+                    formData.append('file', row.file);
+                    formData.append( 'title', 'testitle');
+                    formData.append( 'caption', 'testcaption');
+                    
+                    axios.post( getURL,
+                        formData,
+                        {
+                            headers: {
+                                    'Content-Type': 'multipart/form-data'
+                            }
+                        }
+                    ).then(function(response){
+                        row.imageid = response.data
+                        console.log('Image uploaded');
+                        console.log(response.data);
+                        self.changeCookie()
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                }
+            });
+            //TODO: Reset the estimator once the cookie is updated with the images IDs
+            // Also, be sure that the image ID (and image URL) is added to the Invoice and cart descripption
+            //this.resetEstimator()
+            
+        },
+        changeCookieDEPRECATED: function() {
             let self      = this
             let cookieObj = {}
             console.log('addOn changeCookie')

@@ -162,6 +162,7 @@ class Customisations_For_Cg_Woo_Grid extends Sadoje_Singleton {
 	private function define_public_hooks() {
 
 		$plugin_public = new Customisations_For_Cg_Woo_Grid_Public();
+
         /**
          * Hook: woocommerce_after_single_product_summary.
          *
