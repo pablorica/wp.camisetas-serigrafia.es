@@ -571,7 +571,7 @@ export default {
                     });
                 }
             });
-            //TODO: Reset the estimator once the cookie is updated with the images IDs
+            //TODO:  Reset the estimator once the cookie is updated with the images IDs
             // Also, be sure that the image ID (and image URL) is added to the Invoice and cart descripption
             //this.resetEstimator()
             

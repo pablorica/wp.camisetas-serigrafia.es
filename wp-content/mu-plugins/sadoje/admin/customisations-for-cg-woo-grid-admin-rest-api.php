@@ -102,7 +102,7 @@ class Customisations_For_Cg_Woo_Grid_Admin_Rest_Api extends Customisations_For_C
             null 
         );
 
-        //TODO: Rebuild this to force the images to be stored in https://local.camisetas-serigrafia.wp.es/wp-content/uploads/cg_uploads/YYYY/MM instead of default https://local.camisetas-serigrafia.wp.es/wp-content/uploads/YYYY/MM 
+        //TODO:  Rebuild this to force the images to be stored in https://local.camisetas-serigrafia.wp.es/wp-content/uploads/cg_uploads/YYYY/MM instead of default https://local.camisetas-serigrafia.wp.es/wp-content/uploads/YYYY/MM 
         /*
         * @see https://developer.wordpress.org/reference/functions/wp_upload_dir/
         * @see https://stackoverflow.com/questions/9679394/how-to-change-wordpress-upload-folder-programmatically
