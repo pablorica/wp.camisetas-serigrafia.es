@@ -227,53 +227,6 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
     }
 
     /**
-     * OLD:
-     * Updates the regular price based on parameters
-     *
-     * @param  float  $regular_price
-     * @param  object $priceAdd
-     * @param  int    $totalprods
-     * @param  string $color
-     * @param  string $position
-     * @return float
-     */
-    private function cdg_get_price_addictionOLD(
-        $regular_price, 
-        $priceAdd, 
-        $totalprods, 
-        $color, 
-        $position
-    ) {
-
-        $photolithNormal = (float) $priceAdd->screenPrice/$totalprods;
-        
-        if ($color == 'blanco') { 
-            if( isset($priceAdd->whitePrice)) {
-                $areaPrice = (float) $priceAdd->whitePrice;
-            }
-        } else {
-            if( isset($priceAdd->colorPrice)) {
-                $areaPrice = (float) $priceAdd->colorPrice;
-            }
-        }
-        if($this->verbose) {
-            error_log('cdg_get_price_addiction: Here we apply the price changes due to colour and stamping ');
-            error_log('cdg_get_price_addiction: Regular price -> '.$regular_price);
-            error_log('cdg_get_price_addiction: '.$position.' $stamping -> '.$priceAdd->stamping);
-            $comment = '';
-            if($photolithNormal == 0) {
-                $comment = " (".__('The photolith was added before', 'sadoje').")";
-            }
-            error_log('cdg_get_price_addiction: '.$position.' $photolithNormal -> '.$photolithNormal.$comment);
-            error_log('cdg_get_price_addiction: Color '.$color.' $areaPrice -> '.$areaPrice);
-            error_log('cdg_get_price_addiction: Total -> (regular_price + photolithNormal + areaPrice) = '.($regular_price + $photolithNormal + $areaPrice));
-        }
-        
-
-        return $regular_price + $photolithNormal + $areaPrice;
-    }
-
-    /**
      * Applies the budgeteer configuration to the regular price of each product
      *
      * @param  string                $regular_price
@@ -405,7 +358,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                         $addScreenVal           = false;
                         $objIterator            = new \ArrayIterator($stamping);
                         $current_stamping_title = $objIterator->current();
-                        $pricecolors            = $stamping->pricecolors;
+                        $pricecolors            = $stamping->pricecolors??[];
 
                         if($this->verbose) {
                             error_log('cdg_alter_regular_price: Is this is a new stamping ('.$current_stamping_title.')? ');
