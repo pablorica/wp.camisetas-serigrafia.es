@@ -18,6 +18,50 @@
 [https://staging.camisetas-serigrafia.es/](https://staging.camisetas-serigrafia.es/)
 
 
+### Staging Assets
+
+[Database](https://camisetas-serigrafia.codigo.co.uk/last.camisetas_serigrafia.STAGING.sql.gz)
+
+[Plugins](https://camisetas-serigrafia.codigo.co.uk/plugins.tar.gz)
+
+[Parent Theme](https://camisetas-serigrafia.codigo.co.uk/storefront.tar.gz)
+
+[Theme](https://camisetas-serigrafia.codigo.co.uk/galleria.tar.gz)
+
+
+Regarding the images, since there are so many, it’s not worth downloading them as they will take up a lot of space, and the zip file is too large for the server. Instead, update the .htaccess file so the local version pulls the images from the server, allowing you to work more efficiently.
+
+Note: In the .htaccess file, all images uploaded up to that month will be accessed from the server, so it will still be possible to upload images locally if needed
+  
+
+Here you have an example of htaccess:
+
+     ## Load media from Production server, except the current month
+    <IfModule  mod_rewrite.c>
+    RewriteEngine on
+    RewriteCond %{REQUEST_URI} !/2024/(02|03)/ [NC]
+    RewriteRule ^wp-content/uploads/(.*) https://camisetas-serigrafia.codigo.co.uk/wp-content/uploads/$1 [R=301,L]
+    </IfModule>
+
+In case you are using NGINX, this configuration has the same effect:
+
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
+	    expires max;
+	    log_not_found off;
+    
+	    ## Load media from Production server
+	    # Exceptions
+	    location ~ /wp-content/uploads/smile_fonts/* {
+		    # Do nothing, these are local fonts used by template
+	    }
+	    location ~ /wp-content/uploads/2024/(02|03)/* {
+		    # Do nothing, these are local files from current month
+	    }
+	    rewrite ^/wp-content/uploads/(.*) https://camisetas-serigrafia.codigo.co.uk/wp-content/uploads/$1 redirect;
+    
+    }
+
+
 # Codigo Wordpress Site for Camisetas Serigrafia
 A clean slate Wordpress theme template with Bootstrap(5), Sass, and a Webpack config with Babel.
 Based in [understrap.com](https://understrap.com)
