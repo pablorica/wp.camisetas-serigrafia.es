@@ -1,20 +1,21 @@
 # Camisetas Serigrafía (Wordpress)
 
-## Site
 
-### Live 
+[![version](https://img.shields.io/badge/version-0.5.0-blue.svg)](https://semver.org)
+
+
+## Live Site
 
 [https://camisetas-serigrafia.es](https://camisetas-serigrafia.es)
 
   
+## Staging Site
 
-### Staging Site
+[https://camisetas-serigrafia.codigo.co.uk/](https://camisetas-serigrafia.codigo.co.uk/)
 
-[http://camisetas-serigrafia.es/staging/](http://camisetas-serigrafia.es/staging/)
+### Backup Current Site
 
-#### CMS
-
-[http://camisetas-serigrafia.es/staging/admin489lc08ev/](http://camisetas-serigrafia.es/staging/admin489lc08ev/)
+[https://staging.camisetas-serigrafia.es/](https://staging.camisetas-serigrafia.es/)
 
 
 # Codigo Wordpress Site for Camisetas Serigrafia
@@ -85,6 +86,24 @@ Replace `localhost/theme_test/` with the URL to your local WordPress test enviro
 npm run watch-bs
 ```
 
+## Development
+
+### Codigo Woo Grid plugin
+
+Custom plugin that adds a matrix of Woocommerce Products variations
+
+[Read More](https://github.com/pablorica/wp.camisetas-serigrafia.es/tree/main/wp-content/plugins/cg-woo-grid#readme)
+
+### Codigo Woo Grid add-on
+
+This is an extension of the previous plugins, with specific customizations for this project. This must-use plugin updates prices in the WooCommerce product variations matrix
+
+[Read More](https://github.com/pablorica/wp.camisetas-serigrafia.es/tree/main/wp-content/mu-plugins/sadoje#readme)
+
+## Basic Features
+
+Codigo Woo Grid allows your users to add multiple variations of a product to their cart from single form.
+
 
 ## Required Plugins
 * [Carousel Slider Block for Gutenberg](https://en-gb.wordpress.org/plugins/carousel-block/)
@@ -107,6 +126,16 @@ npm run watch-bs
 
 * [HTML 5 Blank](https://github.com/toddmotto/html5blank)
 
-## License
 
-MIT
+
+## Copyright and License
+
+Copyright 2024 Camisetas Serigrafía Theme released under the [MIT](https://github.com/pablorica/hmo/blob/main/LICENSE) license.
+
+## Versioning
+
+We use [SemVer](https://semver.org/) for versioning. For the versions available, [list of tags can be found in this page](https://github.com/pablorica/wordpress_codigo_theme/tags).
+
+### Changelog
+
+[CHANGELOG.md](https://github.com/pablorica/wp.camisetas-serigrafia.es/blob/main/CHANGELOG.md)
