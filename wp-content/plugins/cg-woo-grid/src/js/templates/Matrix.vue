@@ -19,7 +19,7 @@
     </div><!-- /.container -->
 
     <button id="updateTotal" @click="updateTotal">Click me</button>
-    <form id="matrixGrid" 
+    <form id="matrixGrid"
         ref="matrixForm"
     >
         <div class="loading" 
@@ -29,7 +29,7 @@
         </div>
         
         <div class="cdg_product" 
-            v-for="(attribute, key) in matrix"
+            v-for="(attribute, keyY) in matrix"
         >
             <span>
                 <div>
@@ -41,10 +41,15 @@
             </span>
             <div>
                 <div>
-                    <span v-for="(valueX, keyX) in attribute.x">
+                    <span
+                      v-for="(valueX, keyX) in attribute.x"
+                      :key="keyX"
+                      @mouseover="showStockMessage = { keyX: keyX, keyY: keyY }"
+                      @mouseleave="showStockMessage = { keyX: null, keyY: null }"
+                    >
                         {{valueX.name}}
                         <br>
-                        <input type="number" 
+                        <input type="number"
                             placeholder="0"
                             min="0" 
                             :max="valueX.stock"
@@ -54,15 +59,18 @@
                             :class="{invalid:quantities[valueX.slug] > valueX.stock}"
                             :disabled="valueX.stock === 0 || (disableAll && !enableField[valueX.slug] )"
                         >
-                        <div class="invalid-feedback"
-                            :class="{show:quantities[valueX.slug] > valueX.stock}"
+                        <div
+                          class="invalid-feedback"
+                          :class="{show:(quantities[valueX.slug] > valueX.stock ||
+                          (valueX.stock === 0 && showStockMessage.keyX === keyX && showStockMessage.keyY === keyY))}"
                         >
                             <div class="arrow"></div>
                             <span v-html="valueX.messageStock"
                                 :class="{show:quantities[valueX.slug] > valueX.stock && valueX.stock !== 0}"
                             ></span>
-                            <span v-html="messagezero"
-                                :class="{show:valueX.stock === 0}"
+                            <span
+                              v-html="messagezero"
+                              :class="{show:showStockMessage}"
                             ></span>
                         </div>
                         <br/>
@@ -87,17 +95,21 @@ export default {
             return {
             	loading: 	        false,
             	noresults:          config.noresults,
-                messagezero:        config.stock_zero_message,
+              messagezero:        config.stock_zero_message,
             	empty: 		        false,
-                disableAll:         false,
-                enableField: 	    [],
-                product_id:         null,
-                taxonomy_y:         config.taxonomy_y,
-                taxonomy_x:         config.taxonomy_x,
-                min_quantity:       0,
-                matrix: 	        [],
-                quantities: 	    {},
-                cookieName:         "cgWooGrid"
+              disableAll:         false,
+              enableField: 	    [],
+              product_id:         null,
+              taxonomy_y:         config.taxonomy_y,
+              taxonomy_x:         config.taxonomy_x,
+              min_quantity:       0,
+              matrix: 	        [],
+              quantities: 	    {},
+              cookieName:         "cgWooGrid",
+              showStockMessage: {
+                keyX: null,
+                keyY: null
+              },
             }
         },
         mounted: function () {
@@ -108,46 +120,46 @@ export default {
             if (typeof element.parentElement.dataset.customminimum !== 'undefined') {
                 this.min_quantity = element.parentElement.dataset.customminimum
             }
-
+            
             emitter.on('fireReset', () => {
                 this.resetAll();
-            });
+            });  
             emitter.on('fireUpdateAll', () => {
                 this.updateTotal();
-            });
+            });  
 
             //Remove the cookie (if exists)
             this.removeCookie();
-            this.buildMatrix();
+            this.buildMatrix(); 
         },
         methods: {
             buildMatrix: function () {
 
                 var self = this;
                 self.empty   = true;
-
+                    
                 if(self.product_id !== null) {
 
                     self.empty = false;
-
-                    var getURL = config.api.index +
+                    
+                    var getURL = config.api.index + 
                     '/attmatrix/product_id='+self.product_id+
                     '/taxonomy_y='+self.taxonomy_y+
                     '/taxonomy_x='+self.taxonomy_x;
 
                     self.loading = true;
                     //console.log('loading '+ getURL);
-
+                    
                     (function($){
                         $.get( getURL , function( r ){
                             self.loading  = false;
                             self.matrix = r;
 
                             //console.log(r);
-                            self.matrix.map((attribute, key) => {
+                            self.matrix.map((attribute, key) => { 
                                 attribute.yslug = attribute.y.toLowerCase();
                             });
-
+                            
                         }).done(function() {
                             //setTimeout(() => {
                                 //$('#phpMatrix').addClass('hide');
@@ -157,7 +169,7 @@ export default {
                                 self.$refs.matrixForm.reset();
                                 self.quantities = {};
                             }, 500)
-
+                            
                         }).fail(function() {
                             //console.log('woops');
                             self.loading = false;
@@ -168,7 +180,7 @@ export default {
                 }
 	        },
             checkifAllowedUpdates: function(
-                quantity,
+                quantity, 
                 stock,
                 slug
             ){
@@ -176,10 +188,9 @@ export default {
                 //console.log('checking');
 
                 if(quantity > stock) {
-                  //console.log('no allowed');
-                  self.disableAll = true
-                  self.enableField[slug] = true
-                  emitter.emit('disableAddToCartButton');
+                    //console.log('no allowed');
+                    self.disableAll = true
+                    self.enableField[slug] = true
                 } else {
                     //console.log('allowed');
                     self.disableAll = false,
@@ -192,7 +203,7 @@ export default {
 
                 if(!self.disableAll) {
 
-                    let purchaseAmount = 0,
+                    let purchaseAmount = 0, 
                     _letSend = false,
                     _data={}
 
@@ -214,7 +225,7 @@ export default {
                     }
                     console.log('Plugin: total products '+purchaseAmount)
 
-                    self.updateCookie({  totalProducts: purchaseAmount })
+                    self.updateCookie({  totalProducts: purchaseAmount }) 
 
                     if(purchaseAmount > 0) {
 
@@ -223,14 +234,14 @@ export default {
                         }
 
                         var postURL = config.api.index + '/updatetotalbox';
-
+                        
                         if(purchaseAmount >= self.min_quantity){
                             //$('.cdg_total').css('display', 'block');
                             emitter.emit('hideTotalBox');
-                        }
+                        } 
                         emitter.emit('fireUpdateBar', purchaseAmount );
 
-
+                        
 
                         _letSend = axios.post(
                             postURL,
@@ -238,14 +249,14 @@ export default {
                         )
                         .then(function (response) {
                             //console.log('then');
-                            if(purchaseAmount >= self.min_quantity){
+                            if(purchaseAmount >= self.min_quantity){	
                                 response.data.addcartenabled = true;
                             } else {
                                 response.data.addcartenabled = false;
                             }
                             emitter.emit('firePopulateBox', response.data );
 
-                            self.updateCookie({ newdescription: response.data.description })
+                            self.updateCookie({ newdescription: response.data.description }) 
 
                             _letSend = false;
 
@@ -261,18 +272,18 @@ export default {
                             _letSend = false;
                         });
 
-
-
+                        
+                        
                         /* *
                         (function($){
-                            _letSend = $.post(
+                            _letSend = $.post( 
                                 postURL,
                                 _data
                             )
                             .done(function( response ) {
                                 //$('#cdg_form .cdg_total .loading').stop(true).fadeOut(0);
                                     //console.log('firePopulateBox');
-                                    if(purchaseAmount >= self.min_quantity){
+                                    if(purchaseAmount >= self.min_quantity){	
                                         //console.log('firePopulateBox', response);
                                         response.addcartenabled = true;
                                     } else {
@@ -299,11 +310,11 @@ export default {
                         /* */
                     }
                     else if(purchaseAmount === 0) {
-                        self.setToZero()
+                        self.setToZero() 
                     }
                 }
 
-
+                
             },
             updateCookie: function(cookieObj) {
                 let self = this
@@ -326,7 +337,7 @@ export default {
 
 
                     cookieObj = {...oldCookieObj,...cookieObj};
-                }
+                } 
 
                 const cookieJSON = JSON.stringify(cookieObj);
                 window.$cookies.set(self.cookieName,cookieJSON);
