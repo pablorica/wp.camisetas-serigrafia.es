@@ -46,7 +46,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
 	 * Build the price table
 	 *
 	 * @since    1.0.0
-     * 
+     *
      * @return void || WP_Error
 	 */
     function cdg_pricetable() {
@@ -54,11 +54,11 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
         //error_log('cdg_budgeteer -> Element Name: '.$this->get_element_name());
 
         $args = array();
-        
+
         if( null !== get_queried_object_id()) {
 
             $elementName = $this->get_element_name();
-            
+
             require_once $this->plugin_path. 'admin/'.$elementName.'-admin-rest-api.php';
             $plugin_admin_restapi = new Customisations_For_Cg_Woo_Grid_Admin_Rest_Api();
             $urlspace = $plugin_admin_restapi->get_url_space();
@@ -66,43 +66,151 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
             global $product;
 
             //  TODO: Make this configurable in backend
-            $quantities   = [1000,500,400,200,100,50,30,10,6,1];
+            $quantities = explode(',', get_option($elementName.'_budgeteer_tableprices_columns'));
             $objectPrices = Array();
             foreach($quantities as $quantity) {
                 $objectPrice = new \stdClass();
                 $objectPrice->quantity = $quantity;
-                $objectPrice->price = strip_tags(
-                    wc_price(
-                        $this->cdg_alter_regular_price( 
-                            $product->get_price(),
-                            $product,
-                            $quantity
-                        )
-                    )
-                );
+                $objectPrice->price =  $this->cdg_get_regular_price_by_type($quantity, $product);
                 $objectPrices[] = $objectPrice;
-                
+
             }
             //error_log(print_r($objectPrices,true));
             $jsPrices = json_encode($objectPrices);
             //error_log(print_r($jsPrices,true));
-            require_once $this->plugin_path.'public/display/'.$elementName.'-product-price-table.php'; 
+            require_once $this->plugin_path.'public/display/'.$elementName.'-product-price-table.php';
 
         } else {
             // If the code somehow executes to here something bad happened return a 500.
-            return new \WP_Error( 
-                $this->get_element_name().'_error', 
-                esc_html__( 'Something went wrong', "cg-woo-grid" ), 
-                array( 'status' => 500 ) 
+            return new \WP_Error(
+                $this->get_element_name().'_error',
+                esc_html__( 'Something went wrong', "cg-woo-grid" ),
+                array( 'status' => 500 )
             );
         }
+    }
+
+    /**
+     * Calculate the price of a product based on the quantity of products
+     *
+     *
+     * @param $variation
+     * @param $quantity
+     * @param $baseprices
+     * @param $profit
+     * @param $tax_p
+     * @return string
+     */
+    function cdg_calculate_price($variation, $quantity, $baseprices, $profit, $tax_p) {
+        $variation_id = $variation['variation_id'];
+        $product = wc_get_product($variation_id);
+        $regular_price = $product->get_regular_price();
+        $price_per_box = get_post_meta($variation_id, '_box_price', true);
+        $price_per_package = get_post_meta($variation_id, '_pack_price', true);
+
+        if ($quantity >= $baseprices['packagepricemin'] && $quantity < $baseprices['boxpricemin']) {
+            $price = $price_per_package * (1 + $profit / 100) ?? 0;
+        } elseif ($quantity >= $baseprices['boxpricemin']) {
+            $price = $price_per_box * (1 + $profit / 100) ?? 0;
+        } else {
+            $price = $regular_price * (1 + $profit / 100) ?? 0;
+        }
+
+        $taxes = $price / 100 * $tax_p;
+        return strip_tags(html_entity_decode(wc_price($price + $taxes)));
+    }
+
+    /**
+     * Build the table price configuration to each product by type
+     *
+     * @param  string $quantity
+     * @param  array  $product
+     *
+     * @return array
+     */
+    function cdg_get_regular_price_by_type($quantity, $product) {
+        // get the quantity of products to establish the type of price (regular, package, box)
+        $baseprice = get_option($this->get_element_name().'_budgeteer_baseprice_types');
+        $baseprices = maybe_unserialize($baseprice)[0];
+
+        // get the tax rate
+        $tax_p = 0;
+        $tax_rates = \WC_Tax::get_rates($product->get_tax_class());
+        if (!empty($tax_rates)) {
+            $tax_rate = reset($tax_rates);
+            $tax_p = sprintf(_x('%.2f', '', 'wptheme.foundation'), $tax_rate['rate']);
+        }
+        $profit = 0;
+
+        // get the profit rate based on the quantity of products
+        $profit_types = get_option($this->get_element_name().'_budgeteer_profit_types');
+        if($profit_types) {
+            $profits = maybe_unserialize($profit_types);
+            if(is_array($profits)
+                && count($profits)
+            ) {
+                $current_profit_types = array_filter($profits, function($obj) use ($quantity) {
+                    return ($obj['min'] <= $quantity && $obj['max'] >= $quantity);
+                });
+
+                $current_profit_type = array_pop($current_profit_types);
+
+                if(isset($current_profit_type['profit'])) {
+                    $profit = $current_profit_type['profit'];
+                }
+            }
+        }
+
+        $prices = [
+            'white' => null,
+            'color' => null,
+        ];
+        if ($product->is_type('variable')) {
+            $variations = $product->get_available_variations();
+
+            $white_variation = null;
+            $color_variation = null;
+
+            foreach ($variations as $variation_data) {
+                $size = $variation_data['attributes']['attribute_pa_tamano'];
+                $color = $variation_data['attributes']['attribute_pa_color'];
+
+                // only get the prices of the variations that are in the sizes s, m, l, xl, 2xl (adult size)
+                if (in_array($size, ['s', 'm', 'l', 'xl', '2xl'])) {
+                    if ($color == 'blanco' && !$white_variation) { // get the variation data to white color
+                        $white_variation = $variation_data;
+                    } elseif ($color != 'blanco' && !$color_variation) { // get the variation data to color
+                        $color_variation = $variation_data;
+                    }
+
+                    if ($white_variation && $color_variation) {
+                        break;
+                    }
+                }
+            }
+
+            // get the prices of the white variation
+            if ($white_variation) {
+                $prices['white'] = $this->cdg_calculate_price($white_variation, $quantity, $baseprices, $profit, $tax_p);
+            }
+
+            // get the prices of the color variation
+            if ($color_variation) {
+                $prices['color'] = $this->cdg_calculate_price($color_variation, $quantity, $baseprices, $profit, $tax_p);
+            }
+
+            // return the prices of the white and color variations based on the quantity of products
+            return $prices;
+        }
+
+        return [];
     }
 
     /**
 	 * Build the budgeteer
 	 *
 	 * @since    1.0.0
-     * 
+     *
      * @return void || WP_Error
 	 */
     function cdg_budgeteer() {
@@ -110,23 +218,23 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
         //error_log('cdg_budgeteer -> Element Name: '.$this->get_element_name());
 
         $args = array();
-        
+
         if( null !== get_queried_object_id()) {
 
             $elementName = $this->get_element_name();
-            
+
             require_once $this->plugin_path. 'admin/'.$elementName.'-admin-rest-api.php';
             $plugin_admin_restapi = new Customisations_For_Cg_Woo_Grid_Admin_Rest_Api();
             $urlspace = $plugin_admin_restapi->get_url_space();
 
-            require_once $this->plugin_path.'public/display/'.$elementName.'-display.php'; 
+            require_once $this->plugin_path.'public/display/'.$elementName.'-display.php';
 
         } else {
             // If the code somehow executes to here something bad happened return a 500.
-            return new \WP_Error( 
-                $this->get_element_name().'_error', 
-                esc_html__( 'Something went wrong', "cg-woo-grid" ), 
-                array( 'status' => 500 ) 
+            return new \WP_Error(
+                $this->get_element_name().'_error',
+                esc_html__( 'Something went wrong', "cg-woo-grid" ),
+                array( 'status' => 500 )
             );
         }
     }
@@ -142,9 +250,9 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
      * @return float
      */
     private function cdg_get_price_addiction(
-        $regular_price, 
-        $pricecolors, 
-        $totalprods, 
+        $regular_price,
+        $pricecolors,
+        $totalprods,
         $color,
         $addScreenVal
     ) {
@@ -153,20 +261,20 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
         $priceelement = array_pop(
             array_filter(
                 $pricecolors,
-                function($obj){ 
+                function($obj){
                     return strtolower($obj->color) ==  'all';
                 }
             )
         );
 
         if( ! $priceelement ) {
-            if ($color == 'blanco') { 
+            if ($color == 'blanco') {
                 $priceelement = array_pop(
                     array_filter(
                         $pricecolors,
-                        function($obj){ 
+                        function($obj){
                             return str_contains(
-                                strtolower($obj->color), 
+                                strtolower($obj->color),
                                 'blanc'
                             );
                         }
@@ -176,9 +284,9 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                 $priceelement = array_pop(
                     array_filter(
                         $pricecolors,
-                        function($obj){ 
+                        function($obj){
                             return str_contains(
-                                strtolower($obj->color), 
+                                strtolower($obj->color),
                                 'color'
                             );
                         }
@@ -196,7 +304,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
         if( $addScreenVal
             && isset($priceelement->pricescreen)
             && $priceelement->pricescreen === true
-            && isset($priceelement->pricescreenval) 
+            && isset($priceelement->pricescreenval)
         ) {
             $photolithTotal = $priceelement->pricescreenval;
             $photolithNormal = (float) $photolithTotal/$totalprods;
@@ -208,7 +316,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
         ) {
             $priceclothval = (float) $priceelement->priceclothval;
         }
-        
+
         if($this->verbose) {
             error_log('cdg_get_price_addiction: Regular price -> '.$regular_price);
             error_log('cdg_get_price_addiction: Total products -> '.$totalprods);
@@ -221,7 +329,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
             error_log('cdg_get_price_addiction: Color '.$color.': priceclothval -> '.$priceclothval);
             error_log('cdg_get_price_addiction: Total -> (regular_price + photolithNormal + priceclothval) = '.($regular_price + $photolithNormal + $priceclothval));
         }
-        
+
 
         return $regular_price + $photolithNormal + $priceclothval;
     }
@@ -231,10 +339,10 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
      *
      * @param  string                $regular_price
      * @param  WC_Product_Variation  $single_variation
-     * 
+     *
      * @return string
      */
-    function cdg_alter_regular_price( 
+    function cdg_alter_regular_price(
         $regular_price,
         $single_variation,
         $quantity,
@@ -259,20 +367,20 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
             if($this->verbose) {
                 error_log('cdg_alter_regular_price: The quantity of this item is bigger than  '.$baseprices['boxpricemin'].' , therefore the sale price is the box price');
             }
-            $regular_price = get_post_meta( 
-                $single_variation->get_id(), 
-                '_box_price', 
-                true 
+            $regular_price = get_post_meta(
+                $single_variation->get_id(),
+                '_box_price',
+                true
             );
         }
         elseif($quantity >= $baseprices['packagepricemin']) {
             if($this->verbose) {
                 error_log('cdg_alter_regular_price: The quantity of this item is bigger than  '.$baseprices['packagepricemin'].' , therefore the sale price is the package price');
             }
-            $regular_price = get_post_meta( 
-                $single_variation->get_id(), 
-                '_pack_price', 
-                true 
+            $regular_price = get_post_meta(
+                $single_variation->get_id(),
+                '_pack_price',
+                true
             );
         }
 
@@ -287,17 +395,17 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                 //error_log('cdg_alter_regular_price: This COOKIE was populated in  src/js/templates/Estimator.vue (previously in src/js/templates/Budgetter.vue)');
             }
 
-            $cgWooGrid = json_decode( 
-                html_entity_decode( 
+            $cgWooGrid = json_decode(
+                html_entity_decode(
                     stripslashes (
-                        $_COOKIE['cgWooGrid'] 
-                    ) 
-                ) 
+                        $_COOKIE['cgWooGrid']
+                    )
+                )
             );
             //error_log('cdg_alter_regular_price: COOKIE -> '.print_r($_COOKIE['cgWooGrid'],true));
             //error_log('cdg_alter_regular_price: JSON -> '.print_r($cgWooGrid,true));
-            if( isset($cgWooGrid->totalProducts) 
-                && $cgWooGrid->totalProducts > 0 
+            if( isset($cgWooGrid->totalProducts)
+                && $cgWooGrid->totalProducts > 0
             ) {
                 $description = '';
 
@@ -318,14 +426,14 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                         //error_log('cdg_alter_regular_price: $profits -> '.print_r($profits,true));
                     }
 
-                    if(is_array($profits) 
+                    if(is_array($profits)
                         && count($profits)
                     ) {
-                    
+
                         $current_profit_type = array_pop(
                             array_filter(
                                 $profits,
-                                function($obj) use ($totalprods) { 
+                                function($obj) use ($totalprods) {
                                     return ($obj['min'] <= $totalprods && $obj['max'] >= $totalprods);
                                 }
                             )
@@ -364,11 +472,11 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                             error_log('cdg_alter_regular_price: Is this is a new stamping ('.$current_stamping_title.')? ');
                         }
 
-                        if( ! $addScreenVal 
+                        if( ! $addScreenVal
                             && ! in_array(
-                                $current_stamping_title, 
+                                $current_stamping_title,
                                 $this->saved_stamping_titles
-                            ) 
+                            )
                         ) {
                             if($this->verbose) {
                                 error_log('cdg_alter_regular_price: This is a new stamping ('.$current_stamping_title.') so we must add a new photolite and save the stamping name and color value ('.$pricecolors[0]->pricescreenval.') to avoid duplicates in the next loops');
@@ -378,11 +486,11 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                             $this->saved_price_screenvals[] = $pricecolors[0]->pricescreenval;
                         }
 
-                        
+
                         if( ! $addScreenVal ) {
                             foreach($pricecolors as $pricecolor) {
                                 if( ! in_array(
-                                        $pricecolor->pricescreenval, 
+                                        $pricecolor->pricescreenval,
                                         $this->saved_price_screenvals
                                     )
                                 ) {
@@ -394,7 +502,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                                     break;
                                 }
                             }
-                        } 
+                        }
 
                         
                         if( ! $addScreenVal ) {
@@ -408,9 +516,9 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                         }
 
                         $regular_price = $this->cdg_get_price_addiction(
-                            $regular_price, 
-                            $pricecolors, 
-                            $totalprods, 
+                            $regular_price,
+                            $pricecolors,
+                            $totalprods,
                             $attr['attribute_pa_color'],
                             $addScreenVal
                         );
@@ -432,7 +540,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                 if($this->verbose) {
                     error_log('cdg_alter_regular_price: baggedPrice -> '.print_r($cgWooGrid->bagged,true));
                 }
-                
+
                 $regular_price = $regular_price + (float) $cgWooGrid->bagged->baggedprice;
             }
 
@@ -444,20 +552,20 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
             if($this->verbose) {
                 error_log('cdg_alter_regular_price: Reading the COOKIE to get the budgeterr configuration -> '.print_r($_COOKIE['cgWooGrid'] , true));
                 error_log('cdg_alter_regular_price: This COOKIE was populated in  src/js/templates/Estimator.vue (prevoously in src/js/templates/Budgetter.vue)');
-                
+
             }
 
-            $cgWooGrid = json_decode( 
-                html_entity_decode( 
+            $cgWooGrid = json_decode(
+                html_entity_decode(
                     stripslashes (
-                        $_COOKIE['cgWooGrid'] 
-                    ) 
-                ) 
+                        $_COOKIE['cgWooGrid']
+                    )
+                )
             );
             //error_log('cdg_alter_regular_price: COOKIE -> '.print_r($_COOKIE['cgWooGrid'],true));
             //error_log('cdg_alter_regular_price: JSON -> '.print_r($cgWooGrid,true));
-            if( isset($cgWooGrid->totalProducts) 
-                && $cgWooGrid->totalProducts > 0 
+            if( isset($cgWooGrid->totalProducts)
+                && $cgWooGrid->totalProducts > 0
             ) {
                 $description = '';
 
@@ -478,14 +586,14 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                         //error_log('cdg_alter_regular_price: $profits -> '.print_r($profits,true));
                     }
 
-                    if(is_array($profits) 
+                    if(is_array($profits)
                         && count($profits)
                     ) {
-                    
+
                         $current_profit_type = array_pop(
                             array_filter(
                                 $profits,
-                                function($obj) use ($totalprods) { 
+                                function($obj) use ($totalprods) {
                                     return ($obj['min'] <= $totalprods && $obj['max'] >= $totalprods);
                                 }
                             )
@@ -518,10 +626,10 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                     $stampingFront = $priceAdd->stamping;
                     $areaFront     = $priceAdd->area;
                     $regular_price = $this->cdg_get_price_addiction(
-                        $regular_price, 
-                        $priceAdd, 
-                        $totalprods, 
-                        $attr['attribute_pa_color'],  
+                        $regular_price,
+                        $priceAdd,
+                        $totalprods,
+                        $attr['attribute_pa_color'],
                         'Front'
                     );
                     // $description .= '
@@ -543,10 +651,10 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                     //  .' '.$areaRear.') ';
 
                     $regular_price = $this->cdg_get_price_addiction(
-                        $regular_price, 
-                        $priceAdd, 
-                        $totalprods, 
-                        $attr['attribute_pa_color'],  
+                        $regular_price,
+                        $priceAdd,
+                        $totalprods,
+                        $attr['attribute_pa_color'],
                         'Rear'
                     );
                 }
@@ -559,7 +667,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                 if($this->verbose) {
                     error_log('cdg_alter_regular_price: baggedPrice -> '.$cgWooGrid->bagged);
                 }
-                
+
                 $regular_price = $regular_price + (float) $cgWooGrid->bagged;
             }
 
@@ -572,7 +680,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
             error_log('++++++++++++++++++++');
             error_log('');
         }
-        
+
         return $regular_price;
     }
 
@@ -585,12 +693,12 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
      */
     function cdg_alter_total_price($price) {
         if(isset($_COOKIE['cgWooGrid'])) {
-            $addsTotalPrice = json_decode( 
-                html_entity_decode( 
+            $addsTotalPrice = json_decode(
+                html_entity_decode(
                     stripslashes (
-                        $_COOKIE['cgWooGrid'] 
-                    ) 
-                ) 
+                        $_COOKIE['cgWooGrid']
+                    )
+                )
             );
             //error_log('cdg_alter_total_price: JSON -> '.print_r($addsTotalPrice,true));
             $price = $price + (float) $addsTotalPrice->screen_price_front;
@@ -614,23 +722,23 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
         //error_log('$totalitems -> '.$totalitems);
 
         foreach ( $cart->get_cart() as $cart_item_key => $cart_item ) {
-            
+
             $product  = $cart_item['data'];
             $quantity = $cart_item['quantity'];
-            $price = $this->cdg_alter_regular_price( 
+            $price = $this->cdg_alter_regular_price(
                 $product->get_price(),
                 $product,
                 $quantity,
                 $totalitems
             );
             $cart_item['data']->set_price( $price);
-            
-            //$description = $cart_item['data']->get_description(); 
+
+            //$description = $cart_item['data']->get_description();
         }
     }
 
 
-    
+
 
 
     // Render meta on cart and checkout
