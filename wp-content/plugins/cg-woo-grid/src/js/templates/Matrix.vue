@@ -19,7 +19,7 @@
     </div><!-- /.container -->
 
     <button id="updateTotal" @click="updateTotal">Click me</button>
-    <form id="matrixGrid" 
+    <form id="matrixGrid"
         ref="matrixForm"
     >
         <div class="loading" 
@@ -29,7 +29,7 @@
         </div>
         
         <div class="cdg_product" 
-            v-for="(attribute, key) in matrix"
+            v-for="(attribute, keyY) in matrix"
         >
             <span>
                 <div>
@@ -41,10 +41,15 @@
             </span>
             <div>
                 <div>
-                    <span v-for="(valueX, keyX) in attribute.x">
+                    <span
+                      v-for="(valueX, keyX) in attribute.x"
+                      :key="keyX"
+                      @mouseover="showStockMessage = { keyX: keyX, keyY: keyY }"
+                      @mouseleave="showStockMessage = { keyX: null, keyY: null }"
+                    >
                         {{valueX.name}}
                         <br>
-                        <input type="number" 
+                        <input type="number"
                             placeholder="0"
                             min="0" 
                             :max="valueX.stock"
@@ -54,15 +59,18 @@
                             :class="{invalid:quantities[valueX.slug] > valueX.stock}"
                             :disabled="valueX.stock === 0 || (disableAll && !enableField[valueX.slug] )"
                         >
-                        <div class="invalid-feedback"
-                            :class="{show:quantities[valueX.slug] > valueX.stock}"
+                        <div
+                          class="invalid-feedback"
+                          :class="{show:(quantities[valueX.slug] > valueX.stock ||
+                          (valueX.stock === 0 && showStockMessage.keyX === keyX && showStockMessage.keyY === keyY))}"
                         >
                             <div class="arrow"></div>
                             <span v-html="valueX.messageStock"
                                 :class="{show:quantities[valueX.slug] > valueX.stock && valueX.stock !== 0}"
                             ></span>
-                            <span v-html="messagezero"
-                                :class="{show:valueX.stock === 0}"
+                            <span
+                              v-html="messagezero"
+                              :class="{show:showStockMessage}"
                             ></span>
                         </div>
                         <br/>
@@ -87,17 +95,21 @@ export default {
             return {
             	loading: 	        false,
             	noresults:          config.noresults,
-                messagezero:        config.stock_zero_message,
+              messagezero:        config.stock_zero_message,
             	empty: 		        false,
-                disableAll:         false,
-                enableField: 	    [],
-                product_id:         null,
-                taxonomy_y:         config.taxonomy_y,
-                taxonomy_x:         config.taxonomy_x,
-                min_quantity:       0,
-                matrix: 	        [],
-                quantities: 	    {},
-                cookieName:         "cgWooGrid"
+              disableAll:         false,
+              enableField: 	    [],
+              product_id:         null,
+              taxonomy_y:         config.taxonomy_y,
+              taxonomy_x:         config.taxonomy_x,
+              min_quantity:       0,
+              matrix: 	        [],
+              quantities: 	    {},
+              cookieName:         "cgWooGrid",
+              showStockMessage: {
+                keyX: null,
+                keyY: null
+              },
             }
         },
         mounted: function () {
