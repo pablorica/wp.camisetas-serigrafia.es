@@ -3,6 +3,8 @@ Updates prices in the matrix of Woocommerce Products variations
 
 Website: [codigo.co.uk](https://codigo.co.uk)
 
+[![version](https://img.shields.io/badge/version-0.5.0-blue.svg)](https://semver.org)
+
 ## Basic Features
 
 
@@ -53,6 +55,14 @@ Update cart:`cdg_alter_price_cart()` defined in sadoje/public/customisations-for
 * [WooCommerce](https://woocommerce.com/)
 
 
-## License
+## Copyright and License
 
-MIT
+Copyright 2024 Codigo Woo Grid add-on released under the [MIT](https://github.com/pablorica/wp.camisetas-serigrafia.es/blob/main/LICENSE) license.
+
+## Versioning
+
+We use [SemVer](https://semver.org/) for versioning. For the versions available, [list of tags can be found in this page](https://github.com/pablorica/wordpress_codigo_theme/tags).
+
+### Changelog
+
+[CHANGELOG.md](https://github.com/pablorica/wp.camisetas-serigrafia.es/blob/main/CHANGELOG.md)
