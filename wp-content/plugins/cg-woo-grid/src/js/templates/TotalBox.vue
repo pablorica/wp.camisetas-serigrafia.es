@@ -95,7 +95,7 @@
         </div>
         <button id="cdg_add_products" 
             class="button alt add_to_cart_button"
-            v-bind:disabled="(addcartenabled === false)"
+            :disabled="(addcartenabled === false)"
             v-html="results.addtocarttitle"
             @click="addtocart"
         >
@@ -164,6 +164,10 @@ export default {
 
             emitter.on('hideTotalBox', () => {
                 this.loading = false;
+            });
+
+            emitter.on('disableAddToCartButton', () => {
+                this.addcartenabled = false;
             });
 
             this.buildTotalBox(); 
