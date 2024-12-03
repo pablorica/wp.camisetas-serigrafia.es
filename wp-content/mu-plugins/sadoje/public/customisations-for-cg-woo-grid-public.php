@@ -124,7 +124,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
      * Build the table price configuration to each product by type
      *
      * @param  string $quantity
-     * @param  array  $product
+     * @param  object  $product
      *
      * @return array
      */
@@ -165,6 +165,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
             'white' => null,
             'color' => null,
         ];
+
         if ($product->is_type('variable')) {
             $variations = $product->get_available_variations();
 
