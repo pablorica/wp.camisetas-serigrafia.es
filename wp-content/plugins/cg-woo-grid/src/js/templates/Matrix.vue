@@ -52,16 +52,16 @@
                         <input type="number"
                             placeholder="0"
                             min="0" 
-                            :max="valueX.stock"
+                            :max="valueX.stock >= 0 ? valueX.stock : 0"
                             autocomplete="off"
                             v-model="quantities[valueX.slug]"
-                            @change="checkifAllowedUpdates(quantities[valueX.slug],valueX.stock, valueX.slug)"
+                            @change="checkifAllowedUpdates(quantities[valueX.slug],valueX.stock, valueX.slug, keyX, keyY)"
                             :class="{invalid:quantities[valueX.slug] > valueX.stock}"
-                            :disabled="valueX.stock === 0 || (disableAll && !enableField[valueX.slug] )"
+                               :disabled="valueX.stock === 0 || (disableStock.keyX === keyX && disableStock.keyY === keyY)"
                         >
                         <div
                           class="invalid-feedback"
-                          :class="{show:(quantities[valueX.slug] > valueX.stock ||
+                          :class="{show:((quantities[valueX.slug] && quantities[valueX.slug] > valueX.stock) ||
                           (valueX.stock === 0 && showStockMessage.keyX === keyX && showStockMessage.keyY === keyY))}"
                         >
                             <div class="arrow"></div>
@@ -98,7 +98,6 @@ export default {
               messagezero:        config.stock_zero_message,
             	empty: 		        false,
               disableAll:         false,
-              enableField: 	    [],
               product_id:         null,
               taxonomy_y:         config.taxonomy_y,
               taxonomy_x:         config.taxonomy_x,
@@ -110,6 +109,10 @@ export default {
                 keyX: null,
                 keyY: null
               },
+              disableStock: {
+                keyX: null,
+                keyY: null
+              }
             }
         },
         mounted: function () {
@@ -182,20 +185,27 @@ export default {
             checkifAllowedUpdates: function(
                 quantity, 
                 stock,
-                slug
+                slug,
+                keyX,
+                keyY
             ){
                 var self = this;
                 //console.log('checking');
 
                 if(quantity > stock) {
                     //console.log('no allowed');
-                    self.disableAll = true
-                    self.enableField[slug] = true
+                    // self.disableAll = true
+                  if (stock > 0) {
+                    self.quantities[slug] = stock
+                    self.updateTotal();
+                  } else {
+                    self.quantities[slug] = null
+                    self.disableStock = { keyX, keyY }
+                  }
                 } else {
                     //console.log('allowed');
                     self.disableAll = false,
                     self.updateTotal();
-                    self.enableField = [];
                 }
             },
             updateTotal: function(){
