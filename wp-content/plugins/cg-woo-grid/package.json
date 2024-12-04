@@ -21,7 +21,8 @@
     "watch-run-adminjs": "nodemon --watch admin/src/js/ --ext js,vue --exec \"npm-run-all js-admin\"",
     "dist": "npm-run-all dist-clean dist-build",
     "dist-build": "node src/build/dist-build.js",
-    "dist-clean": "node src/build/dist-clean.js"
+    "dist-clean": "node src/build/dist-clean.js",
+    "build": "npm-run-all dist"
   },
   "engines": {
     "node": ">=14"

@@ -22,7 +22,7 @@
                     v-bind:id="'row_'+index" 
                     style="border: 1px solid darkgray; font-size: 10px;"
                 >
-                    <b>{{row.price}}</b>
+                    <b>{{row.price.white ?? "-"}}</b>
                 </td>                
             </tr>
             <tr>
@@ -33,7 +33,7 @@
                     v-bind:id="'row_'+index" 
                     style="border: 1px solid darkgray; font-size: 10px;"
                 >
-                    <b>{{row.price}}</b>
+                    <b>{{row.price.color ?? "-"}}</b>
                 </td> 
             </tr>
         </tbody>
@@ -60,7 +60,7 @@ export default {
         let element = this.$el;
         this.apiurl = element.parentElement.dataset.apiurl;
         this.prices = JSON.parse(element.parentElement.dataset.prices);
-        
+
         this.buildTablePrices(); 
         
     },

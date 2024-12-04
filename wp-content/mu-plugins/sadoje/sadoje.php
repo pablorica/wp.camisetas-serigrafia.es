@@ -5,14 +5,14 @@
  * 
  * @package sadoje
  * @author Pablo Rica
- * @copyright 2022 Pablo Rica
+ * @copyright 2024 Pablo Rica
  * @license GPL-2.0-or-later 
  * 
  * @wordpress-plugin 
  * Plugin Name:     Sadoje
  * Plugin URI:      http://codigo.co.uk/
  * Description:     Adds custom features asked by Sadoje to theme and plugins
- * Version:         0.13.10
+ * Version:         0.14.0
  * Author:          Pablo Rica <pablo@codigo.co.uk>
  * Author URI:      http://codigo.co.uk/pablo-rica
  * Text Domain:     sadoje
