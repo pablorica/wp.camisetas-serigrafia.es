@@ -58,7 +58,7 @@ class Functions {
     ) {
 
 		$this->plugin_name = $plugin_name;
-		$this->version = $version;
+		$this->version = $version.".". time();
 
         //set the variable for the example endpoint. you can use a option plugin to store it and change it later in the admin page
         $this->css_filepath      = CG_WOOGRID_URL.'public/css/cg-woo-grid.css';

@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.5.4] - 2024-12-04
 
+### Update
+
+ - Flush cache in JS and CSS files in plugin and add-on
+
 ### Fix
 
 - Fix compilaton files
