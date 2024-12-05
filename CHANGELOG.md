@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+
+## [0.5.5] - 2024-12-05
+
+### Update
+
+ - [Numeros negativos](https://app.asana.com/0/1203117341882428/1208880819951180)
+    -  Hide negative product quantities and show out-of-stocks instead
+
+
 ## [0.5.4] - 2024-12-04
 
 ### Update
