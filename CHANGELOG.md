@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+
+
+## [0.5.5] - 2024-12-05
+
+### Update
+
+ - [Numeros negativos](https://app.asana.com/0/1203117341882428/1208880819951180)
+    -  Hide negative product quantities and show out-of-stocks instead
+
+
+## [0.5.4] - 2024-12-04
+
+### Update
+
+ - Flush cache in JS and CSS files in plugin and add-on
+
+### Fix
+
+- Fix compilaton files
+
+
 ## [0.5.3] - 2024-12-04
 
 ### Update

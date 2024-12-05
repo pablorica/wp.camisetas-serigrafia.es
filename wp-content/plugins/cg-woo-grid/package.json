@@ -22,7 +22,7 @@
     "dist": "npm-run-all dist-clean dist-build",
     "dist-build": "node src/build/dist-build.js",
     "dist-clean": "node src/build/dist-clean.js",
-    "build": "npm-run-all dist"
+    "build": "npm-run-all css js dist"
   },
   "engines": {
     "node": ">=14"
@@ -44,7 +44,7 @@
     "@rollup/plugin-node-resolve": "^13.0.6",
     "clean-css-cli": "^5.6.1",
     "del": "^6.0.0",
-    "nodemon": "^2.0.20",
+    "nodemon": "^3.1.7",
     "npm-run-all": "^4.1.5",
     "replace-in-file": "^6.3.5",
     "rollup": "^2.79.1",
