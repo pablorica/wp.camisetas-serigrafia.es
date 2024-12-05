@@ -90,7 +90,7 @@ package-lock.json
 !CHANGELOG.md
 !composer.json
 # Migration file
-!*.sql.gz
+#!*.sql.gz
 
 # track favicon files, if they exist
 !android-chrome-*.png
