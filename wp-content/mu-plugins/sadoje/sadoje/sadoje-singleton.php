@@ -46,7 +46,7 @@ abstract class Sadoje_Singleton {
 	protected function __construct() {
         //Initialize all the basics components of the plugin
         $this->plugin_name = 'sadoje';
-        $this->version = '0.13.10';
+        $this->version = '0.14.0.'. time();
 
         
         $this->verbose = false;

@@ -75,7 +75,8 @@
                         </div>
                         <br/>
                         <i v-if="valueX.showStock">
-                            <small v-html="valueX.stock"></small>
+                          <small v-if="valueX.stock > 0" v-html="valueX.stock"></small>
+                          <small v-else>Fuera de stcok</small>
                         </i>
                     </span>
                 </div>
@@ -93,26 +94,26 @@ export default {
         name: 'attributes-matrix',
         data: function() {
             return {
-            	loading: 	        false,
-            	noresults:          config.noresults,
-              messagezero:        config.stock_zero_message,
-            	empty: 		        false,
-              disableAll:         false,
-              product_id:         null,
-              taxonomy_y:         config.taxonomy_y,
-              taxonomy_x:         config.taxonomy_x,
-              min_quantity:       0,
-              matrix: 	        [],
-              quantities: 	    {},
-              cookieName:         "cgWooGrid",
-              showStockMessage: {
+                loading: 	        false,
+                noresults:          config.noresults,
+                messagezero:        config.stock_zero_message,
+                empty: 		        false,
+                disableAll:         false,
+                product_id:         null,
+                taxonomy_y:         config.taxonomy_y,
+                taxonomy_x:         config.taxonomy_x,
+                min_quantity:       0,
+                matrix: 	        [],
+                quantities: 	    {},
+                cookieName:         "cgWooGrid",
+                showStockMessage: {
                 keyX: null,
                 keyY: null
-              },
-              disableStock: {
-                keyX: null,
-                keyY: null
-              }
+                },
+                disableStock: {
+                  keyX: null,
+                  keyY: null
+                }
             }
         },
         mounted: function () {

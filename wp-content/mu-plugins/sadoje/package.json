@@ -3,56 +3,56 @@
     "version": "0.1.0",
     "description": "Adds custom features asked by Sadoje to theme and plugins",
     "scripts": {
-      "test": "cleancss -o public/css/sadoje.min.css public/css/sadoje.css",
-      "css": "npm-run-all css-compile css-minify",
-      "css-compile": "sass --style expanded --source-map --embed-sources --no-error-css --quiet src/sass/sadoje.scss:public/css/sadoje.css",
-      "css-minify": "cleancss -O1 --format breakWith=lf --with-rebase --source-map --source-map-inline-sources --output public/css/ --batch --batch-suffix \".min\" \"public/css/*.css\" \"!public/css/*.min.css\" \"!public/css/*rtl*.css\"",
-      "css-admin-colors-compile": "sass --style expanded --source-map --embed-sources --no-error-css --quiet admin/src/sass/yellow.scss:admin/css/colors/yellow.css",
-      "js": "npm-run-all js-compile js-minify",
-      "js-compile": "rollup --config src/build/rollup.config.js --sourcemap",
-      "js-minify": "terser --config-file src/build/terser.config.json --output public/js/sadoje.min.js public/js/sadoje.js",
-      "js-admin": "npm-run-all js-admin-compile js-admin-minify",
-      "js-admin-compile": "rollup --config admin/src/build/rollup.config.js --sourcemap",
-      "js-admin-minify": "terser --config-file admin/src/build/terser.config.json --output admin/js/sadoje.min.js admin/js/sadoje.js",
-      "watch": "npm-run-all --parallel watch-run-*",
-      "watch-run-css": "nodemon --watch src/sass/ --ext scss --exec \"npm-run-all css\"",
-      "watch-run-js": "nodemon --watch src/js/ --ext js,vue --exec \"npm-run-all js\"",
-      "watch-run-adminjs": "nodemon --watch admin/src/js/ --ext js,vue --exec \"npm-run-all js-admin\"",
-      "dist": "npm-run-all dist-clean dist-build",
-      "dist-build": "node src/build/dist-build.js",
-      "dist-clean": "node src/build/dist-clean.js"
+        "test": "cleancss -o public/css/sadoje.min.css public/css/sadoje.css",
+        "css": "npm-run-all css-compile css-minify",
+        "css-compile": "sass --style expanded --source-map --embed-sources --no-error-css --quiet src/sass/sadoje.scss:public/css/sadoje.css",
+        "css-minify": "cleancss -O1 --format breakWith=lf --with-rebase --source-map --source-map-inline-sources --output public/css/ --batch --batch-suffix \".min\" \"public/css/*.css\" \"!public/css/*.min.css\" \"!public/css/*rtl*.css\"",
+        "css-admin-colors-compile": "sass --style expanded --source-map --embed-sources --no-error-css --quiet admin/src/sass/yellow.scss:admin/css/colors/yellow.css",
+        "js": "npm-run-all js-compile js-minify",
+        "js-compile": "rollup --config src/build/rollup.config.js --sourcemap",
+        "js-minify": "terser --config-file src/build/terser.config.json --output public/js/sadoje.min.js public/js/sadoje.js",
+        "js-admin": "npm-run-all js-admin-compile js-admin-minify",
+        "js-admin-compile": "rollup --config admin/src/build/rollup.config.js --sourcemap",
+        "js-admin-minify": "terser --config-file admin/src/build/terser.config.json --output admin/js/sadoje.min.js admin/js/sadoje.js",
+        "watch": "npm-run-all --parallel watch-run-*",
+        "watch-run-css": "nodemon --watch src/sass/ --ext scss --exec \"npm-run-all css\"",
+        "watch-run-js": "nodemon --watch src/js/ --ext js,vue --exec \"npm-run-all js\"",
+        "watch-run-adminjs": "nodemon --watch admin/src/js/ --ext js,vue --exec \"npm-run-all js-admin\"",
+        "dist": "npm-run-all dist-clean dist-build",
+        "dist-build": "node src/build/dist-build.js",
+        "dist-clean": "node src/build/dist-clean.js",
+        "build": "npm-run-all css js dist"
     },
     "engines": {
-      "node": ">=14"
+        "node": ">=14"
     },
     "keywords": [
-      "wordpress",
-      "woocommerce",
-      "grid",
-      "product",
-      "attributes"
+        "wordpress",
+        "woocommerce",
+        "grid",
+        "product",
+        "attributes"
     ],
     "author": "Pablo Rica (http://codigo.co.uk/pablo-rica)",
     "license": "GPL-2.0",
     "devDependencies": {
-      "@babel/core": "^7.19.3",
-      "@babel/preset-env": "^7.19.4",
-      "@rollup/plugin-babel": "^5.3.0",
-      "@rollup/plugin-commonjs": "^21.0.0",
-      "@rollup/plugin-node-resolve": "^13.0.6",
-      "clean-css-cli": "^5.6.1",
-      "del": "^6.0.0",
-      "nodemon": "^2.0.20",
-      "npm-run-all": "^4.1.5",
-      "replace-in-file": "^6.3.5",
-      "rollup": "^2.79.1",
-      "sass": "^1.55.0",
-      "terser": "^5.15.1"
+        "@babel/core": "^7.19.3",
+        "@babel/preset-env": "^7.19.4",
+        "@rollup/plugin-babel": "^5.3.0",
+        "@rollup/plugin-commonjs": "^21.0.0",
+        "@rollup/plugin-node-resolve": "^13.0.6",
+        "clean-css-cli": "^5.6.1",
+        "del": "^6.0.0",
+        "nodemon": "^3.1.7",
+        "npm-run-all": "^4.1.5",
+        "replace-in-file": "^6.3.5",
+        "rollup": "^2.79.1",
+        "sass": "^1.55.0",
+        "terser": "^5.15.1"
     },
     "dependencies": {
-      "@rollup/plugin-multi-entry": "^6.0.0",
-      "rollup-plugin-vue": "^6.0.0",
-      "tiny-emitter": "^2.1.0"
+        "@rollup/plugin-multi-entry": "^6.0.0",
+        "rollup-plugin-vue": "^6.0.0",
+        "tiny-emitter": "^2.1.0"
     }
-  }
-  
+}
