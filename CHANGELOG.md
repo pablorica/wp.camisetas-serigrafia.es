@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 
+## [0.5.6] - 2024-12-09
+
+### Fix
+
+ - [Numeros negativos](https://app.asana.com/0/1203117341882428/1208880819951180)
+    -  Se ha arreglado el detalle del mensaje duplicado
+    -  además también se arreglo el mensaje que mostraba un stock negativo
+
+
 ## [0.5.5] - 2024-12-05
 
 ### Update
