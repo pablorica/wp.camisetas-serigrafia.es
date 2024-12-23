@@ -227,6 +227,7 @@ class Customisations_For_Cg_Woo_Grid_Admin_Rest_Api extends Customisations_For_C
 
         /*
         * Upload image
+        * https://local.camisetas-serigrafia.wp.es/wp-json/customisations-for-cg-woo-grid/v1/upload-image
         */
         register_rest_route( 
             $this->get_name_space(), 
@@ -240,10 +241,11 @@ class Customisations_For_Cg_Woo_Grid_Admin_Rest_Api extends Customisations_For_C
                 )
             )
         ); 
-        //https://local.camisetas-serigrafia.wp.es/wp-json/customisations-for-cg-woo-grid/v1/serialize
+        
 
         /*
         * Encode serialized string to JSON format
+        * https://local.camisetas-serigrafia.wp.es/wp-json/customisations-for-cg-woo-grid/v1/encode/
         */
         register_rest_route( 
             $this->get_name_space(), 
@@ -257,10 +259,10 @@ class Customisations_For_Cg_Woo_Grid_Admin_Rest_Api extends Customisations_For_C
                 )
             )
         ); 
-        //https://local.camisetas-serigrafia.wp.es/wp-json/customisations-for-cg-woo-grid/v1/encode/
 
         /*
         * Serialize object
+        * https://local.camisetas-serigrafia.wp.es/wp-json/customisations-for-cg-woo-grid/v1/serialize
         */
         register_rest_route( 
             $this->get_name_space(), 
@@ -274,7 +276,7 @@ class Customisations_For_Cg_Woo_Grid_Admin_Rest_Api extends Customisations_For_C
                 )
             )
         ); 
-        //https://local.camisetas-serigrafia.wp.es/wp-json/customisations-for-cg-woo-grid/v1/serialize
+        
 
 
 

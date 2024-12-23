@@ -3,7 +3,17 @@
 /**
  * Provide a admin area view for the plugin
  *
- * This file is used to markup the admin-facing aspects of the plugin.
+ * This file is used to markup the admin-facing aspects of the plugin. It will save all the settings in the wp_options table.
+ * 
+ * 
+ * The <form> with method="post" and action="options.php" is used on settings pages to save plugin or theme options.
+ * It works with the Settings API to validate and store settings in the wp_options database table.
+ * Key functions:
+ *     settings_fields($option_group): Adds security fields.
+ *     do_settings_sections($page): Displays registered settings fields and sections.
+ *     submit_button(): Adds the submit button.
+ * When submitted, the form sends data to options.php, where WordPress processes and saves the settings. 
+ * It’s a standard setup for creating configurable admin options.
  *
  * @since      1.0.0
  * @author     Pablo Rica <pablo@codigo.co.uk>
@@ -145,6 +155,7 @@
 						</div><!-- .inside -->
 					</div><!-- #settings-baseprice -->
 
+                    <!-- Embolsado -->
                     <div id="settings-bagged"
                         class="postbox"
                     >
@@ -162,6 +173,7 @@
 						</div><!-- .inside -->
 					</div><!-- #settings-bagged -->
 
+                    <!-- Estampación (Viejo) -->
                     <div id="settings-stamping"
                         class="postbox"
                     >
@@ -455,13 +467,14 @@
 					</div><!-- #settings-stamping -->
 
 
+                    <!-- Estampación y Configurador General-->
                     <div id="settings-imprint"
                         class="postbox"
                     >
                         <h2>
-                            <span><?php echo __('Estampación','sadoje'); ?></span>
+                            <span><?php echo __('Caja de Estampación (Presupuestador)','sadoje'); ?></span>
                         </h2>
-						<div class="inside">
+                        <div class="inside">
                             <form id="formImprint"
                                 method="POST" 
                                 action="options.php"
@@ -488,7 +501,7 @@
                                     <tbody>
                                         <template v-for="(row, index) in rows">
                                             <tr v-bind:id="'row_'+index" 
-                                                v-bind:class = "(index % 2 == 1)?'':'alternate'"
+                                                v-bind:class="[(index % 2 == 1 ? 'alternate' : ''), row.imprint_unpublish ? 'unpublished' : '']"
                                             >
                                                 <th>
                                                     <input type="text" 
@@ -524,6 +537,14 @@
                                                     />
                                                 </th>
                                                 <th style="text-align:right">
+                                                <button  type="button" 
+                                                    class="button button-secondary button-unpublish" 
+                                                    style="background:#FFA500; color:#FFF; border-color:#FFF;"
+                                                    @click="row.imprint_unpublish = !row.imprint_unpublish; updateRows()"
+                                                    >
+                                                    {{ row.imprint_unpublish ? '<?php echo __('Activar','sadoje'); ?>' : '<?php echo __('Desactivar','sadoje'); ?>' }}
+                                                    </button>
+
                                                     <button class="button button-secondary button-delete" 
                                                         style="background:#DC3232;color:#FFF;border-color:#FFF;"
                                                         @click="deleteRow(index, $event)"
@@ -547,12 +568,13 @@
 
                                 <?php submit_button(); ?>  
                             </form> 
-						</div><!-- .inside -->
+                        </div><!-- .inside -->
 
+                        <!-- Configurador General  -->
                         <h2>
-                            <span><?php echo __('Configuración general','sadoje'); ?></span>
+                            <span><?php echo __('Configuración general de los tipos de estampación','sadoje'); ?></span>
                         </h2>
-						<div class="inside">
+                        <div class="inside">
                             <form id="formPrices"
                                 method="POST" 
                                 action="options.php"
@@ -675,10 +697,10 @@
 
                                 <?php submit_button(); ?>  
                             </form> 
-						</div><!-- .inside -->
-					</div><!-- #settings-stamping -->
+                        </div><!-- .inside -->
+                    </div><!-- #settings-stamping -->
 
-
+                     <!-- Configurador General Margen de beneficio -->
                     <div id="settings-profit"
                         class="postbox"
                     >

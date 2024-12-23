@@ -14,9 +14,54 @@
 
 //import { emitter } from '../../../src/js/vue-customisations-for-cg-woo-grid.js';
 
-console.log('CG_WOOGRID_PATH:' + CG_WOOGRID_PATH);
+//console.log('CG_WOOGRID_PATH:' + CG_WOOGRID_PATH);
 
 const { createApp } = Vue
+
+
+function phpUnserialize(serializedString) {
+    const parsePhpArray = (input) => {
+        const result = [];
+        const regex = /([aisb]):(\d+):(?:\{([^}]*)\}|(?:"([^"]*)";)|(;))|b:(0|1);/g;
+        let match;
+
+        while ((match = regex.exec(input)) !== null) {
+            const type = match[1] || (match[0].startsWith('b:') ? 'b' : null); // Handle "b" type
+            const size = parseInt(match[2], 10);
+            const nested = match[3];
+            const stringValue = match[4];
+            const emptyValue = match[5];
+            const booleanValue = match[6];
+
+            //console.log('type:', type);
+
+            if (type === 'a') {
+                // Array
+                result.push(parsePhpArray(nested));
+            } else if (type === 's') {
+                // String
+                result.push(stringValue);
+            } else if (type === 'i') {
+                // Integer
+                result.push(size);
+            } else if (type === 'b') {
+                // Boolean
+                result.push(booleanValue === '1');
+            } else if (emptyValue !== undefined) {
+                result.push(null);
+            }
+        }
+
+        return result;
+    };
+
+    try {
+        return parsePhpArray(serializedString);
+    } catch (error) {
+        console.error('Error deserializing data:', error);
+        return [];
+    }
+}
 
 function gBuildTable(self) {
 
@@ -29,7 +74,59 @@ function gBuildTable(self) {
         })
         .then(function (response) {
             //console.log(response);
-            self.rows = response.data
+            function validateAndCleanRows(rows, columns) {
+                // Convert columns to a map for easy access
+                const columnMap = columns.reduce((map, column) => {
+                    map[column.slug] = column;
+                    return map;
+                }, {});
+            
+                // Iterate over rows and clean up
+                return rows.map(row => {
+                    const cleanedRow = { ...row }; // Copy the row
+            
+                    Object.keys(row).forEach(key => {
+                        // Skip sticky values
+                        if(cleanedRow[key] === 'all') {
+                            return;
+                        }
+                        //console.log('Key:', key);
+                        if (['pricecloth', 'priceclothval', 'pricescreen', 'pricescreenval'].includes(key)) {
+                            return;
+                        }
+            
+                        const column = columnMap[key];
+            
+                        // If column doesn't exist or is unpublished, handle accordingly
+                        if (!column 
+                            || column.imprint_unpublish === 1
+                        ) {
+                            // Remove the invalid key
+                            delete cleanedRow[key];
+                            console.log(`Delete `+ cleanedRow[key]);
+                        } else if (
+                            column 
+                            && column.values 
+                            && !column.values.includes(row[key])
+                        ) {
+                            // If the value is not in the allowed values for the column, clear it
+                            cleanedRow[key] = '';
+                            console.log(`Empty `+ cleanedRow[key]);
+                        }
+                    });
+            
+                    return cleanedRow;
+                });
+            }
+            //check if self.columns exists
+            if (typeof self.columns !== 'undefined' ) {
+            
+                self.rows = validateAndCleanRows(response.data, self.columns);
+                //console.log('Rows :', self.rows);
+                //console.log('Columns :', self.columns);
+            } else {
+                self.rows = response.data
+            }
         })
         .catch(function (error) {
             console.log(error);
@@ -38,7 +135,7 @@ function gBuildTable(self) {
 }
 function gUpdateRows(self) {
     let getURL = self.apiurl+'/serialize';
-    //console.log(self.rows);
+    //console.log('Rows :', self.rows);
     axios.post(getURL,{
             object: self.rows
         })
@@ -242,42 +339,89 @@ if(document.getElementById("formPrices")) {
                 serialized: '',
                 apiurl:'',
                 rows: [],
-                //TODO:  THis must be dinamically populated. Take a look at the function addRow() in mu-plugins/sadoje/src/js/templates/Estimator.vue, it¡s loading this content via AJAX
-                columns: [
-                    {
-                        slug:'estampacion',
-                        title:'Tipo de estampación',
-                        values:['Serigrafía','Bordados', 'Digital todo color']
-                    },
-                    {
-                        slug:'tamano',
-                        title:'Tamaño',
-                        values:['Pequeño','Grande']
-                    },
-                    {
-                        slug:'tintas',
-                        title:'Tintas',
-                        values:['1 Tinta','2 Tintas','3 Tintas','4 tintas']
-                    },
-                    {
-                        slug:'ubicacion',
-                        title:'Ubicación',
-                        values:['Pecho','Espalda','Manga derecha','Manga izquierda']
-                    },
-                    {
-                        slug:'color',
-                        title:'Tipo de prenda',
-                        values:['Prendas blancas','Prendas de color']
-                    },
-                ],
+                columns: [],
                 refId: 'customisationsforcgwoogridbudgeteerpricestypes',
             }
         },
         mounted: function () {
+
+            function transformToDesiredFormat(deserializedData) {
+                return deserializedData
+                .filter((item) => {
+                    if (Array.isArray(item)) {
+                        const result = {};
+                        for (let i = 0; i < item.length; i += 2) {
+                            const key = item[i];
+                            const value = item[i + 1];
+                            result[key] = value;
+                        }
+        
+                        // Exclude items with 'imprint_unpublish'
+                        if ('imprint_unpublish' in result 
+                            && result.imprint_unpublish === true
+                        ) {
+                            return false; // Filter out this item
+                        }
+                        
+                    }
+                    return true; // Keep the item
+                })
+                .map((item) => {
+                    if (Array.isArray(item)) {
+                        const result = {};
+                        for (let i = 0; i < item.length; i += 2) {
+                            const key = item[i];
+                            const value = item[i + 1];
+                            result[key] = value;
+                        }
+
+                        //console.log('result:', result);
+            
+                        return {
+                            slug: result.imprint || '',
+                            title: result.imprint_label || '',
+                            values: result.imprint_values ? result.imprint_values.split('|').map((v) => v.trim()) : [],
+                        };
+                    }
+                    return {
+                        slug: '',
+                        title: '',
+                        values: [],
+                    };
+                });
+            }
             
             let element     = this.$el;
             this.apiurl     = element.parentElement.dataset.apiurl;
-            this.serialized = this.$refs[this.refId].value 
+            this.serialized = this.$refs[this.refId].value;
+
+            // Fetch the serialized data from the hidden input
+            const columnsInput = document.getElementById('customisations-for-cg-woo-grid_budgeteer_imprint_types');
+            if (columnsInput) {
+
+                //console.log(columnsInput.value)
+
+                /*
+                // Example usage
+                const serializedString = 'a:5:{i:0;a:3:{s:7:"imprint";s:11:"estampacion";s:13:"imprint_label";s:20:"Tipo de estampación";s:14:"imprint_values";s:43:"Serigrafía | Bordados | Digital todo color";}i:1;a:4:{s:7:"imprint";s:6:"tintas";s:13:"imprint_label";s:6:"Tintas";s:14:"imprint_values";s:40:"1 Tinta | 2 Tintas | 3 Tintas | 4 tintas";s:17:"imprint_unpublish";b:1;}i:2;a:3:{s:7:"imprint";s:6:"tamano";s:13:"imprint_label";s:7:"Tamaño";s:14:"imprint_values";s:17:"Pequeño | Grande";}i:3;a:3:{s:7:"imprint";s:9:"ubicacion";s:13:"imprint_label";s:10:"Ubicación";s:14:"imprint_values";s:49:"Pecho | Espalda | Manga derecha | Manga izquierda";}i:4;a:4:{s:7:"imprint";s:5:"color";s:13:"imprint_label";s:14:"Tipo de prenda";s:14:"imprint_values";s:34:"Prendas blancas | Prendas de color";s:12:"imprint_hide";b:1;}}';
+                const deserializedData = phpUnserialize(serializedString);
+                const formattedData = transformToDesiredFormat(deserializedData);
+
+                console.log(formattedData);
+                */
+
+                try {
+                    const deserializedData = phpUnserialize(columnsInput.value);
+                    const formattedData = transformToDesiredFormat(deserializedData);
+                    //console.log('Deserialized data:', deserializedData);
+                    //console.log('FormattedData data:', formattedData);
+                    this.columns = formattedData;
+                    //console.log('this.columns:', this.columns);
+                } catch (error) {
+                    console.error('Error deserializing data:', error);
+                }
+                
+            }
             
             this.buildTable(); 
 
@@ -308,7 +452,6 @@ if(document.getElementById("formPrices")) {
                 gUpdateRows(this)
             },
             updateRows: function () {
-                  
                 gUpdateRows(this)
             },
             addRow: function(event) {

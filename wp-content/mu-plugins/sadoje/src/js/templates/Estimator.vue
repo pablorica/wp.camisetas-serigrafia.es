@@ -286,7 +286,7 @@ export default {
                     .then(function (response) {
                         //console.log(response);
                         //self.columns.push(response.data)
-                        console.log(response.data);
+                        //console.log(response.data);
                         let defaultSelects = []; 
                         for (let i = 0; i < response.data.length; i++) {
                             const item = response.data[i];
@@ -299,6 +299,11 @@ export default {
                             if(item.imprint_hide) {
                                 continue;
                             }
+
+                            if(item.imprint_unpublish) {
+                                continue;
+                            }
+
 
                             let imprintObject = {
                                 slug:       item.imprint,
@@ -314,10 +319,9 @@ export default {
                             defaultSelects.push(imprintObject);
                         }
 
-                        console.log('defaultSelects');
-                        //console.log(defaultSelects);
+                        //console.log('defaultSelects', defaultSelects);
                         self.columns.push(defaultSelects);
-                        console.log(self.columns);
+                        //console.log('self.columns', self.columns);
                         self.loading = false;
                     })
                     .catch(function (error) {

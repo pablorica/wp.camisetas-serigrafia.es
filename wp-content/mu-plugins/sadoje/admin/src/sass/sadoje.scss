@@ -1,0 +1,53 @@
+.hide-form-table table.form-table th, 
+.hide-form-table table.form-table td {
+    padding: 0;
+    margin: 0;
+}
+
+#formStamping hr {
+    margin: 20px 0;
+    border:none;
+}
+
+.widefat input[type="text"], 
+.widefat input[type="password"], 
+.widefat input[type="date"], 
+.widefat input[type="datetime"], 
+.widefat input[type="datetime-local"], 
+.widefat input[type="email"], 
+.widefat input[type="month"], 
+.widefat input[type="number"], 
+.widefat input[type="search"], 
+.widefat input[type="tel"], 
+.widefat input[type="time"], 
+.widefat input[type="url"], 
+.widefat input[type="week"] {
+    padding: 0 8px !important;
+}
+
+input[type="number"][size="4"]{ 
+    width: 4em; 
+}
+input[type="number"][size="5"]{ 
+    width: 5em; 
+}
+input[type="number"][size="6"]{ 
+    width: 6em; 
+}
+input[type="number"][size="8"]{ 
+    width: 8em; 
+}
+input[type="number"][size="10"]{ 
+    width: 10em; 
+}
+
+.unpublished {
+    background-color: #f9dcdc; /* Light red background for unpublished rows */
+    color: #a33; /* Dark red text color for better contrast */
+    opacity: 0.5; /* Slightly transparent to indicate disabled state */
+    pointer-events: none; /* Disable pointer events to prevent user interaction */
+    button {
+        //allow button to be clicked
+        pointer-events: auto;
+    }
+  }
