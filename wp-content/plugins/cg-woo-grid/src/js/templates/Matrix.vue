@@ -57,18 +57,20 @@
                             v-model="quantities[valueX.slug]"
                             @change="checkifAllowedUpdates(quantities[valueX.slug],valueX.stock, valueX.slug, keyX, keyY)"
                             :class="{invalid:quantities[valueX.slug] > valueX.stock}"
-                               :disabled="valueX.stock === 0 || (disableStock.keyX === keyX && disableStock.keyY === keyY)"
+                           :disabled="valueX.stock <= 0 || (disableStock.keyX === keyX && disableStock.keyY === keyY)"
                         >
                         <div
                           class="invalid-feedback"
                           :class="{show:((quantities[valueX.slug] && quantities[valueX.slug] > valueX.stock) ||
-                          (valueX.stock === 0 && showStockMessage.keyX === keyX && showStockMessage.keyY === keyY))}"
+                          (valueX.stock <= 0 && showStockMessage.keyX === keyX && showStockMessage.keyY === keyY))}"
                         >
                             <div class="arrow"></div>
-                            <span v-html="valueX.messageStock"
-                                :class="{show:quantities[valueX.slug] > valueX.stock && valueX.stock !== 0}"
+                            <span
+                              v-html="valueX.messageStock"
+                              :class="{show:quantities[valueX.slug] > valueX.stock && valueX.stock !== 0}"
                             ></span>
                             <span
+                              v-if="valueX.stock <= 0"
                               v-html="messagezero"
                               :class="{show:showStockMessage}"
                             ></span>
