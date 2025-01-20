@@ -10,6 +10,8 @@
  namespace Sadoje;
 
 
+use Automattic\WooCommerce\Admin\Composer\Package;
+
 class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Grid {
 
     /** ** ** ** ** ** **
@@ -161,50 +163,53 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
             }
         }
 
+        // Init price structure
         $prices = [
-            'white' => null,
-            'color' => null,
+            'adult' => ['white' => null, 'color' => null],
+            'child' => ['white' => null, 'color' => null],
         ];
 
-        if ($product->is_type('variable')) {
-            $variations = $product->get_available_variations();
+        if (!$product->is_type('variable')) {
+            return [];
+        }
 
-            $white_variation = null;
-            $color_variation = null;
+        // Get product variations
+        $variations = $product->get_available_variations();
+        $variation_map = [
+            'adult' => ['sizes' => ['s', 'm', 'l', 'xl', '2xl']],
+            'child' => ['sizes' => ['4', '8', '12', '16']],
+        ];
 
-            foreach ($variations as $variation_data) {
-                $size = $variation_data['attributes']['attribute_pa_tamano'];
-                $color = $variation_data['attributes']['attribute_pa_color'];
+        $selected_variations = [
+            'adult' => ['white' => null, 'color' => null],
+            'child' => ['white' => null, 'color' => null],
+        ];
 
-                // only get the prices of the variations that are in the sizes s, m, l, xl, 2xl (adult size)
-                if (in_array($size, ['s', 'm', 'l', 'xl', '2xl'])) {
-                    if ($color == 'blanco' && !$white_variation) { // get the variation data to white color
-                        $white_variation = $variation_data;
-                    } elseif ($color != 'blanco' && !$color_variation) { // get the variation data to color
-                        $color_variation = $variation_data;
-                    }
+        foreach ($variations as $variation) {
+            $size = $variation['attributes']['attribute_pa_tamano'] ?? '';
+            $color = $variation['attributes']['attribute_pa_color'] ?? '';
 
-                    if ($white_variation && $color_variation) {
-                        break;
+            foreach ($variation_map as $type => $data) {
+                if (in_array($size, $data['sizes'], true)) {
+                    if ($color === 'blanco' && !$selected_variations[$type]['white']) {
+                        $selected_variations[$type]['white'] = $variation;
+                    } elseif ($color !== 'blanco' && !$selected_variations[$type]['color']) {
+                        $selected_variations[$type]['color'] = $variation;
                     }
                 }
             }
-
-            // get the prices of the white variation
-            if ($white_variation) {
-                $prices['white'] = $this->cdg_calculate_price($white_variation, $quantity, $baseprices, $profit, $tax_p);
-            }
-
-            // get the prices of the color variation
-            if ($color_variation) {
-                $prices['color'] = $this->cdg_calculate_price($color_variation, $quantity, $baseprices, $profit, $tax_p);
-            }
-
-            // return the prices of the white and color variations based on the quantity of products
-            return $prices;
         }
 
-        return [];
+        // Calculate prices
+        foreach ($selected_variations as $type => $colors) {
+            foreach ($colors as $color => $variation) {
+                if ($variation) {
+                    $prices[$type][$color] = $this->cdg_calculate_price($variation, $quantity, $baseprices, $profit, $tax_p);
+                }
+            }
+        }
+
+        return $prices;
     }
 
     /**
