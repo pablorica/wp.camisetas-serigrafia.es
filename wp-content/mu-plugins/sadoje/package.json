@@ -23,7 +23,7 @@
         "dist": "npm-run-all dist-clean dist-build",
         "dist-build": "node src/build/dist-build.js",
         "dist-clean": "node src/build/dist-clean.js",
-        "build": "npm-run-all css js dist"
+        "build": "npm-run-all css-admin-compile css js dist"
     },
     "engines": {
         "node": ">=14"

@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.14.2] - 2024-12-23
 
+- Update package.json
+
  - [Activar/Desactivar campos](https://app.asana.com/0/1203117341882428/1209039244783521) 
   - Opcion de desactivar campos del presupuestador en el CMS
     - Cuando un campo se desactiva:
