@@ -6,7 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [0.5.8] - 2025-01-21
 
+ - [Tallas Adultos/Niños](https://app.asana.com/0/1203117341882428/1209050961520853) Implement new price table adults / children design
 
 ## [0.5.7] - 2024-12-23
 
