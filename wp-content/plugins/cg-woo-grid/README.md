@@ -72,4 +72,4 @@ We use [SemVer](https://semver.org/) for versioning. For the versions available,
 
 ### Changelog
 
-[CHANGELOG.md](https://github.com/pablorica/wp.camisetas-serigrafia.es/blob/main/CHANGELOG.md)
+[CHANGELOG.md](https://github.com/pablorica/wp.camisetas-serigrafia.es/blob/develop/wp-content/plugins/cg-woo-grid/CHANGELOG.md)

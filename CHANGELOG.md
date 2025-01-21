@@ -14,15 +14,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 #### Codigo Woo Grid plugin
 
  - [Read More Updates](https://github.com/pablorica/wp.camisetas-serigrafia.es/tree/main/wp-content/plugins/cg-woo-grid#readme)
- - [New Changelog File](https://github.com/pablorica/wp.camisetas-serigrafia.es/tree/main/wp-content/plugins/cg-woo-grid#readme)
- - [0.12.11](https://github.com/pablorica/wp.camisetas-serigrafia.es/tree/main/wp-content/plugins/cg-woo-grid#readme) Fixed: PHP warning errors
+ - [New Changelog File](https://github.com/pablorica/wp.camisetas-serigrafia.es/blob/develop/wp-content/plugins/cg-woo-grid/CHANGELOG.md)
+ - [0.12.11](https://github.com/pablorica/wp.camisetas-serigrafia.es/blob/develop/wp-content/plugins/cg-woo-grid/CHANGELOG.md) Fixed: PHP warning errors
 
 
 #### Codigo Woo Grid add-on
 
   - [Read More Updates](https://github.com/pablorica/wp.camisetas-serigrafia.es/tree/main/wp-content/mu-plugins/sadoje#readme)
-  - [New Changelog File](https://github.com/pablorica/wp.camisetas-serigrafia.es/tree/main/wp-content/mu-plugins/sadoje#readme)
-  - [0.5.8](https://github.com/pablorica/wp.camisetas-serigrafia.es/tree/main/wp-content/mu-plugins/sadoje#readme) 
+  - [New Changelog File](https://github.com/pablorica/wp.camisetas-serigrafia.es/blob/develop/wp-content/mu-plugins/sadoje/CHANGELOG.md)
+  - [0.5.8](https://github.com/pablorica/wp.camisetas-serigrafia.es/blob/develop/wp-content/mu-plugins/sadoje/CHANGELOG.md) 
     - Implement new price table adults / children design
     - Add new values to the child sizes array
 

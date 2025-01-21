@@ -3,7 +3,7 @@ Updates prices in the matrix of Woocommerce Products variations
 
 Website: [codigo.co.uk](https://codigo.co.uk)
 
-[![version](https://img.shields.io/badge/version-0.5.8-blue.svg)](https://semver.org)
+[![version](https://img.shields.io/badge/version-0.14.3-blue.svg)](https://semver.org)
 
 ## Basic Features
 
@@ -65,4 +65,4 @@ We use [SemVer](https://semver.org/) for versioning. For the versions available,
 
 ### Changelog
 
-[CHANGELOG.md](https://github.com/pablorica/wp.camisetas-serigrafia.es/blob/main/CHANGELOG.md)
+[CHANGELOG.md](https://github.com/pablorica/wp.camisetas-serigrafia.es/blob/develop/wp-content/mu-plugins/sadoje/CHANGELOG.mdd)
