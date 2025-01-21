@@ -75,7 +75,6 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                 $objectPrice->quantity = $quantity;
                 $objectPrice->price =  $this->cdg_get_regular_price_by_type($quantity, $product);
                 $objectPrices[] = $objectPrice;
-
             }
             //error_log(print_r($objectPrices,true));
             $jsPrices = json_encode($objectPrices);
@@ -151,8 +150,14 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
             if(is_array($profits)
                 && count($profits)
             ) {
-                $current_profit_types = array_filter($profits, function($obj) use ($quantity) {
-                    return ($obj['min'] <= $quantity && $obj['max'] >= $quantity);
+                $current_profit_types = array_filter(
+                    $profits, 
+                    function($obj) use ($quantity) {
+                        if (isset($obj['min']) && isset($obj['max'])) {
+                            return ($obj['min'] <= $quantity && $obj['max'] >= $quantity);
+                        } else {
+                            return false;
+                        }
                 });
 
                 $current_profit_type = array_pop($current_profit_types);
@@ -173,11 +178,12 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
             return [];
         }
 
-        // Get product variations
+        // Get product variations 
         $variations = $product->get_available_variations();
+         // TODO: $variation_map needs to be populated automatically from CMS
         $variation_map = [
             'adult' => ['sizes' => ['s', 'm', 'l', 'xl', '2xl']],
-            'child' => ['sizes' => ['4', '8', '12', '16']],
+            'child' => ['sizes' => ['1-2','3-4','4', '5-6', '7-8', '8', '9-10', '11-12', '12', '16' ]],
         ];
 
         $selected_variations = [

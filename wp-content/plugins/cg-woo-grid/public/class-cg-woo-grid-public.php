@@ -386,11 +386,6 @@ class Functions {
                 array( 'status' => 500 ) 
             );
         }
-
-        //$args['taxonomy_y'] = 'pa_color';
-        //$args['taxonomy_x'] = 'pa_tamano';
-        $args['taxonomy_y'] = get_option($this->plugin_name.'_taxonomy_y_setting');
-        $args['taxonomy_x'] = get_option($this->plugin_name.'_taxonomy_x_setting');
         
 
         if($matrix = $rest_api->build_product_matrix($args)) {

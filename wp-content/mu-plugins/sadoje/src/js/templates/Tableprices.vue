@@ -98,6 +98,9 @@ export default {
             let self   = this
             let getURL = self.apiurl+'/encode';
 
+            console.log('prices URL');
+            console.log(getURL);
+
             console.log('prices');
             console.log(self.prices);
 
