@@ -6,6 +6,28 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+
+## [0.5.8] - 2025-01-21
+
+### Updates
+
+#### Codigo Woo Grid plugin
+
+ - [Read More Updates](https://github.com/pablorica/wp.camisetas-serigrafia.es/tree/main/wp-content/plugins/cg-woo-grid#readme)
+ - [New Changelog File](https://github.com/pablorica/wp.camisetas-serigrafia.es/blob/develop/wp-content/plugins/cg-woo-grid/CHANGELOG.md)
+ - [0.12.11](https://github.com/pablorica/wp.camisetas-serigrafia.es/blob/develop/wp-content/plugins/cg-woo-grid/CHANGELOG.md) Fixed: PHP warning errors
+
+
+#### Codigo Woo Grid add-on
+
+  - [Read More Updates](https://github.com/pablorica/wp.camisetas-serigrafia.es/tree/main/wp-content/mu-plugins/sadoje#readme)
+  - [New Changelog File](https://github.com/pablorica/wp.camisetas-serigrafia.es/blob/develop/wp-content/mu-plugins/sadoje/CHANGELOG.md)
+  - [0.14.3](https://github.com/pablorica/wp.camisetas-serigrafia.es/blob/develop/wp-content/mu-plugins/sadoje/CHANGELOG.md) 
+    - Implement new price table adults / children design
+    - Add new values to the child sizes array
+
+
+
 ## [0.5.7] - 2024-12-23
 
  - Presupuestador: Update package.json

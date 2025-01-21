@@ -378,6 +378,27 @@ class Rest_Api {
     public function build_product_matrix($args) {
 
         //error_log('build_product_matrix ');
+        //error_log(print_r($args,true));
+
+        // OLD:
+        //$args['taxonomy_y'] = 'pa_color';
+        //$args['taxonomy_x'] = 'pa_tamano';
+
+        if( !isset($args['taxonomy_y']) ) {
+            $args['taxonomy_y'] = get_option($this->plugin_name.'_taxonomy_y_setting');
+        }
+
+        if(!isset($args['taxonomy_x']) ) {
+            $args['taxonomy_x'] = get_option($this->plugin_name.'_taxonomy_x_setting');
+        }
+
+        if(!isset($args['stock']) ) {
+            $args['stock'] = array(
+                'minimum'           => get_option($this->plugin_name.'_minimum_stock'),
+                'show'              => get_option($this->plugin_name.'_show_stock'),
+                'message_threshold' => get_option($this->plugin_name.'_stock_threshold_message')
+            );
+        }
         
         extract(wp_parse_args(
             $args,
@@ -397,6 +418,10 @@ class Rest_Api {
                 array( 'status' => 500 ) 
             );
         }
+
+        
+
+
 
         $functions = new Functions( 
             $this->plugin_name, 
@@ -498,6 +523,9 @@ class Rest_Api {
         if( isset($parameters['taxonomy_x']) ) {
             $args['taxonomy_x'] = $parameters['taxonomy_x'];
         }
+
+        //error_log('get_product_matrix');
+        //error_log(print_r($args,true));
 
         return rest_ensure_response(
             $this->build_product_matrix($args)

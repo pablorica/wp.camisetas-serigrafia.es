@@ -3,6 +3,9 @@ Adds a matrix of Woocommerce Products variations
 
 Website: [codigo.co.uk](https://codigo.co.uk)
 
+[![version](https://img.shields.io/badge/version-0.12.11-blue.svg)](https://semver.org)
+
+
 ## Basic Features
 
 Codigo Woo Grid allows your users to add multiple variations of a product to their cart from single form.
@@ -59,6 +62,14 @@ The user can add quantities to these fields and can simultaneously add them to t
 * [WooCommerce](https://woocommerce.com/)
 
 
-## License
+## Copyright and License
 
-MIT
+Copyright 2024 Codigo Woo Grid plugin released under the [MIT](https://github.com/pablorica/wp.camisetas-serigrafia.es/blob/main/LICENSE) license.
+
+## Versioning
+
+We use [SemVer](https://semver.org/) for versioning. For the versions available, [list of tags can be found in this page](https://github.com/pablorica/wordpress_codigo_theme/tags).
+
+### Changelog
+
+[CHANGELOG.md](https://github.com/pablorica/wp.camisetas-serigrafia.es/blob/develop/wp-content/plugins/cg-woo-grid/CHANGELOG.md)

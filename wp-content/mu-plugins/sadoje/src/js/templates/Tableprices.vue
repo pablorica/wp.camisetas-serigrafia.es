@@ -1,45 +1,72 @@
 <template>
-    <table class="table-responsive"
-        style="text-align: center; font-size: 12px;width: 100%; margin-top: 0px"
-    >
-        <tbody>
-            <tr>
-                <th style="border: 1px solid darkgray; background-color: lightgrey;">
-                    <b>Adulto</b>
-                </th>
-                <th v-for="(row, index) in prices"
-                    v-bind:id="'row_'+index" 
-                    style="border: 1px solid darkgray; background-color: lightgrey;"
-                >
-                    <b>{{row.quantity}}</b>
-                </th>
-            </tr>
-            <tr>
-                <th style="border: 1px solid darkgray">
-                    Blanco                        
-                </th>
-                <td v-for="(row, index) in prices"
-                    v-bind:id="'row_'+index" 
-                    style="border: 1px solid darkgray; font-size: 10px;"
-                >
-                    <b>{{row.price.white ?? "-"}}</b>
-                </td>                
-            </tr>
-            <tr>
-                <th style="border: 1px solid darkgray">
-                    Color
-                </th>
-                <td v-for="(row, index) in prices"
-                    v-bind:id="'row_'+index" 
-                    style="border: 1px solid darkgray; font-size: 10px;"
-                >
-                    <b>{{row.price.color ?? "-"}}</b>
-                </td> 
-            </tr>
-        </tbody>
-    </table>
+  <div class="price-container">
+    <h2 class="title">Precio por Cantidades</h2>
 
+    <!-- Adult Section -->
+    <div class="table-section">
+      <div class="table-header">
+        <b>Adulto</b>
+      </div>
 
+      <div class="table-wrapper">
+        <table>
+          <thead>
+          <tr>
+            <th>Tipo</th>
+            <th v-for="(row, index) in prices" :key="index" :id="'row_'+index">
+              {{ row.quantity }}
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>Blanco</td>
+            <td v-for="(row, index) in prices" :key="index" :id="'row_'+index">
+              {{ row.price.adult.white ?? "-" }}
+            </td>
+          </tr>
+          <tr>
+            <td>Color</td>
+            <td v-for="(row, index) in prices" :key="index" :id="'row_'+index">
+              {{ row.price.adult.color ?? "-" }}
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-header">
+        <b>Niño</b>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+          <tr>
+            <th>Tipo</th>
+            <th v-for="(row, index) in prices" :key="index" :id="'row_'+index">
+              {{ row.quantity }}
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>Blanco</td>
+            <td v-for="(row, index) in prices" :key="index" :id="'row_'+index">
+              {{ row.price.child.white ?? "-" }}
+            </td>
+          </tr>
+          <tr>
+            <td>Color</td>
+            <td v-for="(row, index) in prices" :key="index" :id="'row_'+index">
+              {{ row.price.child.color ?? "-" }}
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>  
@@ -70,6 +97,9 @@ export default {
 
             let self   = this
             let getURL = self.apiurl+'/encode';
+
+            console.log('prices URL');
+            console.log(getURL);
 
             console.log('prices');
             console.log(self.prices);
