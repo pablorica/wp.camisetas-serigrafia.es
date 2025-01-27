@@ -1,7 +1,5 @@
 <template>
   <div class="price-container">
-    <h2 class="title">Precio por Cantidades</h2>
-
     <!-- Adult Section -->
     <div class="table-section">
       <div class="table-header">

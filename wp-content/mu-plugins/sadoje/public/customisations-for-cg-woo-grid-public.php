@@ -76,6 +76,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                 $objectPrice->price =  $this->cdg_get_regular_price_by_type($quantity, $product);
                 $objectPrices[] = $objectPrice;
             }
+
             //error_log(print_r($objectPrices,true));
             $jsPrices = json_encode($objectPrices);
             //error_log(print_r($jsPrices,true));
@@ -143,31 +144,13 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
         }
         $profit = 0;
 
-        // get the profit rate based on the quantity of products
         $profit_types = get_option($this->get_element_name().'_budgeteer_profit_types');
-        if($profit_types) {
+        if ($profit_types) {
             $profits = maybe_unserialize($profit_types);
-            if(is_array($profits)
-                && count($profits)
-            ) {
-                $current_profit_types = array_filter(
-                    $profits, 
-                    function($obj) use ($quantity) {
-                        if (isset($obj['min']) && isset($obj['max'])) {
-                            return ($obj['min'] <= $quantity && $obj['max'] >= $quantity);
-                        } else {
-                            return false;
-                        }
-                });
-
-                $current_profit_type = array_pop($current_profit_types);
-
-                if(isset($current_profit_type['profit'])) {
-                    $profit = $current_profit_type['profit'];
-                }
+            if (is_array($profits) && count($profits)) {
+                $profit = $this->get_profit_by_type($quantity, $product, $profits);
             }
         }
-
         // Init price structure
         $prices = [
             'adult' => ['white' => null, 'color' => null],
@@ -361,7 +344,6 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
         $totalprods = 0
     ) {
         $attr = $single_variation->get_variation_attributes();
-
         if($this->verbose) {
             error_log('cdg_alter_regular_price: Product -> '.print_r($single_variation->get_name(),true));
             error_log('cdg_alter_regular_price: Colour -> '.$attr['attribute_pa_color']);
@@ -434,35 +416,18 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                 $profit_types = get_option($this->get_element_name().'_budgeteer_profit_types');
                 if($profit_types) {
                     $profits = maybe_unserialize($profit_types);
-                    if($this->verbose) {
-                        //error_log('cdg_alter_regular_price: $profits -> '.print_r($profits,true));
+
+                    $product_id = $single_variation->get_id();
+                    if ($single_variation->get_parent_id()) {
+                        $product_id = $single_variation->get_parent_id();
+                    }
+                    if (is_array($profits) && count($profits)) {
+                        $product = wc_get_product($product_id);
+                        $profit = $this->get_profit_by_type($quantity, $product, $profits);
                     }
 
-                    if(is_array($profits)
-                        && count($profits)
-                    ) {
-
-                        $current_profit_type = array_pop(
-                            array_filter(
-                                $profits,
-                                function($obj) use ($totalprods) {
-                                    return ($obj['min'] <= $totalprods && $obj['max'] >= $totalprods);
-                                }
-                            )
-                        );
-
-                        if($this->verbose) {
-                            //error_log('cdg_alter_regular_price: Filtered $profit -> '.print_r($current_profit_type,true));
-                        }
-
-                        if(isset($current_profit_type['profit'])) {
-
-                            if($this->verbose) {
-                                //error_log('cdg_alter_regular_price: Filtered $profit -> '.$current_profit_type['profit']);
-                            }
-
-                            $profit = $current_profit_type['profit'];
-                        }
+                    if($this->verbose) {
+                        //error_log('cdg_alter_regular_price: $profits -> '.print_r($profits,true));
                     }
                 }
 
@@ -749,9 +714,77 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
         }
     }
 
+    /**
+     * Get the profit value based on product ID, category, or general settings.
+     *
+     * @param int $quantity     The quantity of the product.
+     * @param object $product   The product object (WC_Product).
+     * @param array $profits    The profits array (includes product, category, and general rules).
+     * @return float            The profit value.
+     */
+    function get_profit_by_type($quantity, $product, $profits)
+    {
+        $product_id = $product->get_id();
+        $product_categories = $product->get_category_ids();
 
+        if (!empty($profits['product']['products'])) {
+            $products_id = array_column($profits['product']['products'], 'id');
 
+            if (in_array($product_id, $products_id, true)) {
 
+                $product_profit = array_filter(
+                    $profits['product']['rows'],
+                    function($obj) use ($quantity) {
+                        if (isset($obj['min']) && isset($obj['max'])) {
+                            return ($obj['min'] <= $quantity && $obj['max'] >= $quantity);
+                        } else {
+                            return false;
+                        }
+                    });
+                if (!empty($product_profit)) {
+                    $selected_product_profit = array_pop($product_profit);
+                    return $selected_product_profit['profit'] ?? 0;
+                }
+            }
+        }
+        if (!empty($profits['category']['categories'])) {
+            $category_ids = array_column($profits['category']['categories'], 'id');
+
+            $matched_categories = array_intersect($product_categories, $category_ids);
+            if (!empty($matched_categories)) {
+
+                $category_profit = array_filter(
+                    $profits['category']['rows'],
+                    function($obj) use ($quantity) {
+                        if (isset($obj['min']) && isset($obj['max'])) {
+                            return ($obj['min'] <= $quantity && $obj['max'] >= $quantity);
+                        } else {
+                            return false;
+                        }
+                    });
+                if (!empty($category_profit)) {
+                    $selected_category_profit = array_pop($category_profit);
+                    return $selected_category_profit['profit'] ?? 0;
+                }
+            }
+        }
+
+        if (!empty($profits['general'])) {
+            $general_profit = array_filter(
+                $profits['general'],
+                function ($rule) use ($quantity) {
+                    return isset($rule['min'], $rule['max']) &&
+                        $quantity >= $rule['min'] && $quantity <= $rule['max'];
+                }
+            );
+            if (!empty($general_profit)) {
+                $selected_general_profit = array_pop($general_profit);
+                return $selected_general_profit['profit'] ?? 0;
+            }
+        }
+
+        return 0; // return 0 if no profit is found
+    }
 
     // Render meta on cart and checkout
 function render_meta_on_cart_and_checkout( $cart_data, $cart_item = null ) {
@@ -785,6 +818,4 @@ function cdg_display_order_description( $order ){
     $order_id = method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id;
     echo '<p><strong>'.__('My Field Name').':</strong> ' . get_post_meta( $order_id, 'my_field_name', true ) . '</p>';
 }
-
-
 }

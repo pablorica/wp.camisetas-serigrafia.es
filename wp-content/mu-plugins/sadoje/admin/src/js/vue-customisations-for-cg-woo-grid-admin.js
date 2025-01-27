@@ -4,10 +4,10 @@
 *
 * ---- $refs
 * this piece of code in all mounted functions: << this.serialized = this.$refs[this.refId].value >>
-* is reading an HTML attribute "ref" in input types. 
-* That ref attribute is not showed by some browser inspectors (Chrome), but VUE understands it. 
+* is reading an HTML attribute "ref" in input types.
+* That ref attribute is not showed by some browser inspectors (Chrome), but VUE understands it.
 * It was added to the input tag in the render_settings_field() function defined in plugins/cg-woo-grid/admin/class-cg-woo-grid-admin.php l.829
-* 
+*
 */
 
 //import selectBox from './templates/selectBox.vue';
@@ -63,82 +63,115 @@ function phpUnserialize(serializedString) {
     }
 }
 
-function gBuildTable(self) {
-
+async function gBuildProfitTable(self) {
     let getURL = self.apiurl+'/encode';
-
     if(self.serialized !== ''){
 
-     axios.post(getURL,{
+        await axios.post(getURL,{
             serialized: self.serialized
         })
-        .then(function (response) {
-            //console.log(response);
-            function validateAndCleanRows(rows, columns) {
-                // Convert columns to a map for easy access
-                const columnMap = columns.reduce((map, column) => {
-                    map[column.slug] = column;
-                    return map;
-                }, {});
-            
-                // Iterate over rows and clean up
-                return rows.map(row => {
-                    const cleanedRow = { ...row }; // Copy the row
-            
-                    Object.keys(row).forEach(key => {
-                        // Skip sticky values
-                        if(cleanedRow[key] === 'all') {
-                            return;
-                        }
-                        //console.log('Key:', key);
-                        if (['pricecloth', 'priceclothval', 'pricescreen', 'pricescreenval'].includes(key)) {
-                            return;
-                        }
-            
-                        const column = columnMap[key];
-            
-                        // If column doesn't exist or is unpublished, handle accordingly
-                        if (!column 
-                            || column.imprint_unpublish === 1
-                        ) {
-                            // Remove the invalid key
-                            delete cleanedRow[key];
-                            console.log(`Delete `+ cleanedRow[key]);
-                        } else if (
-                            column 
-                            && column.values 
-                            && !column.values.includes(row[key])
-                        ) {
-                            // If the value is not in the allowed values for the column, clear it
-                            cleanedRow[key] = '';
-                            console.log(`Empty `+ cleanedRow[key]);
-                        }
+            .then(function (response) {
+                self.rows = response.data.general;
+                self.categoryRows = response.data.category.rows ?? response.data.category;
+                self.selectedCategories = response.data.category.categories ?? [];
+                self.productRows = response.data.product.rows ?? [];
+                self.selectedProducts = response.data.product.products ?? [];
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+}
+async function gBuildTable(self) {
+    let getURL = self.apiurl+'/encode';
+    if(self.serialized !== ''){
+
+        await axios.post(getURL,{
+            serialized: self.serialized
+        })
+            .then(function (response) {
+                function validateAndCleanRows(rows, columns) {
+                    // Convert columns to a map for easy access
+                    const columnMap = columns.reduce((map, column) => {
+                        map[column.slug] = column;
+                        return map;
+                    }, {});
+
+                    // Iterate over rows and clean up
+                    return rows.map(row => {
+                        const cleanedRow = { ...row }; // Copy the row
+
+                        Object.keys(row).forEach(key => {
+                            // Skip sticky values
+                            if(cleanedRow[key] === 'all') {
+                                return;
+                            }
+                            //console.log('Key:', key);
+                            if (['pricecloth', 'priceclothval', 'pricescreen', 'pricescreenval'].includes(key)) {
+                                return;
+                            }
+
+                            const column = columnMap[key];
+
+                            // If column doesn't exist or is unpublished, handle accordingly
+                            if (!column
+                                || column.imprint_unpublish === 1
+                            ) {
+                                // Remove the invalid key
+                                delete cleanedRow[key];
+                                // console.log(`Delete `+ cleanedRow[key]);
+                            } else if (
+                                column
+                                && column.values
+                                && !column.values.includes(row[key])
+                            ) {
+                                // If the value is not in the allowed values for the column, clear it
+                                cleanedRow[key] = '';
+                                // console.log(`Empty `+ cleanedRow[key]);
+                            }
+                        });
+
+                        return cleanedRow;
                     });
-            
-                    return cleanedRow;
-                });
-            }
-            //check if self.columns exists
-            if (typeof self.columns !== 'undefined' ) {
-            
-                self.rows = validateAndCleanRows(response.data, self.columns);
-                //console.log('Rows :', self.rows);
-                //console.log('Columns :', self.columns);
-            } else {
-                self.rows = response.data
-            }
+                }
+                //check if self.columns exists
+                if (typeof self.columns !== 'undefined' ) {
+
+                    self.rows = validateAndCleanRows(response.data, self.columns);
+                    //console.log('Rows :', self.rows);
+                    //console.log('Columns :', self.columns);
+                } else {
+                    self.rows = response.data
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+}
+function gUpdateProfitRows(self) {
+    let getURL = self.apiurl+'/serialize';
+    axios.post(getURL,{
+        object: {
+            general: self.rows,
+            category: { categories: self.selectedCategories, rows: self.categoryRows },
+            product: { products: self.selectedProducts, rows: self.productRows }
+        }
+    })
+        .then(function (response) {
+            self.serialized = response.data
+            self.$refs[self.refId].value = self.serialized
         })
         .catch(function (error) {
             console.log(error);
         });
-    }
 }
 function gUpdateRows(self) {
     let getURL = self.apiurl+'/serialize';
     //console.log('Rows :', self.rows);
     axios.post(getURL,{
-            object: self.rows
-        })
+        object: self.rows
+    })
         .then(function (response) {
             //console.log(response);
             self.serialized = response.data
@@ -148,16 +181,34 @@ function gUpdateRows(self) {
             console.log(error);
         });
 }
-function gAddRow(event, self) {
-    event.preventDefault()
-    let row = {}
-    self.rows.push(row);
+function gAddRow(event, self, type) {
+    event.preventDefault();
+    switch (type) {
+        case 'category':
+            self.categoryRows.push({});
+            break;
+        case 'product':
+            self.productRows.push({});
+            break;
+        default:
+            self.rows.push({});
+            break;
+    }
 }
-function gDeleteRow(event, self, row) {
-    event.preventDefault()
-    //alert('Delete ' + row)
-    self.rows.splice(row, 1)
-    self.updateRows()
+function gDeleteRow(event, self, row, type) {
+    event.preventDefault();
+    switch (type) {
+        case 'category':
+            self.categoryRows.splice(row, 1);
+            break;
+        case 'product':
+            self.productRows.splice(row, 1);
+            break;
+        default:
+            self.rows.splice(row, 1);
+            break;
+    }
+    self.updateRows();
 }
 
 if(document.getElementById("formBaseprice")) {
@@ -177,12 +228,12 @@ if(document.getElementById("formBaseprice")) {
             }
         },
         mounted: function () {
-            
+
             let element     = this.$el;
             this.apiurl     = element.parentElement.dataset.apiurl;
             this.serialized = this.$refs[this.refId].value
-            
-            this.buildTable(); 
+
+            this.buildTable();
 
         },
         methods: {
@@ -210,13 +261,13 @@ if(document.getElementById("formStamping")) {
             }
         },
         mounted: function () {
-            
+
             let element     = this.$el;
             this.apiurl     = element.parentElement.dataset.apiurl;
             this.serialized = this.$refs[this.refId].value
-        
-            
-            this.buildTable(); 
+
+
+            this.buildTable();
 
             this.serwording = this.$refs[this.refWording].value
             this.buildTableWording();
@@ -238,19 +289,19 @@ if(document.getElementById("formStamping")) {
             buildTableWording: function () {
                 let self   = this
                 let getURL = self.apiurl+'/encode';
-            
+
                 if(self.serwording !== ''){
-            
-                axios.post(getURL,{
+
+                    axios.post(getURL,{
                         serialized: self.serwording
                     })
-                    .then(function (response) {
-                        //console.log(response);
-                        self.wording = response.data
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
+                        .then(function (response) {
+                            //console.log(response);
+                            self.wording = response.data
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
                 }
             },
             updateWording: function() {
@@ -258,8 +309,8 @@ if(document.getElementById("formStamping")) {
                 let getURL = self.apiurl+'/serialize';
                 //console.log(self.rows);
                 axios.post(getURL,{
-                        object: self.wording
-                    })
+                    object: self.wording
+                })
                     .then(function (response) {
                         //console.log(response);
                         self.serwording = response.data
@@ -284,19 +335,19 @@ if(document.getElementById("formImprint")) {
             }
         },
         mounted: function () {
-            
+
             let element     = this.$el;
             this.apiurl     = element.parentElement.dataset.apiurl;
             this.serialized = this.$refs[this.refId].value
-            
-            this.buildTable(); 
+
+            this.buildTable();
 
         },
         methods: {
             buildTable: function () {
                 gBuildTable(this);
             },
-            
+
             sanitize: function(index) {
 
                 let ele = this.rows[index].imprint_values;
@@ -318,7 +369,7 @@ if(document.getElementById("formImprint")) {
                 gUpdateRows(this)
             },
             updateRows: function () {
-                  
+
                 gUpdateRows(this)
             },
             addRow: function(event) {
@@ -347,50 +398,50 @@ if(document.getElementById("formPrices")) {
 
             function transformToDesiredFormat(deserializedData) {
                 return deserializedData
-                .filter((item) => {
-                    if (Array.isArray(item)) {
-                        const result = {};
-                        for (let i = 0; i < item.length; i += 2) {
-                            const key = item[i];
-                            const value = item[i + 1];
-                            result[key] = value;
-                        }
-        
-                        // Exclude items with 'imprint_unpublish'
-                        if ('imprint_unpublish' in result 
-                            && result.imprint_unpublish === true
-                        ) {
-                            return false; // Filter out this item
-                        }
-                        
-                    }
-                    return true; // Keep the item
-                })
-                .map((item) => {
-                    if (Array.isArray(item)) {
-                        const result = {};
-                        for (let i = 0; i < item.length; i += 2) {
-                            const key = item[i];
-                            const value = item[i + 1];
-                            result[key] = value;
-                        }
+                    .filter((item) => {
+                        if (Array.isArray(item)) {
+                            const result = {};
+                            for (let i = 0; i < item.length; i += 2) {
+                                const key = item[i];
+                                const value = item[i + 1];
+                                result[key] = value;
+                            }
 
-                        //console.log('result:', result);
-            
+                            // Exclude items with 'imprint_unpublish'
+                            if ('imprint_unpublish' in result
+                                && result.imprint_unpublish === true
+                            ) {
+                                return false; // Filter out this item
+                            }
+
+                        }
+                        return true; // Keep the item
+                    })
+                    .map((item) => {
+                        if (Array.isArray(item)) {
+                            const result = {};
+                            for (let i = 0; i < item.length; i += 2) {
+                                const key = item[i];
+                                const value = item[i + 1];
+                                result[key] = value;
+                            }
+
+                            //console.log('result:', result);
+
+                            return {
+                                slug: result.imprint || '',
+                                title: result.imprint_label || '',
+                                values: result.imprint_values ? result.imprint_values.split('|').map((v) => v.trim()) : [],
+                            };
+                        }
                         return {
-                            slug: result.imprint || '',
-                            title: result.imprint_label || '',
-                            values: result.imprint_values ? result.imprint_values.split('|').map((v) => v.trim()) : [],
+                            slug: '',
+                            title: '',
+                            values: [],
                         };
-                    }
-                    return {
-                        slug: '',
-                        title: '',
-                        values: [],
-                    };
-                });
+                    });
             }
-            
+
             let element     = this.$el;
             this.apiurl     = element.parentElement.dataset.apiurl;
             this.serialized = this.$refs[this.refId].value;
@@ -420,17 +471,17 @@ if(document.getElementById("formPrices")) {
                 } catch (error) {
                     console.error('Error deserializing data:', error);
                 }
-                
+
             }
-            
-            this.buildTable(); 
+
+            this.buildTable();
 
         },
         methods: {
             buildTable: function () {
                 gBuildTable(this);
             },
-            
+
             sanitize: function(index) {
 
                 let ele = this.rows[index].imprint_values;
@@ -464,43 +515,111 @@ if(document.getElementById("formPrices")) {
     }).mount('#formPrices')
 }
 
-if(document.getElementById("formProfit")) {
+if (document.getElementById("formProfit")) {
+
     createApp({
         data() {
             return {
                 serialized: '',
-                apiurl:'',
+                apiurl: '',
                 rows: [],
-                refId: 'customisationsforcgwoogridbudgeteerprofittypes'
-            }
+                searchCategory: '',
+                categories: [],
+                categoryRows: [],
+                selectedCategories: [],
+                searchProduct: '',
+                products: [],
+                productRows: [],
+                selectedProducts: [],
+                refId: 'customisationsforcgwoogridbudgeteerprofittypes',
+                activeTab: 'general',
+                isOpen: false,
+            };
         },
-        mounted: function () {
-            
-            let element     = this.$el;
-            this.apiurl     = element.parentElement.dataset.apiurl;
-            this.serialized = this.$refs[this.refId].value
+        mounted: async function () {
+            let element = this.$el;
+            this.apiurl = element.parentElement.dataset.apiurl;
+            this.serialized = this.$refs[this.refId].value;
 
-            //console.log(this.$refs)
-            //console.log(this.refId)
-            //console.log(this.$refs[this.refId])
-
-            
-            this.buildTable(); 
-
+            await this.searchCategories();
+            await this.searchProducts();
+            await this.buildTable();
+        },
+        computed: {
+            filteredCategories() {
+                return this.categories.filter(category =>
+                  category.name.toLowerCase().includes(this.searchCategory.toLowerCase()) &&
+                  !this.selectedCategories.some(selected => selected.id === category.id)
+                )
+            },
+            filteredProducts() {
+                return this.products.filter(product => product.title.toLowerCase().includes(this.searchProduct.toLowerCase()))
+            }
         },
         methods: {
-            buildTable: function () {
-                gBuildTable(this);
+            buildTable: async function () {
+                await gBuildProfitTable(this);
             },
             updateRows: function () {
-                gUpdateRows(this)
+                gUpdateProfitRows(this);
             },
-            addRow: function(event) {
-                gAddRow(event, this)
+            addRow: function (event, type) {
+                gAddRow(event, this, type);
             },
-            deleteRow(row, event) {
-                gDeleteRow(event, this, row)
+            deleteRow(row, event, type) {
+                gDeleteRow(event, this, row, type);
+            },
+            currentProfitTab(tab) {
+                this.activeTab = tab;
+                this.isOpen = false;
+            },
+            searchCategories() {
+                clearTimeout(this.debounceCategoryTimeout);
+                this.debounceCategoryTimeout = setTimeout(() => {
+                    let getURL = `/index.php/wp-json/wp/v2/product_cat/?joint&page=1&per_page=50&name=${this.searchCategory}`;
+                    axios.get(getURL).then((response) => {
+                        this.categories = response.data;
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                }, 500);
+            },
+            searchProducts() {
+                clearTimeout(this.debounceProductTimeout);
+                this.debounceProductTimeout = setTimeout(() => {
+                    let getURL = `/index.php/wp-json/wp/v2/search/?subtype=product&page=1&per_page=20&search=${this.searchProduct}`;
+                    axios.get(getURL).then((response) => {
+                        this.products = response.data;
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                }, 500);
+            },
+            toggleCategory(category) {
+                this.selectedCategories.push({ id: category.id, name: category.name });
+                this.searchCategory = ''
+                this.isOpen = false;
+                gUpdateProfitRows(this);
+            },
+            toggleProduct(product) {
+                this.selectedProducts.push({ id: product.id, title: product.title });
+                this.searchProduct = ''
+                this.isOpen = false;
+                gUpdateProfitRows(this);
+            },
+            removeCategory(category) {
+                this.selectedCategories = this.selectedCategories.filter(c => c.id !== category.id)
+                gUpdateProfitRows(this);
+            },
+            removeProduct(product) {
+                this.selectedProducts = this.selectedProducts.filter(p => p.id !== product.id)
+                gUpdateProfitRows(this);
+            },
+            closeDropdown() {
+                setTimeout(() => {
+                    this.isOpen = false
+                }, 200)
             }
         }
-    }).mount('#formProfit')
+    }).mount('#formProfit');
 }
