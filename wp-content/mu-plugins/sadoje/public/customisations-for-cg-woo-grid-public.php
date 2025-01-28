@@ -68,7 +68,34 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
             global $product;
 
             //  TODO: Make this configurable in backend
-            $quantities = explode(',', get_option($elementName.'_budgeteer_tableprices_columns'));
+            $quantities_types = get_option($elementName.'_budgeteer_tableprices_types');
+            if ($quantities_types) {
+                $quantities = maybe_unserialize($quantities_types);
+                $product_id = $product->get_id();
+                $product_categories = $product->get_category_ids();
+
+                if (!empty($quantities['product']['products'])) {
+                    $products_id = array_column($quantities['product']['products'], 'id');
+
+                    if (in_array($product_id, $products_id, true)) {
+
+                        $quantities = explode(',', $quantities['product']['rows']);
+                    }
+                }
+                if (!empty($quantities['category']['categories'])) {
+                    $category_ids = array_column($quantities['category']['categories'], 'id');
+
+                    $matched_categories = array_intersect($product_categories, $category_ids);
+                    if (!empty($matched_categories)) {
+                        $quantities = explode(',', $quantities['category']['rows']);
+                    }
+                }
+
+                if (!empty($quantities['general'])) {
+                    $quantities = explode(',', $quantities['general']);
+                }
+            }
+
             $objectPrices = Array();
             foreach($quantities as $quantity) {
                 $objectPrice = new \stdClass();
@@ -79,6 +106,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
 
             //error_log(print_r($objectPrices,true));
             $jsPrices = json_encode($objectPrices);
+
             //error_log(print_r($jsPrices,true));
             require_once $this->plugin_path.'public/display/'.$elementName.'-product-price-table.php';
 
@@ -161,7 +189,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
             return [];
         }
 
-        // Get product variations 
+        // Get product variations
         $variations = $product->get_available_variations();
          // TODO: $variation_map needs to be populated automatically from CMS
         $variation_map = [
@@ -481,7 +509,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                             }
                         }
 
-                        
+
                         if( ! $addScreenVal ) {
                             if($this->verbose) {
                                 error_log('cdg_alter_regular_price: This is not a new stamping title ('.$current_stamping_title.') so there will not be a new photolite.');

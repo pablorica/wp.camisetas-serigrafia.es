@@ -62,7 +62,22 @@ function phpUnserialize(serializedString) {
         return [];
     }
 }
-
+function gBuildPriceTable(self) {
+    let getURL = self.apiurl+'/encode';
+    axios.post(getURL,{
+        serialized: self.serialized
+    })
+        .then(function (response) {
+            self.generalColumns = response.data.general;
+            self.categoryColumns = response.data.category.rows ?? response.data.category;
+            self.selectedCategories = response.data.category.categories ?? [];
+            self.productColumns = response.data.product.rows ?? response.data.product;
+            self.selectedProducts = response.data.product.products ?? [];
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
 async function gBuildProfitTable(self) {
     let getURL = self.apiurl+'/encode';
     if(self.serialized !== ''){
@@ -149,6 +164,23 @@ async function gBuildTable(self) {
             });
     }
 }
+async function gUpdatePriceTableColumns(self) {
+    let getURL = self.apiurl+'/serialize';
+    await axios.post(getURL,{
+        object: {
+            general: self.generalColumns,
+            category: { categories: self.selectedCategories, rows: self.categoryColumns },
+            product: { products: self.selectedProducts, rows: self.productColumns }
+        }
+    })
+        .then(function (response) {
+            self.serialized = response.data
+            self.$refs[self.refId].value = self.serialized
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
 function gUpdateProfitRows(self) {
     let getURL = self.apiurl+'/serialize';
     axios.post(getURL,{
@@ -209,6 +241,28 @@ function gDeleteRow(event, self, row, type) {
             break;
     }
     self.updateRows();
+}
+async function gSearchProducts(self) {
+    clearTimeout(self.debounceTimeout);
+    self.debounceTimeout = setTimeout(() => {
+        let getURL = `/index.php/wp-json/wp/v2/search/?subtype=product&page=1&per_page=20&search=${self.searchProduct}`;
+        axios.get(getURL).then((response) => {
+            self.products = response.data;
+        }).catch(function (error) {
+            console.log(error);
+        });
+    }, 500);
+}
+async function gSearchCategories(self) {
+    clearTimeout(self.debounceCategoryTimeout);
+    self.debounceCategoryTimeout = setTimeout(() => {
+        let getURL = `/index.php/wp-json/wp/v2/product_cat/?joint&page=1&per_page=50&name=${self.searchCategory}`;
+        axios.get(getURL).then((response) => {
+            self.categories = response.data;
+        }).catch(function (error) {
+            console.log(error);
+        });
+    }, 500);
 }
 
 if(document.getElementById("formBaseprice")) {
@@ -573,27 +627,11 @@ if (document.getElementById("formProfit")) {
                 this.activeTab = tab;
                 this.isOpen = false;
             },
-            searchCategories() {
-                clearTimeout(this.debounceCategoryTimeout);
-                this.debounceCategoryTimeout = setTimeout(() => {
-                    let getURL = `/index.php/wp-json/wp/v2/product_cat/?joint&page=1&per_page=50&name=${this.searchCategory}`;
-                    axios.get(getURL).then((response) => {
-                        this.categories = response.data;
-                    }).catch(function (error) {
-                        console.log(error);
-                    });
-                }, 500);
+            async searchCategories() {
+                await gSearchCategories(this);
             },
-            searchProducts() {
-                clearTimeout(this.debounceProductTimeout);
-                this.debounceProductTimeout = setTimeout(() => {
-                    let getURL = `/index.php/wp-json/wp/v2/search/?subtype=product&page=1&per_page=20&search=${this.searchProduct}`;
-                    axios.get(getURL).then((response) => {
-                        this.products = response.data;
-                    }).catch(function (error) {
-                        console.log(error);
-                    });
-                }, 500);
+            async searchProducts() {
+                await gSearchProducts(this);
             },
             toggleCategory(category) {
                 this.selectedCategories.push({ id: category.id, name: category.name });
@@ -623,3 +661,95 @@ if (document.getElementById("formProfit")) {
         }
     }).mount('#formProfit');
 }
+
+if (document.getElementById("formPriceTable")) {
+
+    createApp({
+        data() {
+            return {
+                serialized: '',
+                apiurl: '',
+                generalColumns: "",
+                categoryColumns: "",
+                productColumns: "",
+                searchCategory: '',
+                categories: [],
+                selectedCategories: [],
+                searchProduct: '',
+                products: [],
+                selectedProducts: [],
+                refId: 'customisationsforcgwoogridbudgeteertablepricestypes',
+                activeTab: 'general',
+                isOpen: false,
+            };
+        },
+        mounted: async function () {
+            let element = this.$el;
+            this.apiurl = element.parentElement.dataset.apiurl;
+            this.serialized = this.$refs[this.refId].value;
+
+            this.buildTable();
+        },
+        computed: {
+            filteredCategories() {
+                return this.categories.filter(category =>
+                    category.name.toLowerCase().includes(this.searchCategory.toLowerCase()) &&
+                    !this.selectedCategories.some(selected => selected.id === category.id)
+                )
+            },
+            filteredProducts() {
+                return this.products.filter(product => product.title.toLowerCase().includes(this.searchProduct.toLowerCase()))
+            }
+        },
+        methods: {
+            buildTable: async function () {
+                await gBuildPriceTable(this);
+            },
+            updateColumns: async function () {
+                await gUpdatePriceTableColumns(this);
+            },
+            addRow: function (event, type) {
+                gAddRow(event, this, type);
+            },
+            deleteRow(row, event, type) {
+                gDeleteRow(event, this, row, type);
+            },
+            currentPriceTab(tab) {
+                this.activeTab = tab;
+                this.isOpen = false;
+            },
+            async searchCategories() {
+                await gSearchCategories(this);
+            },
+            async searchProducts() {
+                await gSearchProducts(this);
+            },
+            async toggleCategory(category) {
+                this.selectedCategories.push({ id: category.id, name: category.name });
+                this.searchCategory = ''
+                this.isOpen = false;
+                await gUpdatePriceTableColumns(this);
+            },
+            async toggleProduct(product) {
+                this.selectedProducts.push({ id: product.id, title: product.title });
+                this.searchProduct = ''
+                this.isOpen = false;
+                await gUpdatePriceTableColumns(this);
+            },
+            async removeCategory(category) {
+                this.selectedCategories = this.selectedCategories.filter(c => c.id !== category.id)
+                await gUpdatePriceTableColumns(this);
+            },
+            async removeProduct(product) {
+                this.selectedProducts = this.selectedProducts.filter(p => p.id !== product.id)
+                await gUpdatePriceTableColumns(this);
+            },
+            closeDropdown() {
+                setTimeout(() => {
+                    this.isOpen = false
+                }, 200)
+            }
+        }
+    }).mount('#formPriceTable');
+}
+

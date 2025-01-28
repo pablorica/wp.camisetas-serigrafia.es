@@ -28,14 +28,14 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
             define('CG_WOOGRID_PATH', WP_PLUGIN_DIR . '/cg-woo-grid');
         }
 
-        wp_register_script( 
+        wp_register_script(
             $this->plugin_name.'-admin-constants',
-            '' 
+            ''
         );
         wp_enqueue_script($this->plugin_name.'-admin-constants');
-        wp_add_inline_script( 
-            $this->plugin_name.'-admin-constants', 
-            'const CG_WOOGRID_PATH = "'.CG_WOOGRID_PATH.'";' 
+        wp_add_inline_script(
+            $this->plugin_name.'-admin-constants',
+            'const CG_WOOGRID_PATH = "'.CG_WOOGRID_PATH.'";'
         );
         //error_log('enqueue_admin_inline_js');
     }
@@ -56,9 +56,9 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
         $cgWooGrid = new \Cg_Woo_Grid();
 
         require_once CG_WOOGRID_PATH . '/admin/class-cg-woo-grid-admin.php';
-        $cgWooGridAdmin = new \Cg_Woo_Grid_Admin\Functions( 
-            $cgWooGrid->get_plugin_name(), 
-            $cgWooGrid->get_version() 
+        $cgWooGridAdmin = new \Cg_Woo_Grid_Admin\Functions(
+            $cgWooGrid->get_plugin_name(),
+            $cgWooGrid->get_version()
         );
 
         if($function == 'sayHello') {
@@ -66,16 +66,16 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
         }
         if($function == 'buildFields') {
             if(!$var['field_callback']) {
-                $var['field_callback'] =  array( 
-                    $cgWooGridAdmin, 
-                    'render_settings_field' 
+                $var['field_callback'] =  array(
+                    $cgWooGridAdmin,
+                    'render_settings_field'
                 );
             }
             $cgWooGridAdmin->buildFields(
                 $var['settings_page_slug'],
-                $var['field_id'], 
-                $var['field_title'], 
-                $var['field_callback'], 
+                $var['field_id'],
+                $var['field_title'],
+                $var['field_callback'],
                 $var['settings_section_id'],
                 $var['field_args']
             );
@@ -86,7 +86,7 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
      * Adds submenu to administration area
      *
      * @see https://blog.wplauncher.com/create-wordpress-plugin-settings-page/
-     * 
+     *
      * @return void
      */
     public function cdg_add_admin_submenu() {
@@ -95,15 +95,15 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
 
 
         //add_submenu_page( $parent_slug, $page_title, $menu_title, $capability, $menu_slug, $function );
-        add_submenu_page( 
-            'cg-woo-grid', 
-            esc_html__('Presupuestador', 'sadoje'), 
-            esc_html__('Presupuestador', 'sadoje'), 
-            'administrator', 
-            $this->get_element_name().'-budgeteer', 
-            array( 
-                $this, 
-                'cdg_display_admin_budgeteer' 
+        add_submenu_page(
+            'cg-woo-grid',
+            esc_html__('Presupuestador', 'sadoje'),
+            esc_html__('Presupuestador', 'sadoje'),
+            'administrator',
+            $this->get_element_name().'-budgeteer',
+            array(
+                $this,
+                'cdg_display_admin_budgeteer'
             )
         );
     }
@@ -117,7 +117,7 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
         require_once $this->plugin_path. 'admin/'.$this->get_element_name().'-admin-rest-api.php';
         $plugin_admin_restapi = new Customisations_For_Cg_Woo_Grid_Admin_Rest_Api();
         $urlspace = $plugin_admin_restapi->get_url_space();
-		require_once $this->plugin_path.'admin/display/'.$this->get_element_name().'-display.php'; 
+		require_once $this->plugin_path.'admin/display/'.$this->get_element_name().'-display.php';
     }
 
 
@@ -128,12 +128,12 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
         // Title to be displayed on the administration page
         $settings_title = '';
         // Callback that echos out any content at the top of the section (between heading and fields).
-        $settings_callback = null; 
+        $settings_callback = null;
         //Function that fills each field with the desired form inputs. The function should echo its output.
         $field_callback = null;
 
         $settings_pages = array();
-        
+
 
         //The slug-name of the settings page on which to show the section.
         $settings_page  = new \stdClass();
@@ -141,7 +141,7 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
         $settings_page->fields = array();
 
         $option_lists = array(
-            0 => __("Desactivado","sadoje"), 
+            0 => __("Desactivado","sadoje"),
             1 => __("Activado","sadoje")
         );
         $field_id = $this->get_element_name().'_budgeteer_general_status';
@@ -362,7 +362,7 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
         $settings_page->slug   = $this->get_element_name().'_budgeteer_tableprices';
         $settings_page->fields = array();
 
-        
+
 
         $option_lists = array();
 
@@ -378,22 +378,22 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
         }
         //error_log( print_r($option_lists,true));
         // TODO: MAke SELECTBOX works
-        $field_id = $this->get_element_name().'_budgeteer_tableprices_sizes_adults';
-        $settings_page->fields[] = array(
-            'id'    => $field_id,
-            'title' => __('Tallas adultos','sadoje').":",
-            'args'  => array (
-                'type'             => 'selectbox',
-                'subtype'          => '',
-                'id'               => $field_id,
-                'name'             => $field_id,
-                'required'         => '',
-                'get_options_list' => $option_lists,
-                'value_type'       => 'normal',
-                'wp_data'          => 'option',
-                'class'            => 'alternate',
-            )
-        );
+       $field_id = $this->get_element_name().'_budgeteer_tableprices_sizes_adults';
+       $settings_page->fields[] = array(
+           'id'    => $field_id,
+           'title' => __('Tallas adultos','sadoje').":",
+           'args'  => array (
+               'type'             => 'select',
+               'subtype'          => '',
+               'id'               => $field_id,
+               'name'             => $field_id,
+               'required'         => '',
+               'get_options_list' => $option_lists,
+               'value_type'       => 'normal',
+               'wp_data'          => 'option',
+               'class'            => 'alternate',
+           )
+       );
         $field_id = $this->get_element_name().'_budgeteer_tableprices_sizes_kids';
         $settings_page->fields[] = array(
             'id'    => $field_id,
@@ -410,20 +410,20 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
                 'class'            => '',
             )
         );
-        $field_id = $this->get_element_name().'_budgeteer_tableprices_columns';
+        $field_id = $this->get_element_name().'_budgeteer_tableprices_types';
         $settings_page->fields[] = array(
             'id'    => $field_id,
-            'title' => __('Columnas','sadoje').":",
+            'title' => '',
             'args'  => array (
-                'type'             => 'textarea',
-                'subtype'          => '',
+                'type'             => 'input',
+                'subtype'          => 'hidden',
                 'id'               => $field_id,
                 'name'             => $field_id,
                 'required'         => '',
                 'get_options_list' => '',
                 'value_type'       => 'serialized',
                 'wp_data'          => 'option',
-                'class'            => 'alternate',
+                'class'            => '',
             )
         );
 
@@ -473,16 +473,16 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
         );
         array_push($settings_pages,$settings_page);
 
-        
+
 
         /* Build settings page fields */
-        
+
         foreach($settings_pages as $settings_page) {
             add_settings_section(
-                $settings_section_id, 
-                $settings_title,  
-                $settings_callback,    
-                $settings_page->slug                
+                $settings_section_id,
+                $settings_title,
+                $settings_callback,
+                $settings_page->slug
             );
 
             foreach($settings_page->fields as $field) {
@@ -497,11 +497,11 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
                         'field_args'          => $field['args'],
                     )
                 );
-                
+
             }
 
         }
-        
+
     }
 
 

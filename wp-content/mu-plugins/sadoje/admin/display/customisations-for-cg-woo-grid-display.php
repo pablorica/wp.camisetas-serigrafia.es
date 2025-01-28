@@ -1011,14 +1011,120 @@
                             <span><?php echo __('Tabla de precios','sadoje'); ?></span>
                         </h2>
                         <div class="inside">
-                            <form method="POST"
-                                  action="options.php"
+                            <form
+                                id="formPriceTable"
+                                method="POST"
+                                action="options.php"
+                                data-apiurl = "<?php echo $urlspace; ?>"
                             >
+                                <div class="price-tabs">
+                                    <p  :class="[activeTab === 'general' ? 'active-tab' : '', 'tabs']"
+                                        @click="currentPriceTab('general')"
+                                    >
+                                        <?php echo __('General','sadoje'); ?>
+                                    </p>
+                                    <p  :class="[activeTab === 'category' ? 'active-tab' : '', 'tabs']"
+                                        @click="currentPriceTab('category')">
+                                        <?php echo __('Categoría','sadoje'); ?>
+                                    </p>
+                                    <p  :class="[activeTab === 'product' ? 'active-tab' : '', 'tabs']"
+                                        @click="currentPriceTab('product')">
+                                        <?php echo __('Producto','sadoje'); ?>
+                                    </p>
+                                </div>
+
+                                <div v-if="activeTab === 'category'" class="input-selector">
+                                    <p class="input-selector__title"><?php esc_html_e('Selector de Categorías','sadoje'); ?></p>
+                                    <div class="input-selector__search-container">
+                                        <input
+                                                v-model="searchCategory"
+                                                @focus="isOpen = true"
+                                                @blur="closeDropdown"
+                                                type="text"
+                                                @input="searchCategories"
+                                                placeholder="<?php esc_html_e('Buscar categorías','sadoje'); ?>"
+                                                class="input-selector__search-input"
+                                        />
+                                        <div v-if="isOpen" class="input-selector__dropdown">
+                                            <div
+                                                    v-for="category in filteredCategories"
+                                                    :key="category.id"
+                                                    @mousedown.prevent="toggleCategory(category)"
+                                                    class="input-selector__dropdown-item"
+                                            >
+                                                {{ category.name }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="input-selector__selected-categories">
+                                        <div
+                                                v-for="category in selectedCategories"
+                                                :key="category.id"
+                                                class="input-selector__chip"
+                                        >
+                                            {{ category.name }}
+                                            <button @click="removeCategory(category)" class="input-selector__chip-remove">
+                                                <span class="input-selector__chip-remove-icon">&times;</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div v-else-if="activeTab === 'product'" class="input-selector">
+                                        <p class="input-selector__title"><?php esc_html_e('Selector de Productos','sadoje'); ?></p>
+                                        <div class="input-selector__search-container">
+                                            <input
+                                                    v-model="searchProduct"
+                                                    @focus="isOpen = true"
+                                                    @blur="closeDropdown"
+                                                    type="text"
+                                                    @input="searchProducts"
+                                                    placeholder="<?php esc_html_e('Buscar productos','sadoje'); ?>"
+                                                    class="input-selector__search-input"
+                                            />
+                                            <div v-if="isOpen" class="input-selector__dropdown">
+                                                <div
+                                                        v-for="product in filteredProducts"
+                                                        :key="product.id"
+                                                        @mousedown.prevent="toggleProduct(product)"
+                                                        class="input-selector__dropdown-item"
+                                                >
+                                                    {{ product.title }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="input-selector__selected-categories">
+                                            <div
+                                                    v-for="product in selectedProducts"
+                                                    :key="product.id"
+                                                    class="input-selector__chip"
+                                            >
+                                                {{ product.title }}
+                                                <button @click="removeProduct(product)" class="input-selector__chip-remove">
+                                                    <span class="input-selector__chip-remove-icon">&times;</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                <div v-if="activeTab === 'general'" class="input-price-table">
+                                    <label for="columns"><?php echo __('Columnas generales:','sadoje'); ?></label>
+                                    <input name="columns" type="text" v-model="generalColumns" @blur="updateColumns()" />
+                                </div>
+                                <div v-else-if="activeTab === 'category'" class="input-price-table">
+                                    <label for="columns"><?php echo __('Columnas por categoría:','sadoje'); ?></label>
+                                    <input name="columns" type="text" v-model="categoryColumns" @blur="updateColumns()" />
+                                </div>
+                                <div v-else-if="activeTab === 'product'" class="input-price-table">
+                                    <label for="columns"><?php echo __('Columnas por producto:','sadoje'); ?></label>
+                                    <input name="columns" type="text" v-model="productColumns" @blur="updateColumns()" />
+                                </div>
 
                                 <?php
                                 settings_fields( 'customisations-for-cg-woo-grid_budgeteer_tableprices' );
                                 do_settings_sections( 'customisations-for-cg-woo-grid_budgeteer_tableprices' );
                                 ?>
+
                                 <?php submit_button(); ?>
                             </form>
 
