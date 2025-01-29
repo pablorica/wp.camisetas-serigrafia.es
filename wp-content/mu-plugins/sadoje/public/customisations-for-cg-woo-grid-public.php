@@ -66,6 +66,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
             $urlspace = $plugin_admin_restapi->get_url_space();
 
             global $product;
+            $foundQuantities = false;
 
             //  TODO: Make this configurable in backend
             $quantities_types = get_option($elementName.'_budgeteer_tableprices_types');
@@ -74,28 +75,43 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                 $product_id = $product->get_id();
                 $product_categories = $product->get_category_ids();
 
-                if (!empty($quantities['product']['products'])) {
-                    $products_id = array_column($quantities['product']['products'], 'id');
+                if (!empty($quantities['product']) && !$foundQuantities) {
+                    foreach ($quantities['product'] as $product_rule_set) {
+                        if (!empty($product_rule_set['products'])) {
+                            $products_id = array_column($product_rule_set['products'], 'id');
 
-                    if (in_array($product_id, $products_id, true)) {
-
-                        $quantities = explode(',', $quantities['product']['rows']);
-                    }
-                }
-                if (!empty($quantities['category']['categories'])) {
-                    $category_ids = array_column($quantities['category']['categories'], 'id');
-
-                    $matched_categories = array_intersect($product_categories, $category_ids);
-                    if (!empty($matched_categories)) {
-                        $quantities = explode(',', $quantities['category']['rows']);
+                            if (in_array($product_id, $products_id, true)) {
+                                $quantities = explode(',', $product_rule_set['rows']);
+                                $foundQuantities = true;
+                                break;
+                            }
+                        }
                     }
                 }
 
-                if (!empty($quantities['general'])) {
+                if (!$foundQuantities && !empty($quantities['category'])) {
+                    foreach ($quantities['category'] as $category_rule_set) {
+                        if (!empty($category_rule_set['categories'])) {
+                            $category_ids = array_column($category_rule_set['categories'], 'id');
+
+                            if (!empty(array_intersect($product_categories, $category_ids))) {
+                                $quantities = explode(',', $category_rule_set['rows']);
+                                $foundQuantities = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (!$foundQuantities && !empty($quantities['general'])) {
                     $quantities = explode(',', $quantities['general']);
+                    $foundQuantities = true;
+                }
+
+                if (!$foundQuantities) {
+                    $quantities = explode(',', "2000,1000,500,400,200,100,50,30,10,6,1");
                 }
             }
-
             $objectPrices = Array();
             foreach($quantities as $quantity) {
                 $objectPrice = new \stdClass();
@@ -755,44 +771,55 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
         $product_id = $product->get_id();
         $product_categories = $product->get_category_ids();
 
-        if (!empty($profits['product']['products'])) {
-            $products_id = array_column($profits['product']['products'], 'id');
+        if (!empty($profits['product'])) {
+            foreach ($profits['product'] as $product_rule_set) {
+                if (!empty($product_rule_set['products'])) {
+                    $products_id = array_column($product_rule_set['products'], 'id');
 
-            if (in_array($product_id, $products_id, true)) {
+                    if (in_array($product_id, $products_id, true)) {
+                        $product_profit = array_filter(
+                            $product_rule_set['rows'],
+                            function ($obj) use ($quantity) {
+                                if (isset($obj['min']) && isset($obj['max'])) {
+                                    return ($obj['min'] <= $quantity && $obj['max'] >= $quantity);
+                                } else {
+                                    return false;
+                                }
+                            }
+                        );
 
-                $product_profit = array_filter(
-                    $profits['product']['rows'],
-                    function($obj) use ($quantity) {
-                        if (isset($obj['min']) && isset($obj['max'])) {
-                            return ($obj['min'] <= $quantity && $obj['max'] >= $quantity);
-                        } else {
-                            return false;
+                        if (!empty($product_profit)) {
+                            $selected_product_profit = array_pop($product_profit);
+                            return is_numeric($selected_product_profit['profit']) ? $selected_product_profit['profit'] : 0;
                         }
-                    });
-                if (!empty($product_profit)) {
-                    $selected_product_profit = array_pop($product_profit);
-                    return $selected_product_profit['profit'] ?? 0;
+                    }
                 }
             }
         }
-        if (!empty($profits['category']['categories'])) {
-            $category_ids = array_column($profits['category']['categories'], 'id');
 
-            $matched_categories = array_intersect($product_categories, $category_ids);
-            if (!empty($matched_categories)) {
+        if (!empty($profits['category'])) {
+            foreach ($profits['category'] as $category_rule_set) {
+                if (!empty($category_rule_set['categories'])) {
+                    $category_ids = array_column($category_rule_set['categories'], 'id');
 
-                $category_profit = array_filter(
-                    $profits['category']['rows'],
-                    function($obj) use ($quantity) {
-                        if (isset($obj['min']) && isset($obj['max'])) {
-                            return ($obj['min'] <= $quantity && $obj['max'] >= $quantity);
-                        } else {
-                            return false;
+                    $matched_categories = array_intersect($product_categories, $category_ids);
+                    if (!empty($matched_categories)) {
+                        $category_profit = array_filter(
+                            $category_rule_set['rows'],
+                            function ($obj) use ($quantity) {
+                                if (isset($obj['min']) && isset($obj['max'])) {
+                                    return ($obj['min'] <= $quantity && $obj['max'] >= $quantity);
+                                } else {
+                                    return false;
+                                }
+                            }
+                        );
+
+                        if (!empty($category_profit)) {
+                            $selected_category_profit = array_pop($category_profit);
+                            return is_numeric($selected_category_profit['profit']) ? $selected_category_profit['profit'] : 0;
                         }
-                    });
-                if (!empty($category_profit)) {
-                    $selected_category_profit = array_pop($category_profit);
-                    return $selected_category_profit['profit'] ?? 0;
+                    }
                 }
             }
         }
@@ -805,13 +832,14 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                         $quantity >= $rule['min'] && $quantity <= $rule['max'];
                 }
             );
+
             if (!empty($general_profit)) {
                 $selected_general_profit = array_pop($general_profit);
-                return $selected_general_profit['profit'] ?? 0;
+                return is_numeric($selected_general_profit['profit']) ? $selected_general_profit['profit'] : 0;
             }
         }
 
-        return 0; // return 0 if no profit is found
+        return 0;
     }
 
     // Render meta on cart and checkout

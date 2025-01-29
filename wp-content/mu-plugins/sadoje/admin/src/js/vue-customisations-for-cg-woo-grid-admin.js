@@ -68,11 +68,19 @@ function gBuildPriceTable(self) {
         serialized: self.serialized
     })
         .then(function (response) {
-            self.generalColumns = response.data.general;
-            self.categoryColumns = response.data.category.rows ?? response.data.category;
-            self.selectedCategories = response.data.category.categories ?? [];
-            self.productColumns = response.data.product.rows ?? response.data.product;
-            self.selectedProducts = response.data.product.products ?? [];
+            self.priceTable = response.data;
+            self.priceTable.category.forEach((categoryGroup, i) => {
+                self.selectedCategories.push([]);
+                categoryGroup.categories.forEach((category) => {
+                    self.selectedCategories[i].push({ id: category.id, name: category.name });
+                });
+            });
+            self.priceTable.product.forEach((productGroup, i) => {
+                self.selectedProducts.push([]);
+                productGroup.products.forEach((product) => {
+                    self.selectedProducts[i].push({id: product.id, title: product.title});
+                });
+            });
         })
         .catch(function (error) {
             console.log(error);
@@ -80,17 +88,30 @@ function gBuildPriceTable(self) {
 }
 async function gBuildProfitTable(self) {
     let getURL = self.apiurl+'/encode';
-    if(self.serialized !== ''){
+    if(self.serialized !== '') {
 
         await axios.post(getURL,{
             serialized: self.serialized
         })
             .then(function (response) {
-                self.rows = response.data.general;
-                self.categoryRows = response.data.category.rows ?? response.data.category;
-                self.selectedCategories = response.data.category.categories ?? [];
-                self.productRows = response.data.product.rows ?? [];
-                self.selectedProducts = response.data.product.products ?? [];
+                if (!Object.keys(response.data).includes('general')) {
+                    self.profitTable.general = response.data;
+                    gUpdateProfitRows(self);
+                } else {
+                    self.profitTable = response.data;
+                    self.profitTable.category.forEach((categoryGroup, i) => {
+                        self.selectedCategories.push([]);
+                        categoryGroup.categories.forEach((category) => {
+                            self.selectedCategories[i].push({ id: category.id, name: category.name });
+                        });
+                    });
+                    self.profitTable.product.forEach((productGroup, i) => {
+                        self.selectedProducts.push([]);
+                        productGroup.products.forEach((product) => {
+                            self.selectedProducts[i].push({id: product.id, title: product.title});
+                        });
+                    });
+                }
             })
             .catch(function (error) {
                 console.log(error);
@@ -167,11 +188,7 @@ async function gBuildTable(self) {
 async function gUpdatePriceTableColumns(self) {
     let getURL = self.apiurl+'/serialize';
     await axios.post(getURL,{
-        object: {
-            general: self.generalColumns,
-            category: { categories: self.selectedCategories, rows: self.categoryColumns },
-            product: { products: self.selectedProducts, rows: self.productColumns }
-        }
+        object: self.priceTable
     })
         .then(function (response) {
             self.serialized = response.data
@@ -184,11 +201,7 @@ async function gUpdatePriceTableColumns(self) {
 function gUpdateProfitRows(self) {
     let getURL = self.apiurl+'/serialize';
     axios.post(getURL,{
-        object: {
-            general: self.rows,
-            category: { categories: self.selectedCategories, rows: self.categoryRows },
-            product: { products: self.selectedProducts, rows: self.productRows }
-        }
+        object: self.profitTable
     })
         .then(function (response) {
             self.serialized = response.data
@@ -213,28 +226,34 @@ function gUpdateRows(self) {
             console.log(error);
         });
 }
-function gAddRow(event, self, type) {
+function gAddRow(event, self, type,index) {
     event.preventDefault();
     switch (type) {
         case 'category':
-            self.categoryRows.push({});
+            self.profitTable.category[index].rows.push({});
             break;
         case 'product':
-            self.productRows.push({});
+            self.profitTable.product[index].rows.push({});
+            break;
+        case 'general':
+            self.profitTable.general.push({});
             break;
         default:
             self.rows.push({});
             break;
     }
 }
-function gDeleteRow(event, self, row, type) {
+function gDeleteRow(event, self, row, type, index) {
     event.preventDefault();
     switch (type) {
         case 'category':
-            self.categoryRows.splice(row, 1);
+            self.profitTable.category[index].rows.splice(row, 1);
             break;
         case 'product':
-            self.productRows.splice(row, 1);
+            self.profitTable.product[index].rows.splice(row, 1);
+            break;
+        case 'general':
+            self.profitTable.general.splice(row, 1);
             break;
         default:
             self.rows.splice(row, 1);
@@ -576,18 +595,21 @@ if (document.getElementById("formProfit")) {
             return {
                 serialized: '',
                 apiurl: '',
-                rows: [],
+                profitTable: {
+                    general: [],
+                    category: [],
+                    product: []
+                },
                 searchCategory: '',
                 categories: [],
-                categoryRows: [],
-                selectedCategories: [],
+                selectedCategories: [[]],
                 searchProduct: '',
                 products: [],
-                productRows: [],
-                selectedProducts: [],
+                selectedProducts: [[]],
                 refId: 'customisationsforcgwoogridbudgeteerprofittypes',
                 activeTab: 'general',
-                isOpen: false,
+                isOpen: [],
+                isAccordionOpen: [true],
             };
         },
         mounted: async function () {
@@ -602,8 +624,7 @@ if (document.getElementById("formProfit")) {
         computed: {
             filteredCategories() {
                 return this.categories.filter(category =>
-                  category.name.toLowerCase().includes(this.searchCategory.toLowerCase()) &&
-                  !this.selectedCategories.some(selected => selected.id === category.id)
+                  category.name.toLowerCase().includes(this.searchCategory.toLowerCase())
                 )
             },
             filteredProducts() {
@@ -614,18 +635,48 @@ if (document.getElementById("formProfit")) {
             buildTable: async function () {
                 await gBuildProfitTable(this);
             },
-            updateRows: function () {
+            updateRows: function (index) {
                 gUpdateProfitRows(this);
             },
-            addRow: function (event, type) {
-                gAddRow(event, this, type);
+            addProfitTable: function (type) {
+                switch (type) {
+                    case 'category':
+                        this.profitTable.category.push({
+                            categories: [{}],
+                            rows: [{}]
+                        });
+                        this.selectedCategories.push([]);
+                        break;
+                    case 'product':
+                        this.profitTable.product.push({
+                            products: [{}],
+                            rows: [{}]
+                        });
+                        this.selectedProducts.push([]);
+                        break;
+                }
             },
-            deleteRow(row, event, type) {
-                gDeleteRow(event, this, row, type);
+            removeProfitTable: function (type, index) {
+                switch (type) {
+                    case 'category':
+                        this.profitTable.category.splice(index, 1);
+                        this.selectedCategories.splice(index, 1);
+                        break;
+                    case 'product':
+                        this.profitTable.product.splice(index, 1);
+                        this.selectedProducts.splice(index, 1);
+                        break;
+                }
+                gUpdateProfitRows(this);
+            },
+            addRow: function (event, type, index) {
+                gAddRow(event, this, type, index);
+            },
+            deleteRow(row, event, type, index) {
+                gDeleteRow(event, this, row, type, index);
             },
             currentProfitTab(tab) {
                 this.activeTab = tab;
-                this.isOpen = false;
             },
             async searchCategories() {
                 await gSearchCategories(this);
@@ -633,30 +684,35 @@ if (document.getElementById("formProfit")) {
             async searchProducts() {
                 await gSearchProducts(this);
             },
-            toggleCategory(category) {
-                this.selectedCategories.push({ id: category.id, name: category.name });
-                this.searchCategory = ''
-                this.isOpen = false;
+            toggleAccordion(index) {
+                this.isAccordionOpen[index] = !this.isAccordionOpen[index];
+            },
+            toggleCategory(category, index) {
+                this.selectedCategories[index].push({ id: category.id, name: category.name });
+                this.searchCategory = '';
+                this.isOpen = this.isOpen.map(() => false);
+                this.profitTable.category[index].categories = this.selectedCategories[index];
                 gUpdateProfitRows(this);
             },
-            toggleProduct(product) {
-                this.selectedProducts.push({ id: product.id, title: product.title });
+            toggleProduct(product, index) {
+                this.selectedProducts[index].push({ id: product.id, title: product.title });
                 this.searchProduct = ''
-                this.isOpen = false;
+                this.isOpen = this.isOpen.map(() => false);
+                this.profitTable.product[index].products = this.selectedProducts[index];
                 gUpdateProfitRows(this);
             },
-            removeCategory(category) {
-                this.selectedCategories = this.selectedCategories.filter(c => c.id !== category.id)
+            removeCategory(category, groupIndex) {
+                this.selectedCategories[groupIndex] = this.selectedCategories[groupIndex].filter(c => c.id !== category.id);
+                this.profitTable.category[groupIndex].categories = this.selectedCategories[groupIndex];
                 gUpdateProfitRows(this);
             },
-            removeProduct(product) {
-                this.selectedProducts = this.selectedProducts.filter(p => p.id !== product.id)
+            removeProduct(product, index) {
+                this.selectedProducts[index] = this.selectedProducts[index].filter(p => p.id !== product.id);
+                this.profitTable.product[index].products = this.selectedProducts[index];
                 gUpdateProfitRows(this);
             },
             closeDropdown() {
-                setTimeout(() => {
-                    this.isOpen = false
-                }, 200)
+                this.isOpen = this.isOpen.map(() => false);
             }
         }
     }).mount('#formProfit');
@@ -669,18 +725,21 @@ if (document.getElementById("formPriceTable")) {
             return {
                 serialized: '',
                 apiurl: '',
-                generalColumns: "",
-                categoryColumns: "",
-                productColumns: "",
+                priceTable: {
+                    general: [],
+                    category: [],
+                    product: []
+                },
                 searchCategory: '',
                 categories: [],
-                selectedCategories: [],
+                selectedCategories: [[]],
                 searchProduct: '',
                 products: [],
-                selectedProducts: [],
+                selectedProducts: [[]],
                 refId: 'customisationsforcgwoogridbudgeteertablepricestypes',
                 activeTab: 'general',
-                isOpen: false,
+                isOpen: [false],
+                isAccordionOpen: [true]
             };
         },
         mounted: async function () {
@@ -688,13 +747,14 @@ if (document.getElementById("formPriceTable")) {
             this.apiurl = element.parentElement.dataset.apiurl;
             this.serialized = this.$refs[this.refId].value;
 
+            await this.searchCategories();
+            await this.searchProducts();
             this.buildTable();
         },
         computed: {
             filteredCategories() {
                 return this.categories.filter(category =>
-                    category.name.toLowerCase().includes(this.searchCategory.toLowerCase()) &&
-                    !this.selectedCategories.some(selected => selected.id === category.id)
+                    category.name.toLowerCase().includes(this.searchCategory.toLowerCase())
                 )
             },
             filteredProducts() {
@@ -705,18 +765,42 @@ if (document.getElementById("formPriceTable")) {
             buildTable: async function () {
                 await gBuildPriceTable(this);
             },
-            updateColumns: async function () {
+            updateColumns: async function (index) {
                 await gUpdatePriceTableColumns(this);
             },
-            addRow: function (event, type) {
-                gAddRow(event, this, type);
+            addPriceTable: function (type) {
+                switch (type) {
+                    case 'category':
+                        this.priceTable.category.push({
+                            categories: [{}],
+                            rows: [""]
+                        });
+                        this.selectedCategories.push([]);
+                        break;
+                    case 'product':
+                        this.priceTable.product.push({
+                            products: [{}],
+                            rows: [""]
+                        });
+                        this.selectedProducts.push([]);
+                        break;
+                }
             },
-            deleteRow(row, event, type) {
-                gDeleteRow(event, this, row, type);
+            removePriceTable: function (type, index) {
+                switch (type) {
+                    case 'category':
+                        this.priceTable.category.splice(index, 1);
+                        this.selectedCategories.splice(index, 1);
+                        break;
+                    case 'product':
+                        this.priceTable.product.splice(index, 1);
+                        this.selectedProducts.splice(index, 1);
+                        break;
+                }
+                gUpdatePriceTableColumns(this);
             },
             currentPriceTab(tab) {
                 this.activeTab = tab;
-                this.isOpen = false;
             },
             async searchCategories() {
                 await gSearchCategories(this);
@@ -724,30 +808,35 @@ if (document.getElementById("formPriceTable")) {
             async searchProducts() {
                 await gSearchProducts(this);
             },
-            async toggleCategory(category) {
-                this.selectedCategories.push({ id: category.id, name: category.name });
-                this.searchCategory = ''
-                this.isOpen = false;
+            toggleAccordion(index) {
+                this.isAccordionOpen[index] = !this.isAccordionOpen[index];
+            },
+            async toggleCategory(category, index) {
+                this.selectedCategories[index].push({ id: category.id, name: category.name });
+                this.searchCategory = '';
+                this.isOpen = this.isOpen.map(() => false);
+                this.priceTable.category[index].categories = this.selectedCategories[index];
                 await gUpdatePriceTableColumns(this);
             },
-            async toggleProduct(product) {
-                this.selectedProducts.push({ id: product.id, title: product.title });
+            async toggleProduct(product, index) {
+                this.selectedProducts[index].push({ id: product.id, title: product.title });
                 this.searchProduct = ''
-                this.isOpen = false;
+                this.isOpen = this.isOpen.map(() => false);
+                this.priceTable.product[index].products = this.selectedProducts[index];
                 await gUpdatePriceTableColumns(this);
             },
-            async removeCategory(category) {
-                this.selectedCategories = this.selectedCategories.filter(c => c.id !== category.id)
+            async removeCategory(category,  index) {
+                this.selectedCategories[index] = this.selectedCategories[index].filter(c => c.id !== category.id)
+                this.priceTable.category[index].categories = this.selectedCategories[index];
                 await gUpdatePriceTableColumns(this);
             },
-            async removeProduct(product) {
-                this.selectedProducts = this.selectedProducts.filter(p => p.id !== product.id)
+            async removeProduct(product, index) {
+                this.selectedProducts[index] = this.selectedProducts[index].filter(p => p.id !== product.id)
+                this.priceTable.product[index].products = this.selectedProducts[index];
                 await gUpdatePriceTableColumns(this);
             },
             closeDropdown() {
-                setTimeout(() => {
-                    this.isOpen = false
-                }, 200)
+                this.isOpen = this.isOpen.map(() => false);
             }
         }
     }).mount('#formPriceTable');
