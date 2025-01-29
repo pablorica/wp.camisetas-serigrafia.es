@@ -109,6 +109,7 @@ package-lock.json
 !wp-content/mu-plugins/sadoje
 
 !wp-content/plugins/cg-woo-grid
+!wp-content/plugins/sadoje-template
 
 # Ignore build folders of plugin
 wp-content/mu-plugins/sadoje/.babelrc

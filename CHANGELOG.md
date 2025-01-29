@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 
+## [0.6.0] - 2025-01-21
+
+### Updates
+
+ - New plugin to manage the template
+
 ## [0.5.8] - 2025-01-21
 
 ### Updates
