@@ -65,10 +65,20 @@ function sdj_enqueue_styles() {
             'all'
         );
     }
-    if (is_tax('product_cat')) { // Load CSS only on WooCommerce category pages
+    if (is_tax('product_cat')) { 
         wp_enqueue_style(
             'sadoje-product-category-style',
             plugin_dir_url(__FILE__) . 'assets/css/product_category.css',
+            array(),
+            '1.0',
+            'all'
+        );
+    }
+
+    if (is_product()) {
+        wp_enqueue_style(
+            'sadoje-product-style',
+            plugin_dir_url(__FILE__) . 'assets/css/product.css',
             array(),
             '1.0',
             'all'

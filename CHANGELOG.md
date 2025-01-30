@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
  - Hero Home CSS added to custom plugin
     - Load CSS files based on the page
+    - [Página de producto](https://app.asana.com/0/1203117341882428/1208913047697317) Product thumbnails smaller
 
 
 ## [0.6.0] - 2025-01-29
