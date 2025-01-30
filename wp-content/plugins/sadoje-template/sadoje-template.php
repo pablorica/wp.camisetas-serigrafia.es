@@ -55,7 +55,7 @@ function cws_enqueue_styles() {
         '1.0',
         'all'
     );
-    if (is_home()) {
+    if (is_front_page()) {
         wp_enqueue_style(
             'cws-woocommerce-sidebar-style',
             plugin_dir_url(__FILE__) . 'assets/css/home.css',
