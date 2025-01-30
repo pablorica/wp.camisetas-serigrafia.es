@@ -6,12 +6,19 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [0.6.1] - 2025-01-30
 
-## [0.6.0] - 2025-01-21
+### Updates
+
+ - Hero Home CSS added to custom plugin
+
+
+## [0.6.0] - 2025-01-29
 
 ### Updates
 
  - New plugin to manage the template
+ 
 
 ## [0.5.8] - 2025-01-21
 
