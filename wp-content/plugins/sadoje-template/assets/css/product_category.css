@@ -1,6 +1,6 @@
 
 /* Product Category Archives */
-body.archive.tax-product_cat #main.site-main {
+#main.site-main {
     display: flex;
     flex-wrap: wrap;
     gap: 20px; /* Optional: Adds space between columns */
