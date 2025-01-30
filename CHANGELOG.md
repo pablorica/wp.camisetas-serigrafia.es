@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Updates
 
  - Hero Home CSS added to custom plugin
+    - Load CSS files based on the page
 
 
 ## [0.6.0] - 2025-01-29
@@ -18,7 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Updates
 
  - New plugin to manage the template
- 
+
 
 ## [0.5.8] - 2025-01-21
 

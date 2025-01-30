@@ -48,10 +48,26 @@ add_action('woocommerce_after_main_content', 'sdj_close_main_section', 15);
 
 // Enqueue Plugin CSS
 function cws_enqueue_styles() {
+    wp_enqueue_style(
+        'cws-woocommerce-sidebar-style',
+        plugin_dir_url(__FILE__) . 'assets/css/style.css',
+        array(),
+        '1.0',
+        'all'
+    );
+    if (is_home()) {
+        wp_enqueue_style(
+            'cws-woocommerce-sidebar-style',
+            plugin_dir_url(__FILE__) . 'assets/css/home.css',
+            array(),
+            '1.0',
+            'all'
+        );
+    }
     if (is_tax('product_cat')) { // Load CSS only on WooCommerce category pages
         wp_enqueue_style(
             'cws-woocommerce-sidebar-style',
-            plugin_dir_url(__FILE__) . 'assets/css/style.css',
+            plugin_dir_url(__FILE__) . 'assets/css/product_category.css',
             array(),
             '1.0',
             'all'
