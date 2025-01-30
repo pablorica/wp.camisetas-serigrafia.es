@@ -142,5 +142,5 @@ wp-content/plugins/cg-woo-grid/yarn.lock
 
 
 # track these themes
-#!wp-content/themes/codigo/
+!wp-content/themes/sadoje/
 
