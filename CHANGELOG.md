@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+
+## [0.6.4] - 2025-01-31
+
+### Updates
+
+ - [Tallas Adultos/Niños](https://app.asana.com/0/1203117341882428/1209050961520853) 
+    - Precio principal igual al mínimo de la tabla de precios
+
+
 ## [0.6.3] - 2025-01-31
 
 ### Updates
