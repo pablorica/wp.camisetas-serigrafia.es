@@ -6,6 +6,29 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [0.6.2] - 2025-01-30
+
+### Updates
+
+ - Nueva plantilla
+    - Ha sido requerida en [Página de producto](https://app.asana.com/0/1203117341882428/1208913047697317) 
+
+
+## [0.6.1] - 2025-01-30
+
+### Updates
+
+ - Hero Home CSS added to custom plugin
+    - Load CSS files based on the page
+    - [Página de producto](https://app.asana.com/0/1203117341882428/1208913047697317) Product thumbnails smaller
+
+
+## [0.6.0] - 2025-01-29
+
+### Updates
+
+ - New plugin to manage the template
+
 
 ## [0.5.8] - 2025-01-21
 

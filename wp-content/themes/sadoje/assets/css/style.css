@@ -1,0 +1,11 @@
+
+/*  Slider */
+.slick-dots {
+  bottom: 10px !important;
+}
+.slick-dots li button::before {
+	content:'' !important;
+  background: #3f3d8b;
+  border-radius: 10px;
+	border: 1px solid #fff;
+}
