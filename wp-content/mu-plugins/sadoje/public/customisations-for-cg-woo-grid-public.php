@@ -241,6 +241,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                 '50',
             ]],
             'child' => ['sizes' => [
+                'unica',
                 '1-2',
                 '3-4',
                 '4',
