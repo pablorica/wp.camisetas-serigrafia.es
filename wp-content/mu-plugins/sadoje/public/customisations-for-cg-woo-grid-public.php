@@ -212,7 +212,34 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
         $variations = $product->get_available_variations();
          // TODO: $variation_map needs to be populated automatically from CMS
         $variation_map = [
-            'adult' => ['sizes' => ['s', 'm', 'l', 'xl', '2xl', '3xl']],
+            'adult' => ['sizes' => [
+                's', 
+                'm', 
+                'l', 
+                'xl', 
+                '2xl', 
+                '3xl',
+                '31',
+                '32',
+                '33',
+                '34',
+                '35',
+                '36',
+                '37',
+                '38',
+                '39',
+                '40',
+                '41',
+                '42',
+                '43',
+                '44',
+                '45',
+                '46',
+                '47',
+                '48',
+                '49',
+                '50',
+            ]],
             'child' => ['sizes' => [
                 '1-2',
                 '3-4',
@@ -228,6 +255,12 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                 '12-meses',
                 '18-meses',
                 '2-anos',
+                '25',
+                '26',
+                '27',
+                '28',
+                '29',
+                '30',
             ]],
         ];
 
