@@ -11,6 +11,7 @@
 
 
 use Automattic\WooCommerce\Admin\Composer\Package;
+use Error;
 
 class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Grid {
 
@@ -28,6 +29,8 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
 	 */
 	protected $saved_stamping_titles  = [];
     protected $saved_price_screenvals = [];
+    protected $min_prices = [];
+    protected $prices = [];
 
      /**
 	 * Hello World (for testing purposes)
@@ -45,6 +48,95 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
 
 
     /**
+     * Popluate the prices of a product based on the quantity of products
+     *  
+     * @return void
+     */
+    function cdg_populate_prices() {
+
+        //error_log('cdg_populate_prices ');
+
+        if( null !== get_queried_object_id()) {
+
+            $elementName = $this->get_element_name();
+
+
+            global $product;
+            $foundQuantities = false;
+
+            //  TODO: Make this configurable in backend
+            $quantities_types = get_option($elementName.'_budgeteer_tableprices_types');
+            if ($quantities_types) {
+                $quantities = maybe_unserialize($quantities_types);
+                $product_id = $product->get_id();
+                $product_categories = $product->get_category_ids();
+
+                if ( !empty($quantities['product']) 
+                     && !$foundQuantities
+                ) {
+                    foreach ($quantities['product'] as $product_rule_set) {
+                        if (!empty($product_rule_set['products'])) {
+                            $products_id = array_column($product_rule_set['products'], 'id');
+
+                            if (in_array($product_id, $products_id, true)) {
+                                $quantities = explode(',', $product_rule_set['rows']);
+                                $foundQuantities = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if ( !$foundQuantities 
+                     && !empty($quantities['category'])
+                ) {
+                    foreach ($quantities['category'] as $category_rule_set) {
+                        if (!empty($category_rule_set['categories'])) {
+                            $category_ids = array_column($category_rule_set['categories'], 'id');
+
+                            if (!empty(array_intersect($product_categories, $category_ids))) {
+                                $quantities = explode(',', $category_rule_set['rows']);
+                                $foundQuantities = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if ( !$foundQuantities 
+                     && !empty($quantities['general'])
+                ) {
+                    $quantities = explode(',', $quantities['general']);
+                    $foundQuantities = true;
+                }
+
+                if (!$foundQuantities) {
+                    $quantities = explode(',', "2000,1000,500,400,200,100,50,30,10,6,1");
+                }
+            }
+
+            foreach($quantities as $quantity) {
+                $objectPrice = new \stdClass();
+                $objectPrice->quantity = $quantity;
+                $objectPrice->price =  $this->cdg_get_regular_price_by_type($quantity, $product);
+                $this->prices[] = $objectPrice;
+            }
+
+            
+
+
+        } else {
+            // If the code somehow executes to here something bad happened return a 500.
+            return new \WP_Error(
+                $this->get_element_name().'_error',
+                esc_html__( 'No queried object ID', "cg-woo-grid" ),
+                array( 'status' => 500 )
+            );
+        }
+    }
+
+
+    /**
 	 * Build the price table
 	 *
 	 * @since    1.0.0
@@ -52,6 +144,40 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
      * @return void || WP_Error
 	 */
     function cdg_pricetable() {
+
+
+        if( null !== get_queried_object_id()) {
+
+            $elementName = $this->get_element_name();
+
+            require_once $this->plugin_path. 'admin/'.$elementName.'-admin-rest-api.php';
+            $plugin_admin_restapi = new Customisations_For_Cg_Woo_Grid_Admin_Rest_Api();
+            $urlspace = $plugin_admin_restapi->get_url_space(); //Required for 'public/display/'.$elementName.'-product-price-table.php';
+
+          
+            //$this->cdg_populate_prices();
+
+            $objectPrices = $this->prices;
+
+            //error_log('cdg_pricetable: $objectPrices  -> '.print_r($objectPrices,true));
+
+            //Required for 'public/display/'.$elementName.'-product-price-table.php';
+            $jsPrices = json_encode($objectPrices);
+            //error_log(print_r($jsPrices,true));
+
+            require_once $this->plugin_path.'public/display/'.$elementName.'-product-price-table.php';
+
+        } else {
+            // If the code somehow executes to here something bad happened return a 500.
+            return new \WP_Error(
+                $this->get_element_name().'_error',
+                esc_html__( 'Something went wrong', "cg-woo-grid" ),
+                array( 'status' => 500 )
+            );
+        }
+    }
+    //Deprecated version
+    function cdg_pricetableb() {
 
         //error_log('cdg_budgeteer -> Element Name: '.$this->get_element_name());
 
@@ -147,7 +273,13 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
      * @param $tax_p
      * @return string
      */
-    function cdg_calculate_price($variation, $quantity, $baseprices, $profit, $tax_p) {
+    function cdg_calculate_price(
+        $variation, 
+        $quantity, 
+        $baseprices, 
+        $profit,
+        $tax_p
+    ) {
         $variation_id = $variation['variation_id'];
         $product = wc_get_product($variation_id);
         $regular_price = $product->get_regular_price();
@@ -163,7 +295,12 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
         }
 
         $taxes = $price / 100 * $tax_p;
-        return strip_tags(html_entity_decode(wc_price($price + $taxes)));
+
+        $raw_price = $price + $taxes;
+
+        if (!isset( $this->min_prices[$product->id]) || $raw_price <  $this->min_prices[$product->id])  $this->min_prices[$product->id] = $raw_price;
+
+        return strip_tags(html_entity_decode(wc_price($raw_price)));
     }
 
     /**
@@ -174,7 +311,10 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
      *
      * @return array
      */
-    function cdg_get_regular_price_by_type($quantity, $product) {
+    function cdg_get_regular_price_by_type(
+        $quantity, 
+        $product
+    ) {
         // get the quantity of products to establish the type of price (regular, package, box)
         $baseprice = get_option($this->get_element_name().'_budgeteer_baseprice_types');
         $baseprices = maybe_unserialize($baseprice)[0];
@@ -189,9 +329,10 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
         $profit = 0;
 
         $profit_types = get_option($this->get_element_name().'_budgeteer_profit_types');
+        //Debug
         $test = get_option($this->get_element_name().'_budgeteer_tableprices_sizes_kids');
         $adult = get_option($this->get_element_name().'_budgeteer_tableprices_sizes_adults');
-        echo $test . $adult;
+        //echo $test . $adult;
         if ($profit_types) {
             $profits = maybe_unserialize($profit_types);
             if (is_array($profits) && count($profits)) {
@@ -289,9 +430,21 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
         foreach ($selected_variations as $type => $colors) {
             foreach ($colors as $color => $variation) {
                 if ($variation) {
-                    $prices[$type][$color] = $this->cdg_calculate_price($variation, $quantity, $baseprices, $profit, $tax_p);
+                    $prices[$type][$color] = $this->cdg_calculate_price(
+                        $variation, 
+                        $quantity, 
+                        $baseprices, 
+                        $profit, 
+                        $tax_p
+                    );
+                    
                 }
             }
+        }
+
+        if($this->verbose) {
+            //error_log('cdg_get_regular_price_by_type: $product -> '.$product->id);
+            //error_log('cdg_get_regular_price_by_type: $minprice -> '.$this->min_prices[$product->id]);
         }
 
         return $prices;
@@ -818,8 +971,11 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
      * @param array $profits    The profits array (includes product, category, and general rules).
      * @return float            The profit value.
      */
-    function get_profit_by_type($quantity, $product, $profits)
-    {
+    function get_profit_by_type(
+        $quantity, 
+        $product, 
+        $profits
+    ) {
         $product_id = $product->get_id();
         $product_categories = $product->get_category_ids();
 
@@ -894,36 +1050,76 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
         return 0;
     }
 
-    // Render meta on cart and checkout
-function render_meta_on_cart_and_checkout( $cart_data, $cart_item = null ) {
-    $custom_items = array();
+    /**
+     * Get the minimum price of a product
+     * 
+     * @param string $price   The price of the product.
+     * @param object $product The product object (WC_Product).
+     * 
+     * @return string         The minimum price.
+     */
+    public function cdg_get_minimum_price( 
+        $price, 
+        $product 
+    ) {
 
-    if( !empty( $cart_data ) ) {
-        $custom_items = $cart_data;
+         if($this->verbose) {
+            //error_log('cdg_get_minimum_price: $product -> '.$product->id);
+            //error_log('cdg_get_minimum_price: $minprice '.print_r($this->min_prices,true));
+        }
+        
+        if (isset( $this->min_prices[$product->id]) ) {
+            if($this->verbose) {
+                //error_log('cdg_get_minimum_price: $product -> '.$product->id);
+                //error_log('cdg_get_minimum_price: $price -> '.$price);
+                //error_log('cdg_get_minimum_price: $HTMLminprice -> '. strip_tags(html_entity_decode(wc_price($this->min_prices[$product->id]))) );
+            }
+            
+            return esc_html( 'Desde', 'sadoje' ).'&nbsp;'.strip_tags(html_entity_decode(wc_price($this->min_prices[$product->id])));
+        }
+
+        return $price;
+        
     }
-    if( isset( $cart_item['my_field_name'] ) ) {
-        $custom_items[] = array( "name" => 'My Field', "value" => $cart_item['my_field_name'] );
+
+    
+
+
+
+
+    /**
+     * DEPRECATED FUNCTIONS
+     */
+
+    // Render meta on cart and checkout
+    function render_meta_on_cart_and_checkout( $cart_data, $cart_item = null ) {
+        $custom_items = array();
+
+        if( !empty( $cart_data ) ) {
+            $custom_items = $cart_data;
+        }
+        if( isset( $cart_item['my_field_name'] ) ) {
+            $custom_items[] = array( "name" => 'My Field', "value" => $cart_item['my_field_name'] );
+        }
+        return $custom_items;
     }
-    return $custom_items;
-}
-//add_filter( 'woocommerce_get_item_data', 'render_meta_on_cart_and_checkout', 10, 2 );
+    //add_filter( 'woocommerce_get_item_data', 'render_meta_on_cart_and_checkout', 10, 2 );
 
 
     // Update the order meta with field value
-
-//add_action('woocommerce_checkout_update_order_meta', 'my_custom_checkout_field_update_order_meta');
-function my_custom_checkout_field_update_order_meta( $order_id ) {
-    if ($_POST['my_field_name']) {
-        update_post_meta( $order_id, 'My Field', esc_attr($_POST['my_field_name']));
+    function my_custom_checkout_field_update_order_meta( $order_id ) {
+        if ($_POST['my_field_name']) {
+            update_post_meta( $order_id, 'My Field', esc_attr($_POST['my_field_name']));
+        }
     }
-}
+    //add_action('woocommerce_checkout_update_order_meta', 'my_custom_checkout_field_update_order_meta');
+    //add_action( 'woocommerce_admin_order_data_after_billing_address', 'my_custom_checkout_field_display_admin_order_meta', 10, 1 );
 
     /**
- * Display field value on the order edit page
- */
-//add_action( 'woocommerce_admin_order_data_after_billing_address', 'my_custom_checkout_field_display_admin_order_meta', 10, 1 );
-function cdg_display_order_description( $order ){
-    $order_id = method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id;
-    echo '<p><strong>'.__('My Field Name').':</strong> ' . get_post_meta( $order_id, 'my_field_name', true ) . '</p>';
-}
+     * Display field value on the order edit page
+     */
+    function cdg_display_order_description( $order ){
+        $order_id = method_exists( $order, 'get_id' ) ? $order->get_id() : $order->id;
+        echo '<p><strong>'.__('My Field Name').':</strong> ' . get_post_meta( $order_id, 'my_field_name', true ) . '</p>';
+    }
 }

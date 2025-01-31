@@ -204,6 +204,16 @@ class Customisations_For_Cg_Woo_Grid extends Sadoje_Singleton {
         //     )
         // );
 
+        
+        // Populate all prices in the product page
+        add_action( 
+            'woocommerce_before_single_product', 
+            array( 
+                $plugin_public, 
+                'cdg_populate_prices' 
+            )
+        );
+
         add_filter( 
             'cg-woo-grid_get_regular_price', 
             array( 
@@ -213,6 +223,17 @@ class Customisations_For_Cg_Woo_Grid extends Sadoje_Singleton {
             100,
             3
         );
+
+        add_filter( 
+            'woocommerce_get_price_html', 
+            array( 
+                $plugin_public, 
+                'cdg_get_minimum_price' 
+            ),
+            100,
+            2
+        );
+
         // add_filter( 
         //     'cg-woo-grid_get_total_price', 
         //     array( 
