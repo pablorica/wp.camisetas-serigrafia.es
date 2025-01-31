@@ -4,10 +4,10 @@
 *
 * ---- $refs
 * this piece of code in all mounted functions: << this.serialized = this.$refs[this.refId].value >>
-* is reading an HTML attribute "ref" in input types. 
-* That ref attribute is not showed by some browser inspectors (Chrome), but VUE understands it. 
+* is reading an HTML attribute "ref" in input types.
+* That ref attribute is not showed by some browser inspectors (Chrome), but VUE understands it.
 * It was added to the input tag in the render_settings_field() function defined in plugins/cg-woo-grid/admin/class-cg-woo-grid-admin.php l.829
-* 
+*
 */
 
 //import selectBox from './templates/selectBox.vue';
@@ -62,83 +62,161 @@ function phpUnserialize(serializedString) {
         return [];
     }
 }
-
-function gBuildTable(self) {
-
+function gBuildPriceTable(self) {
     let getURL = self.apiurl+'/encode';
-
-    if(self.serialized !== ''){
-
-     axios.post(getURL,{
-            serialized: self.serialized
-        })
+    axios.post(getURL,{
+        serialized: self.serialized
+    })
         .then(function (response) {
-            //console.log(response);
-            function validateAndCleanRows(rows, columns) {
-                // Convert columns to a map for easy access
-                const columnMap = columns.reduce((map, column) => {
-                    map[column.slug] = column;
-                    return map;
-                }, {});
-            
-                // Iterate over rows and clean up
-                return rows.map(row => {
-                    const cleanedRow = { ...row }; // Copy the row
-            
-                    Object.keys(row).forEach(key => {
-                        // Skip sticky values
-                        if(cleanedRow[key] === 'all') {
-                            return;
-                        }
-                        //console.log('Key:', key);
-                        if (['pricecloth', 'priceclothval', 'pricescreen', 'pricescreenval'].includes(key)) {
-                            return;
-                        }
-            
-                        const column = columnMap[key];
-            
-                        // If column doesn't exist or is unpublished, handle accordingly
-                        if (!column 
-                            || column.imprint_unpublish === 1
-                        ) {
-                            // Remove the invalid key
-                            delete cleanedRow[key];
-                            console.log(`Delete `+ cleanedRow[key]);
-                        } else if (
-                            column 
-                            && column.values 
-                            && !column.values.includes(row[key])
-                        ) {
-                            // If the value is not in the allowed values for the column, clear it
-                            cleanedRow[key] = '';
-                            console.log(`Empty `+ cleanedRow[key]);
-                        }
-                    });
-            
-                    return cleanedRow;
+            self.priceTable = response.data;
+            self.priceTable.category.forEach((categoryGroup, i) => {
+                self.selectedCategories.push([]);
+                categoryGroup.categories.forEach((category) => {
+                    self.selectedCategories[i].push({ id: category.id, name: category.name });
                 });
-            }
-            //check if self.columns exists
-            if (typeof self.columns !== 'undefined' ) {
-            
-                self.rows = validateAndCleanRows(response.data, self.columns);
-                //console.log('Rows :', self.rows);
-                //console.log('Columns :', self.columns);
-            } else {
-                self.rows = response.data
-            }
+            });
+            self.priceTable.product.forEach((productGroup, i) => {
+                self.selectedProducts.push([]);
+                productGroup.products.forEach((product) => {
+                    self.selectedProducts[i].push({id: product.id, title: product.title});
+                });
+            });
         })
         .catch(function (error) {
             console.log(error);
         });
+}
+async function gBuildProfitTable(self) {
+    let getURL = self.apiurl+'/encode';
+    if(self.serialized !== '') {
+
+        await axios.post(getURL,{
+            serialized: self.serialized
+        })
+            .then(function (response) {
+                if (!Object.keys(response.data).includes('general')) {
+                    self.profitTable.general = response.data;
+                    gUpdateProfitRows(self);
+                } else {
+                    self.profitTable = response.data;
+                    self.profitTable.category.forEach((categoryGroup, i) => {
+                        self.selectedCategories.push([]);
+                        categoryGroup.categories.forEach((category) => {
+                            self.selectedCategories[i].push({ id: category.id, name: category.name });
+                        });
+                    });
+                    self.profitTable.product.forEach((productGroup, i) => {
+                        self.selectedProducts.push([]);
+                        productGroup.products.forEach((product) => {
+                            self.selectedProducts[i].push({id: product.id, title: product.title});
+                        });
+                    });
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
+}
+async function gBuildTable(self) {
+    let getURL = self.apiurl+'/encode';
+    if(self.serialized !== ''){
+
+        await axios.post(getURL,{
+            serialized: self.serialized
+        })
+            .then(function (response) {
+                function validateAndCleanRows(rows, columns) {
+                    // Convert columns to a map for easy access
+                    const columnMap = columns.reduce((map, column) => {
+                        map[column.slug] = column;
+                        return map;
+                    }, {});
+
+                    // Iterate over rows and clean up
+                    return rows.map(row => {
+                        const cleanedRow = { ...row }; // Copy the row
+
+                        Object.keys(row).forEach(key => {
+                            // Skip sticky values
+                            if(cleanedRow[key] === 'all') {
+                                return;
+                            }
+                            //console.log('Key:', key);
+                            if (['pricecloth', 'priceclothval', 'pricescreen', 'pricescreenval'].includes(key)) {
+                                return;
+                            }
+
+                            const column = columnMap[key];
+
+                            // If column doesn't exist or is unpublished, handle accordingly
+                            if (!column
+                                || column.imprint_unpublish === 1
+                            ) {
+                                // Remove the invalid key
+                                delete cleanedRow[key];
+                                // console.log(`Delete `+ cleanedRow[key]);
+                            } else if (
+                                column
+                                && column.values
+                                && !column.values.includes(row[key])
+                            ) {
+                                // If the value is not in the allowed values for the column, clear it
+                                cleanedRow[key] = '';
+                                // console.log(`Empty `+ cleanedRow[key]);
+                            }
+                        });
+
+                        return cleanedRow;
+                    });
+                }
+                //check if self.columns exists
+                if (typeof self.columns !== 'undefined' ) {
+
+                    self.rows = validateAndCleanRows(response.data, self.columns);
+                    //console.log('Rows :', self.rows);
+                    //console.log('Columns :', self.columns);
+                } else {
+                    self.rows = response.data
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+}
+async function gUpdatePriceTableColumns(self) {
+    let getURL = self.apiurl+'/serialize';
+    await axios.post(getURL,{
+        object: self.priceTable
+    })
+        .then(function (response) {
+            self.serialized = response.data
+            self.$refs[self.refId].value = self.serialized
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+function gUpdateProfitRows(self) {
+    let getURL = self.apiurl+'/serialize';
+    axios.post(getURL,{
+        object: self.profitTable
+    })
+        .then(function (response) {
+            self.serialized = response.data
+            self.$refs[self.refId].value = self.serialized
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
 }
 function gUpdateRows(self) {
     let getURL = self.apiurl+'/serialize';
     //console.log('Rows :', self.rows);
     axios.post(getURL,{
-            object: self.rows
-        })
+        object: self.rows
+    })
         .then(function (response) {
             //console.log(response);
             self.serialized = response.data
@@ -148,16 +226,76 @@ function gUpdateRows(self) {
             console.log(error);
         });
 }
-function gAddRow(event, self) {
-    event.preventDefault()
-    let row = {}
-    self.rows.push(row);
+function gAddRow(event, self, type,index) {
+    event.preventDefault();
+    switch (type) {
+        case 'category':
+            self.profitTable.category[index].rows.push({});
+            break;
+        case 'product':
+            self.profitTable.product[index].rows.push({});
+            break;
+        case 'general':
+            self.profitTable.general.push({});
+            break;
+        default:
+            self.rows.push({});
+            break;
+    }
 }
-function gDeleteRow(event, self, row) {
-    event.preventDefault()
-    //alert('Delete ' + row)
-    self.rows.splice(row, 1)
-    self.updateRows()
+function gDeleteRow(event, self, row, type, index) {
+    event.preventDefault();
+    switch (type) {
+        case 'category':
+            self.profitTable.category[index].rows.splice(row, 1);
+            break;
+        case 'product':
+            self.profitTable.product[index].rows.splice(row, 1);
+            break;
+        case 'general':
+            self.profitTable.general.splice(row, 1);
+            break;
+        default:
+            self.rows.splice(row, 1);
+            break;
+    }
+    self.updateRows();
+}
+async function gSearchProducts(self) {
+    clearTimeout(self.debounceTimeout);
+    self.debounceTimeout = setTimeout(() => {
+        let getURL = `/index.php/wp-json/wp/v2/search/?subtype=product&page=1&per_page=20&search=${self.searchProduct}`;
+        axios.get(getURL).then((response) => {
+            self.products = response.data;
+        }).catch(function (error) {
+            console.log(error);
+        });
+    }, 500);
+}
+async function gSearchCategories(self) {
+    clearTimeout(self.debounceCategoryTimeout);
+    self.debounceCategoryTimeout = setTimeout(() => {
+        let getURL = `/index.php/wp-json/wp/v2/product_cat/?joint&page=1&per_page=50&name=${self.searchCategory}`;
+        axios.get(getURL).then((response) => {
+            self.categories = response.data;
+        }).catch(function (error) {
+            console.log(error);
+        });
+    }, 500);
+}
+async function selectItem(type, self, item, index) {
+    switch (type) {
+        case 'category':
+            if (!self.selectedCategories[index].some(c => c.id === item.id)) {
+                self.selectedCategories[index].push({ id: item.id, name: item.name });
+            }
+            break;
+        case 'product':
+            if (!self.selectedProducts[index].some(p => p.id === item.id)) {
+                self.selectedProducts[index].push({ id: item.id, title: item.title });
+            }
+            break;
+    }
 }
 
 if(document.getElementById("formBaseprice")) {
@@ -177,12 +315,12 @@ if(document.getElementById("formBaseprice")) {
             }
         },
         mounted: function () {
-            
+
             let element     = this.$el;
             this.apiurl     = element.parentElement.dataset.apiurl;
             this.serialized = this.$refs[this.refId].value
-            
-            this.buildTable(); 
+
+            this.buildTable();
 
         },
         methods: {
@@ -210,13 +348,13 @@ if(document.getElementById("formStamping")) {
             }
         },
         mounted: function () {
-            
+
             let element     = this.$el;
             this.apiurl     = element.parentElement.dataset.apiurl;
             this.serialized = this.$refs[this.refId].value
-        
-            
-            this.buildTable(); 
+
+
+            this.buildTable();
 
             this.serwording = this.$refs[this.refWording].value
             this.buildTableWording();
@@ -238,19 +376,19 @@ if(document.getElementById("formStamping")) {
             buildTableWording: function () {
                 let self   = this
                 let getURL = self.apiurl+'/encode';
-            
+
                 if(self.serwording !== ''){
-            
-                axios.post(getURL,{
+
+                    axios.post(getURL,{
                         serialized: self.serwording
                     })
-                    .then(function (response) {
-                        //console.log(response);
-                        self.wording = response.data
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
+                        .then(function (response) {
+                            //console.log(response);
+                            self.wording = response.data
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
                 }
             },
             updateWording: function() {
@@ -258,8 +396,8 @@ if(document.getElementById("formStamping")) {
                 let getURL = self.apiurl+'/serialize';
                 //console.log(self.rows);
                 axios.post(getURL,{
-                        object: self.wording
-                    })
+                    object: self.wording
+                })
                     .then(function (response) {
                         //console.log(response);
                         self.serwording = response.data
@@ -284,19 +422,19 @@ if(document.getElementById("formImprint")) {
             }
         },
         mounted: function () {
-            
+
             let element     = this.$el;
             this.apiurl     = element.parentElement.dataset.apiurl;
             this.serialized = this.$refs[this.refId].value
-            
-            this.buildTable(); 
+
+            this.buildTable();
 
         },
         methods: {
             buildTable: function () {
                 gBuildTable(this);
             },
-            
+
             sanitize: function(index) {
 
                 let ele = this.rows[index].imprint_values;
@@ -318,7 +456,7 @@ if(document.getElementById("formImprint")) {
                 gUpdateRows(this)
             },
             updateRows: function () {
-                  
+
                 gUpdateRows(this)
             },
             addRow: function(event) {
@@ -347,50 +485,50 @@ if(document.getElementById("formPrices")) {
 
             function transformToDesiredFormat(deserializedData) {
                 return deserializedData
-                .filter((item) => {
-                    if (Array.isArray(item)) {
-                        const result = {};
-                        for (let i = 0; i < item.length; i += 2) {
-                            const key = item[i];
-                            const value = item[i + 1];
-                            result[key] = value;
-                        }
-        
-                        // Exclude items with 'imprint_unpublish'
-                        if ('imprint_unpublish' in result 
-                            && result.imprint_unpublish === true
-                        ) {
-                            return false; // Filter out this item
-                        }
-                        
-                    }
-                    return true; // Keep the item
-                })
-                .map((item) => {
-                    if (Array.isArray(item)) {
-                        const result = {};
-                        for (let i = 0; i < item.length; i += 2) {
-                            const key = item[i];
-                            const value = item[i + 1];
-                            result[key] = value;
-                        }
+                    .filter((item) => {
+                        if (Array.isArray(item)) {
+                            const result = {};
+                            for (let i = 0; i < item.length; i += 2) {
+                                const key = item[i];
+                                const value = item[i + 1];
+                                result[key] = value;
+                            }
 
-                        //console.log('result:', result);
-            
+                            // Exclude items with 'imprint_unpublish'
+                            if ('imprint_unpublish' in result
+                                && result.imprint_unpublish === true
+                            ) {
+                                return false; // Filter out this item
+                            }
+
+                        }
+                        return true; // Keep the item
+                    })
+                    .map((item) => {
+                        if (Array.isArray(item)) {
+                            const result = {};
+                            for (let i = 0; i < item.length; i += 2) {
+                                const key = item[i];
+                                const value = item[i + 1];
+                                result[key] = value;
+                            }
+
+                            //console.log('result:', result);
+
+                            return {
+                                slug: result.imprint || '',
+                                title: result.imprint_label || '',
+                                values: result.imprint_values ? result.imprint_values.split('|').map((v) => v.trim()) : [],
+                            };
+                        }
                         return {
-                            slug: result.imprint || '',
-                            title: result.imprint_label || '',
-                            values: result.imprint_values ? result.imprint_values.split('|').map((v) => v.trim()) : [],
+                            slug: '',
+                            title: '',
+                            values: [],
                         };
-                    }
-                    return {
-                        slug: '',
-                        title: '',
-                        values: [],
-                    };
-                });
+                    });
             }
-            
+
             let element     = this.$el;
             this.apiurl     = element.parentElement.dataset.apiurl;
             this.serialized = this.$refs[this.refId].value;
@@ -420,17 +558,17 @@ if(document.getElementById("formPrices")) {
                 } catch (error) {
                     console.error('Error deserializing data:', error);
                 }
-                
+
             }
-            
-            this.buildTable(); 
+
+            this.buildTable();
 
         },
         methods: {
             buildTable: function () {
                 gBuildTable(this);
             },
-            
+
             sanitize: function(index) {
 
                 let ele = this.rows[index].imprint_values;
@@ -464,43 +602,257 @@ if(document.getElementById("formPrices")) {
     }).mount('#formPrices')
 }
 
-if(document.getElementById("formProfit")) {
+if (document.getElementById("formProfit")) {
+
     createApp({
         data() {
             return {
                 serialized: '',
-                apiurl:'',
-                rows: [],
-                refId: 'customisationsforcgwoogridbudgeteerprofittypes'
-            }
+                apiurl: '',
+                profitTable: {
+                    general: [],
+                    category: [],
+                    product: []
+                },
+                searchCategory: '',
+                categories: [],
+                selectedCategories: [[]],
+                searchProduct: '',
+                products: [],
+                selectedProducts: [[]],
+                refId: 'customisationsforcgwoogridbudgeteerprofittypes',
+                activeTab: 'general',
+                isOpen: [],
+                isAccordionOpen: [true],
+            };
         },
-        mounted: function () {
-            
-            let element     = this.$el;
-            this.apiurl     = element.parentElement.dataset.apiurl;
-            this.serialized = this.$refs[this.refId].value
+        mounted: async function () {
+            let element = this.$el;
+            this.apiurl = element.parentElement.dataset.apiurl;
+            this.serialized = this.$refs[this.refId].value;
 
-            //console.log(this.$refs)
-            //console.log(this.refId)
-            //console.log(this.$refs[this.refId])
-
-            
-            this.buildTable(); 
-
+            await this.searchCategories();
+            await this.searchProducts();
+            await this.buildTable();
+        },
+        computed: {
+            filteredCategories() {
+                return this.categories.filter(category =>
+                  category.name.toLowerCase().includes(this.searchCategory.toLowerCase())
+                )
+            },
+            filteredProducts() {
+                return this.products.filter(product => product.title.toLowerCase().includes(this.searchProduct.toLowerCase()))
+            }
         },
         methods: {
-            buildTable: function () {
-                gBuildTable(this);
+            buildTable: async function () {
+                await gBuildProfitTable(this);
             },
             updateRows: function () {
-                gUpdateRows(this)
+                gUpdateProfitRows(this);
             },
-            addRow: function(event) {
-                gAddRow(event, this)
+            addProfitTable: function (type) {
+                switch (type) {
+                    case 'category':
+                        this.profitTable.category.push({
+                            categories: [],
+                            rows: [{}]
+                        });
+                        this.selectedCategories.push([]);
+                        break;
+                    case 'product':
+                        this.profitTable.product.push({
+                            products: [],
+                            rows: [{}]
+                        });
+                        this.selectedProducts.push([]);
+                        break;
+                }
             },
-            deleteRow(row, event) {
-                gDeleteRow(event, this, row)
+            removeProfitTable: function (type, index) {
+                switch (type) {
+                    case 'category':
+                        this.profitTable.category.splice(index, 1);
+                        this.selectedCategories.splice(index, 1);
+                        break;
+                    case 'product':
+                        this.profitTable.product.splice(index, 1);
+                        this.selectedProducts.splice(index, 1);
+                        break;
+                }
+                gUpdateProfitRows(this);
+            },
+            addRow: function (event, type, index) {
+                gAddRow(event, this, type, index);
+            },
+            deleteRow(row, event, type, index) {
+                gDeleteRow(event, this, row, type, index);
+            },
+            currentProfitTab(tab) {
+                this.activeTab = tab;
+            },
+            async searchCategories() {
+                await gSearchCategories(this);
+            },
+            async searchProducts() {
+                await gSearchProducts(this);
+            },
+            toggleAccordion(index) {
+                this.isAccordionOpen[index] = !this.isAccordionOpen[index];
+            },
+            async selectCategory(category, index) {
+                await selectItem('category', this, category, index);
+                this.searchCategory = '';
+                this.isOpen = this.isOpen.map(() => false);
+                this.profitTable.category[index].categories = this.selectedCategories[index];
+                gUpdateProfitRows(this);
+            },
+            async selectProduct(product, index) {
+                await selectItem('product', this, product, index);
+                this.searchProduct = ''
+                this.isOpen = this.isOpen.map(() => false);
+                this.profitTable.product[index].products = this.selectedProducts[index];
+                gUpdateProfitRows(this);
+            },
+            removeCategory(category, groupIndex) {
+                this.selectedCategories[groupIndex] = this.selectedCategories[groupIndex].filter(c => c.id !== category.id);
+                this.profitTable.category[groupIndex].categories = this.selectedCategories[groupIndex];
+                gUpdateProfitRows(this);
+            },
+            removeProduct(product, index) {
+                this.selectedProducts[index] = this.selectedProducts[index].filter(p => p.id !== product.id);
+                this.profitTable.product[index].products = this.selectedProducts[index];
+                gUpdateProfitRows(this);
+            },
+            closeDropdown() {
+                this.isOpen = this.isOpen.map(() => false);
             }
         }
-    }).mount('#formProfit')
+    }).mount('#formProfit');
 }
+
+if (document.getElementById("formPriceTable")) {
+
+    createApp({
+        data() {
+            return {
+                serialized: '',
+                apiurl: '',
+                priceTable: {
+                    general: [],
+                    category: [],
+                    product: []
+                },
+                searchCategory: '',
+                categories: [],
+                selectedCategories: [[]],
+                searchProduct: '',
+                products: [],
+                selectedProducts: [[]],
+                refId: 'customisationsforcgwoogridbudgeteertablepricestypes',
+                activeTab: 'general',
+                isOpen: [false],
+                isAccordionOpen: [true]
+            };
+        },
+        mounted: async function () {
+            let element = this.$el;
+            this.apiurl = element.parentElement.dataset.apiurl;
+            this.serialized = this.$refs[this.refId].value;
+
+            await this.searchCategories();
+            await this.searchProducts();
+            this.buildTable();
+        },
+        computed: {
+            filteredCategories() {
+                return this.categories.filter(category =>
+                    category.name.toLowerCase().includes(this.searchCategory.toLowerCase())
+                )
+            },
+            filteredProducts() {
+                return this.products.filter(product => product.title.toLowerCase().includes(this.searchProduct.toLowerCase()))
+            }
+        },
+        methods: {
+            buildTable: async function () {
+                await gBuildPriceTable(this);
+            },
+            updateColumns: async function (index) {
+                await gUpdatePriceTableColumns(this);
+            },
+            addPriceTable: function (type) {
+                switch (type) {
+                    case 'category':
+                        this.priceTable.category.push({
+                            categories: [],
+                            rows: []
+                        });
+                        this.selectedCategories.push([]);
+                        break;
+                    case 'product':
+                        this.priceTable.product.push({
+                            products: [],
+                            rows: []
+                        });
+                        this.selectedProducts.push([]);
+                        break;
+                }
+            },
+            removePriceTable: function (type, index) {
+                switch (type) {
+                    case 'category':
+                        this.priceTable.category.splice(index, 1);
+                        this.selectedCategories.splice(index, 1);
+                        break;
+                    case 'product':
+                        this.priceTable.product.splice(index, 1);
+                        this.selectedProducts.splice(index, 1);
+                        break;
+                }
+                gUpdatePriceTableColumns(this);
+            },
+            currentPriceTab(tab) {
+                this.activeTab = tab;
+            },
+            async searchCategories() {
+                await gSearchCategories(this);
+            },
+            async searchProducts() {
+                await gSearchProducts(this);
+            },
+            toggleAccordion(index) {
+                this.isAccordionOpen[index] = !this.isAccordionOpen[index];
+            },
+            async selectCategory(category, index) {
+                await selectItem('category', this, category, index);
+                this.searchCategory = '';
+                this.isOpen = this.isOpen.map(() => false);
+                this.priceTable.category[index].categories = this.selectedCategories[index];
+                await gUpdatePriceTableColumns(this);
+            },
+            async selectProduct(product, index) {
+                await selectItem('product', this, product, index);
+                this.searchProduct = ''
+                this.isOpen = this.isOpen.map(() => false);
+                this.priceTable.product[index].products = this.selectedProducts[index];
+                await gUpdatePriceTableColumns(this);
+            },
+            async removeCategory(category,  index) {
+                this.selectedCategories[index] = this.selectedCategories[index].filter(c => c.id !== category.id)
+                this.priceTable.category[index].categories = this.selectedCategories[index];
+                await gUpdatePriceTableColumns(this);
+            },
+            async removeProduct(product, index) {
+                this.selectedProducts[index] = this.selectedProducts[index].filter(p => p.id !== product.id)
+                this.priceTable.product[index].products = this.selectedProducts[index];
+                await gUpdatePriceTableColumns(this);
+            },
+            closeDropdown() {
+                this.isOpen = this.isOpen.map(() => false);
+            }
+        }
+    }).mount('#formPriceTable');
+}
+

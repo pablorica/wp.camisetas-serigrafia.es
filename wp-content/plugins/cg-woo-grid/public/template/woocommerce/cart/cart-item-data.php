@@ -20,19 +20,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <dl class="variation">
 	<?php foreach ( $item_data as $data ) : ?>
-		<dt style="<?php echo sanitize_text_field( 
-                $data['keystyle']  
-            ); ?>"
-            class="<?php echo sanitize_html_class( 
-                'variation-' . $data['key'] 
-            ); ?>"
-        ><?php echo wp_kses_post( $data['key'] ); ?></dt>
-		<dd style="<?php echo sanitize_text_field( 
-                $data['displaystyle']  
-            ); ?>"
-            class="<?php echo sanitize_html_class( 
-                'variation-' . $data['key'] 
-            ); ?>"
-        ><?php echo wp_kses_post( wpautop( $data['display'] ) ); ?></dd>
-	<?php endforeach; ?>
+        <?php 
+        if ( isset($data['key']) 
+            && isset($data['display']) 
+        ) : ?>
+            <dt style="<?php echo (isset($data['keystyle'] ) ? sanitize_text_field($data['keystyle']) : ''); ?>"
+                class="<?php echo sanitize_html_class( 'variation-' . $data['key']); ?>"
+            ><?php echo wp_kses_post( $data['key'] ); ?></dt>
+            <dd style="<?php echo (isset($data['displaystyle'] ) ? sanitize_text_field($data['displaystyle']) : ''); ?>"
+                class="<?php echo sanitize_html_class( 'variation-' . $data['key'] ); ?>"
+            ><?php echo wp_kses_post( wpautop( $data['display'] ) ); ?></dd>
+        <?php endif; ?>
+    <?php endforeach; ?>
 </dl>
