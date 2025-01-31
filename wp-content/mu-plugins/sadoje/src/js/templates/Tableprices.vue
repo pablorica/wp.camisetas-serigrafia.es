@@ -1,13 +1,15 @@
 <template>
   <div class="price-container">
-    <!-- Adult Section -->
-    <div class="table-section">
-      <div class="table-header">
-        <b>Adulto</b>
-      </div>
+    <div v-if="prices.length" class="table-section">
+      <div v-if="checkPriceAvailability('adult', 'color') || checkPriceAvailability('adult', 'white')" class="table-wrapper">
+        <div class="table-header">
+          <b>Adulto</b>
+        </div>
 
-      <div class="table-wrapper">
         <table>
+          <thead>
+
+          </thead>
           <thead>
           <tr>
             <th>Tipo</th>
@@ -17,13 +19,13 @@
           </tr>
           </thead>
           <tbody>
-          <tr>
+          <tr v-if="checkPriceAvailability('adult', 'white')">
             <td>Blanco</td>
             <td v-for="(row, index) in prices" :key="index" :id="'row_'+index">
               {{ row.price.adult.white ?? "-" }}
             </td>
           </tr>
-          <tr>
+          <tr v-if="checkPriceAvailability('adult', 'color')">
             <td>Color</td>
             <td v-for="(row, index) in prices" :key="index" :id="'row_'+index">
               {{ row.price.adult.color ?? "-" }}
@@ -33,11 +35,10 @@
         </table>
       </div>
 
-      <div class="table-header">
-        <b>Niño</b>
-      </div>
-
-      <div class="table-wrapper">
+      <div v-if="checkPriceAvailability('child', 'color') || checkPriceAvailability('child', 'white')" class="table-wrapper">
+        <div class="table-header">
+          <b>Niño</b>
+        </div>
         <table>
           <thead>
           <tr>
@@ -48,13 +49,13 @@
           </tr>
           </thead>
           <tbody>
-          <tr>
+          <tr v-if="checkPriceAvailability('child', 'white')">
             <td>Blanco</td>
             <td v-for="(row, index) in prices" :key="index" :id="'row_'+index">
               {{ row.price.child.white ?? "-" }}
             </td>
           </tr>
-          <tr>
+          <tr v-if="checkPriceAvailability('child', 'color')">
             <td>Color</td>
             <td v-for="(row, index) in prices" :key="index" :id="'row_'+index">
               {{ row.price.child.color ?? "-" }}
@@ -68,7 +69,6 @@
 </template>
 
 <script>  
-console.log('customisations-for-cg-woo-grid: VUE Table Prices')
 import { emitter } from '../vue-customisations-for-cg-woo-grid.js';
 
 export default {
@@ -78,6 +78,7 @@ export default {
             apiurl:             '',
             prices:             '',
             rows:               [],
+            hasWhiteVariation:  false,
         }
     },
     mounted: function () {
@@ -86,42 +87,38 @@ export default {
         this.apiurl = element.parentElement.dataset.apiurl;
         this.prices = JSON.parse(element.parentElement.dataset.prices);
 
-        this.buildTablePrices(); 
+
+        this.buildTablePrices();
         
     },
     methods: {
+      buildTablePrices: function() {
 
-        buildTablePrices: function() {
+          let self   = this
+          let getURL = self.apiurl+'/encode';
+          /*
+          if(self.proftypes !== ''){
 
-            let self   = this
-            let getURL = self.apiurl+'/encode';
 
-            console.log('prices URL');
-            console.log(getURL);
 
-            console.log('prices');
-            console.log(self.prices);
+              axios.post(getURL,{
+                      serialized: self.proftypes
+                  })
+                  .then(function (response) {
+                      //console.log(response);
+                      self.rows = response.data
+                      console.log(response.data);
+                  })
+                  .catch(function (error) {
+                      console.log(error);
+                  });
+          }
+          */
 
-            /*
-            if(self.proftypes !== ''){
-
-                
-
-                axios.post(getURL,{
-                        serialized: self.proftypes
-                    })
-                    .then(function (response) {
-                        //console.log(response);
-                        self.rows = response.data
-                        console.log(response.data);
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-            }
-            */
-
-        },
+      },
+      checkPriceAvailability: function ( type, color) {
+        return this.prices.some(item => item.price[type][color] !== null);
+      }
     }
 }
 </script>

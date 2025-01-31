@@ -812,7 +812,8 @@
                                 <!--Category selector-->
                                     <div :class="['input-selector', isAccordionOpen[i] ? 'is-open' : 'is-close']" v-for="(categoryRows, i) in profitTable.category">
                                         <div class="input-selector__header" @click="toggleAccordion(i)">
-                                            <p class="input-selector__title"><?php esc_html_e('Grupo ','sadoje'); ?>{{ i + 1 }}</p>
+                                            <p v-if="categoryRows.categories.length === 0" class="input-selector__title"><?php esc_html_e('Grupo ','sadoje'); ?>{{ i + 1 }}</p>
+                                            <p class="category-group input-selector__title">{{ categoryRows.categories.map((category) => category.name).join(', ') }}</p>
                                             <div>
                                                 <span class="accordion-icon" @click="toggleAccordion(i)">{{ isAccordionOpen[i] ? '▲' : '▼' }}</span>
                                             </div>
@@ -823,6 +824,7 @@
                                             <input
                                                     v-model="searchCategory"
                                                     @focus="isOpen[i] = true"
+                                                    @click="isOpen[i] = true"
                                                     @blur="closeDropdown"
                                                     type="text"
                                                     @input="searchCategories(i)"
@@ -833,7 +835,7 @@
                                                 <div
                                                         v-for="category in filteredCategories"
                                                         :key="category.id"
-                                                        @mousedown.prevent="toggleCategory(category, i)"
+                                                        @mousedown.prevent="selectCategory(category, i)"
                                                         class="input-selector__dropdown-item"
                                                 >
                                                     {{ category.name }}
@@ -927,7 +929,8 @@
                                 <div v-else-if="activeTab === 'product'">
                                     <div :class="['input-selector', isAccordionOpen[i] ? 'is-open' : 'is-close']" v-for="(productRows, i) in profitTable.product">
                                         <div class="input-selector__header" @click="toggleAccordion(i)">
-                                            <p class="input-selector__title"><?php esc_html_e('Grupo ','sadoje'); ?>{{ i + 1 }}</p>
+                                            <p v-if="productRows.products.length === 0" class="input-selector__title"><?php esc_html_e('Grupo ','sadoje'); ?>{{ i + 1 }}</p>
+                                            <p class="category-group input-selector__title">{{ productRows.products.map((product) => product.title).join(', ') }}</p>
                                             <div>
                                                 <span class="accordion-icon" @click="toggleAccordion(i)">{{ isAccordionOpen[i] ? '▲' : '▼' }}</span>
                                             </div>
@@ -937,6 +940,7 @@
                                             <input
                                                     v-model="searchProduct"
                                                     @focus="isOpen[i] = true"
+                                                    @click="isOpen[i] = true"
                                                     @blur="closeDropdown"
                                                     type="text"
                                                     @input="searchProducts(i)"
@@ -947,7 +951,7 @@
                                                 <div
                                                         v-for="product in filteredProducts"
                                                         :key="product.id"
-                                                        @mousedown.prevent="toggleProduct(product, i)"
+                                                        @mousedown.prevent="selectProduct(product, i)"
                                                         class="input-selector__dropdown-item"
                                                 >
                                                     {{ product.title }}
@@ -1084,9 +1088,10 @@
                                 </div>
 
                                 <div v-else-if="activeTab === 'category'" class="input-price-table">
-                                    <div :class="['input-selector', isAccordionOpen[i] ? 'is-open' : 'is-close']" v-for="(productRows, i) in priceTable.category">
+                                    <div :class="['input-selector', isAccordionOpen[i] ? 'is-open' : 'is-close']" v-for="(categoryRows, i) in priceTable.category">
                                         <div class="input-selector__header" @click="toggleAccordion(i)">
-                                            <p class="input-selector__title"><?php esc_html_e('Grupo ','sadoje'); ?>{{ i + 1 }}</p>
+                                            <p v-if="categoryRows.categories.length === 0" class="input-selector__title"><?php esc_html_e('Grupo ','sadoje'); ?>{{ i + 1 }}</p>
+                                            <p class="category-group input-selector__title">{{ categoryRows.categories.map((category) => category.name).join(', ') }}</p>
                                             <div>
                                                 <span class="accordion-icon" @click="toggleAccordion(i)">{{ isAccordionOpen[i] ? '▲' : '▼' }}</span>
                                             </div>
@@ -1096,6 +1101,7 @@
                                             <input
                                                     v-model="searchCategory"
                                                     @focus="isOpen[i] = true"
+                                                    @click="isOpen[i] = true"
                                                     @blur="closeDropdown"
                                                     type="text"
                                                     @input="searchCategories(i)"
@@ -1106,7 +1112,7 @@
                                                 <div
                                                         v-for="category in filteredCategories"
                                                         :key="category.id"
-                                                        @mousedown.prevent="toggleCategory(category, i)"
+                                                        @mousedown.prevent="selectCategory(category, i)"
                                                         class="input-selector__dropdown-item"
                                                 >
                                                     {{ category.name }}
@@ -1139,8 +1145,8 @@
                                 <div v-else-if="activeTab === 'product'" class="input-price-table">
                                     <div :class="['input-selector', isAccordionOpen[i] ? 'is-open' : 'is-close']" v-for="(productRows, i) in priceTable.product">
                                         <div class="input-selector__header" @click="toggleAccordion(i)">
-                                            <p class="input-selector__title"><?php esc_html_e('Grupo ','sadoje'); ?>{{ i + 1 }}</p>
-                                            <div>
+                                            <p v-if="productRows.products.length === 0" class="input-selector__title"><?php esc_html_e('Grupo ','sadoje'); ?>{{ i + 1 }}</p>
+                                            <p class="category-group input-selector__title">{{ productRows.products.map((product) => product.title).join(', ') }}</p>                                            <div>
                                                 <span class="accordion-icon" @click="toggleAccordion(i)">{{ isAccordionOpen[i] ? '▲' : '▼' }}</span>
                                             </div>
                                         </div>
@@ -1149,6 +1155,7 @@
                                             <input
                                                     v-model="searchProduct"
                                                     @focus="isOpen[i] = true"
+                                                    @click="isOpen[i] = true"
                                                     @blur="closeDropdown"
                                                     type="text"
                                                     @input="searchProducts(i)"
@@ -1159,7 +1166,7 @@
                                                 <div
                                                         v-for="product in filteredProducts"
                                                         :key="product.id"
-                                                        @mousedown.prevent="toggleProduct(product, i)"
+                                                        @mousedown.prevent="selectProduct(product, i)"
                                                         class="input-selector__dropdown-item"
                                                 >
                                                     {{ product.title }}

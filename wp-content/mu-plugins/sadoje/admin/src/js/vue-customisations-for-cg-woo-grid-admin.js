@@ -283,6 +283,20 @@ async function gSearchCategories(self) {
         });
     }, 500);
 }
+async function selectItem(type, self, item, index) {
+    switch (type) {
+        case 'category':
+            if (!self.selectedCategories[index].some(c => c.id === item.id)) {
+                self.selectedCategories[index].push({ id: item.id, name: item.name });
+            }
+            break;
+        case 'product':
+            if (!self.selectedProducts[index].some(p => p.id === item.id)) {
+                self.selectedProducts[index].push({ id: item.id, title: item.title });
+            }
+            break;
+    }
+}
 
 if(document.getElementById("formBaseprice")) {
     createApp({
@@ -635,21 +649,21 @@ if (document.getElementById("formProfit")) {
             buildTable: async function () {
                 await gBuildProfitTable(this);
             },
-            updateRows: function (index) {
+            updateRows: function () {
                 gUpdateProfitRows(this);
             },
             addProfitTable: function (type) {
                 switch (type) {
                     case 'category':
                         this.profitTable.category.push({
-                            categories: [{}],
+                            categories: [],
                             rows: [{}]
                         });
                         this.selectedCategories.push([]);
                         break;
                     case 'product':
                         this.profitTable.product.push({
-                            products: [{}],
+                            products: [],
                             rows: [{}]
                         });
                         this.selectedProducts.push([]);
@@ -687,15 +701,15 @@ if (document.getElementById("formProfit")) {
             toggleAccordion(index) {
                 this.isAccordionOpen[index] = !this.isAccordionOpen[index];
             },
-            toggleCategory(category, index) {
-                this.selectedCategories[index].push({ id: category.id, name: category.name });
+            async selectCategory(category, index) {
+                await selectItem('category', this, category, index);
                 this.searchCategory = '';
                 this.isOpen = this.isOpen.map(() => false);
                 this.profitTable.category[index].categories = this.selectedCategories[index];
                 gUpdateProfitRows(this);
             },
-            toggleProduct(product, index) {
-                this.selectedProducts[index].push({ id: product.id, title: product.title });
+            async selectProduct(product, index) {
+                await selectItem('product', this, product, index);
                 this.searchProduct = ''
                 this.isOpen = this.isOpen.map(() => false);
                 this.profitTable.product[index].products = this.selectedProducts[index];
@@ -772,15 +786,15 @@ if (document.getElementById("formPriceTable")) {
                 switch (type) {
                     case 'category':
                         this.priceTable.category.push({
-                            categories: [{}],
-                            rows: [""]
+                            categories: [],
+                            rows: []
                         });
                         this.selectedCategories.push([]);
                         break;
                     case 'product':
                         this.priceTable.product.push({
-                            products: [{}],
-                            rows: [""]
+                            products: [],
+                            rows: []
                         });
                         this.selectedProducts.push([]);
                         break;
@@ -811,15 +825,15 @@ if (document.getElementById("formPriceTable")) {
             toggleAccordion(index) {
                 this.isAccordionOpen[index] = !this.isAccordionOpen[index];
             },
-            async toggleCategory(category, index) {
-                this.selectedCategories[index].push({ id: category.id, name: category.name });
+            async selectCategory(category, index) {
+                await selectItem('category', this, category, index);
                 this.searchCategory = '';
                 this.isOpen = this.isOpen.map(() => false);
                 this.priceTable.category[index].categories = this.selectedCategories[index];
                 await gUpdatePriceTableColumns(this);
             },
-            async toggleProduct(product, index) {
-                this.selectedProducts[index].push({ id: product.id, title: product.title });
+            async selectProduct(product, index) {
+                await selectItem('product', this, product, index);
                 this.searchProduct = ''
                 this.isOpen = this.isOpen.map(() => false);
                 this.priceTable.product[index].products = this.selectedProducts[index];

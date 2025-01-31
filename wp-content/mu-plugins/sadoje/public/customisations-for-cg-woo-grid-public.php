@@ -189,6 +189,9 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
         $profit = 0;
 
         $profit_types = get_option($this->get_element_name().'_budgeteer_profit_types');
+        $test = get_option($this->get_element_name().'_budgeteer_tableprices_sizes_kids');
+        $adult = get_option($this->get_element_name().'_budgeteer_tableprices_sizes_adults');
+        echo $test . $adult;
         if ($profit_types) {
             $profits = maybe_unserialize($profit_types);
             if (is_array($profits) && count($profits)) {
@@ -209,8 +212,23 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
         $variations = $product->get_available_variations();
          // TODO: $variation_map needs to be populated automatically from CMS
         $variation_map = [
-            'adult' => ['sizes' => ['s', 'm', 'l', 'xl', '2xl']],
-            'child' => ['sizes' => ['1-2','3-4','4', '5-6', '7-8', '8', '9-10', '11-12', '12', '16' ]],
+            'adult' => ['sizes' => ['s', 'm', 'l', 'xl', '2xl', '3xl']],
+            'child' => ['sizes' => [
+                '1-2',
+                '3-4',
+                '4',
+                '5-6',
+                '7-8',
+                '8',
+                '9-10',
+                '11-12',
+                '12',
+                '16',
+                '6-meses',
+                '12-meses',
+                '18-meses',
+                '2-anos',
+            ]],
         ];
 
         $selected_variations = [

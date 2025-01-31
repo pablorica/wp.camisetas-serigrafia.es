@@ -106,6 +106,12 @@ input[type="number"][size="10"]{
         .accordion-icon {
             cursor: pointer;
         }
+
+        .category-group {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     }
 
     .input-selector__title {
