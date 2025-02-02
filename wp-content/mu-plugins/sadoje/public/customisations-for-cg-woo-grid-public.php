@@ -189,9 +189,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
         $profit = 0;
 
         $profit_types = get_option($this->get_element_name().'_budgeteer_profit_types');
-        $test = get_option($this->get_element_name().'_budgeteer_tableprices_sizes_kids');
-        $adult = get_option($this->get_element_name().'_budgeteer_tableprices_sizes_adults');
-        echo $test . $adult;
+
         if ($profit_types) {
             $profits = maybe_unserialize($profit_types);
             if (is_array($profits) && count($profits)) {
