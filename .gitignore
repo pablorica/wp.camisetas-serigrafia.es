@@ -109,6 +109,7 @@ package-lock.json
 !wp-content/mu-plugins/sadoje
 
 !wp-content/plugins/cg-woo-grid
+!wp-content/plugins/sadoje-template
 
 # Ignore build folders of plugin
 wp-content/mu-plugins/sadoje/.babelrc
@@ -141,5 +142,5 @@ wp-content/plugins/cg-woo-grid/yarn.lock
 
 
 # track these themes
-#!wp-content/themes/codigo/
+!wp-content/themes/sadoje/
 

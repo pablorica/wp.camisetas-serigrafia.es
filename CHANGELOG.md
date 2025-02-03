@@ -7,6 +7,50 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 
+## [0.6.4] - 2025-01-31
+
+### Updates
+
+ - [Tallas Adultos/Niños](https://app.asana.com/0/1203117341882428/1209050961520853) 
+    - Precio principal igual al mínimo de la tabla de precios
+
+
+## [0.6.3] - 2025-01-31
+
+### Updates
+
+ - [Tabla de precios: Margen beneficio por producto y categoría](https://app.asana.com/0/1203117341882428/1209050961520871) 
+     - Update harcoded sizes
+     - Implement dynamic products/categories accordion name & show price table only in existing variants
+     - Implement multiple custom price tables by category and product
+     - Implement custom price table by category and product
+     - Implement benefit tables by category and product
+
+
+## [0.6.2] - 2025-01-30
+
+### Updates
+
+ - Nueva plantilla
+    - Ha sido requerida en [Página de producto](https://app.asana.com/0/1203117341882428/1208913047697317) 
+
+
+## [0.6.1] - 2025-01-30
+
+### Updates
+
+ - Hero Home CSS added to custom plugin
+    - Load CSS files based on the page
+    - [Página de producto](https://app.asana.com/0/1203117341882428/1208913047697317) Product thumbnails smaller
+
+
+## [0.6.0] - 2025-01-29
+
+### Updates
+
+ - New plugin to manage the template
+
+
 ## [0.5.8] - 2025-01-21
 
 ### Updates

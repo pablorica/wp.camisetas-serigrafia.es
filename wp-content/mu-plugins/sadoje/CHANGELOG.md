@@ -12,6 +12,23 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
     - *public/customisations-for-cg-woo-grid-public.php:l.182* `$variation_map` needs to be populated automatically from CMS
 
 
+## [0.14.5] - 2025-01-21
+
+ - [Tallas Adultos/Niños](https://app.asana.com/0/1203117341882428/1209050961520853) 
+    - Precio principal igual al mínimo de la tabla de precios
+
+## [0.14.4] - 2025-01-31
+
+### Updates
+
+ - [Tabla de precios: Margen beneficio por producto y categoría](https://app.asana.com/0/1203117341882428/1209050961520871) 
+     - Update harcoded sizes
+     - Implement dynamic products/categories accordion name & show price table only in existing variants
+     - Implement multiple custom price tables by category and product
+     - Implement custom price table by category and product
+     - Implement benefit tables by category and product
+
+
 ## [0.14.3] - 2025-01-21
 
  - [Tallas Adultos/Niños](https://app.asana.com/0/1203117341882428/1209050961520853) 
