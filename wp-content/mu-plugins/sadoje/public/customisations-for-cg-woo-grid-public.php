@@ -329,10 +329,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
         $profit = 0;
 
         $profit_types = get_option($this->get_element_name().'_budgeteer_profit_types');
-        //Debug
-        $test = get_option($this->get_element_name().'_budgeteer_tableprices_sizes_kids');
-        $adult = get_option($this->get_element_name().'_budgeteer_tableprices_sizes_adults');
-        //echo $test . $adult;
+
         if ($profit_types) {
             $profits = maybe_unserialize($profit_types);
             if (is_array($profits) && count($profits)) {
@@ -979,6 +976,21 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
         $product_id = $product->get_id();
         $product_categories = $product->get_category_ids();
 
+        $evaluate_rule = function ($rule, $quantity) {
+            $has_min = isset($rule['min']) && $rule['min'] !== "";
+            $has_max = isset($rule['max']) && $rule['max'] !== "";
+
+            if ($has_min && $has_max) {
+                return $quantity >= $rule['min'] && $quantity <= $rule['max'];
+            } elseif ($has_min) {
+                return $quantity >= $rule['min'];
+            } elseif ($has_max) {
+                return $quantity <= $rule['max'];
+            }
+
+            return true;
+        };
+
         if (!empty($profits['product'])) {
             foreach ($profits['product'] as $product_rule_set) {
                 if (!empty($product_rule_set['products'])) {
@@ -987,12 +999,8 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                     if (in_array($product_id, $products_id, true)) {
                         $product_profit = array_filter(
                             $product_rule_set['rows'],
-                            function ($obj) use ($quantity) {
-                                if (isset($obj['min']) && isset($obj['max'])) {
-                                    return ($obj['min'] <= $quantity && $obj['max'] >= $quantity);
-                                } else {
-                                    return false;
-                                }
+                            function ($rule) use ($quantity, $evaluate_rule) {
+                                return $evaluate_rule($rule, $quantity);
                             }
                         );
 
@@ -1014,12 +1022,8 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                     if (!empty($matched_categories)) {
                         $category_profit = array_filter(
                             $category_rule_set['rows'],
-                            function ($obj) use ($quantity) {
-                                if (isset($obj['min']) && isset($obj['max'])) {
-                                    return ($obj['min'] <= $quantity && $obj['max'] >= $quantity);
-                                } else {
-                                    return false;
-                                }
+                            function ($rule) use ($quantity, $evaluate_rule) {
+                                return $evaluate_rule($rule, $quantity);
                             }
                         );
 
@@ -1035,9 +1039,8 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
         if (!empty($profits['general'])) {
             $general_profit = array_filter(
                 $profits['general'],
-                function ($rule) use ($quantity) {
-                    return isset($rule['min'], $rule['max']) &&
-                        $quantity >= $rule['min'] && $quantity <= $rule['max'];
+                function ($rule) use ($quantity, $evaluate_rule) {
+                    return $evaluate_rule($rule, $quantity);
                 }
             );
 

@@ -1039,7 +1039,15 @@
                                     </div>
 
                                 </div>
-                                <?php submit_button(); ?>
+                                <?php
+                                submit_button(
+                                    null,
+                                    'primary',
+                                    null,
+                                    true,
+                                    [':disabled' => 'isUpdating']
+                                );
+                                ?>
                             </form>
                         </div>
                         <!-- Configurador General Margen de beneficio -->
@@ -1084,7 +1092,12 @@
 
                                 <div v-if="activeTab === 'general'" class="input-price-table">
                                     <label for="columns"><?php echo __('Columnas generales:','sadoje'); ?></label>
-                                    <input name="columns" type="text" v-model="priceTable.general" @blur="updateColumns()" />
+                                    <input
+                                        name="columns"
+                                        type="text"
+                                        v-model="priceTable.general"
+                                        @input="updateColumns()"
+                                    />
                                 </div>
 
                                 <div v-else-if="activeTab === 'category'" class="input-price-table">
@@ -1133,7 +1146,12 @@
                                         </div>
 
                                         <label for="columns"><?php echo __('Columnas por categoría:','sadoje'); ?></label>
-                                        <input name="columns" type="text" v-model="priceTable.category[i].rows" @blur="updateColumns(i)" />
+                                        <input
+                                            name="columns"
+                                            type="text"
+                                            v-model="priceTable.category[i].rows"
+                                            @input="updateColumns(i)"
+                                        />
 
                                         <div class="button button-secondary button-delete delete-table"
                                                 style="background:#DC3232;color:#FFF;border-color:#FFF;margin-left: 10px;"
@@ -1187,7 +1205,12 @@
                                         </div>
 
                                         <label for="columns"><?php echo __('Columnas por producto:','sadoje'); ?></label>
-                                        <input name="columns" type="text" v-model="priceTable.product[i].rows" @blur="updateColumns(i)" />
+                                        <input
+                                            name="columns"
+                                            type="text"
+                                            v-model="priceTable.product[i].rows"
+                                            @input="updateColumns(i)"
+                                        />
 
                                         <div class="button button-secondary button-delete delete-table"
                                                 style="background:#DC3232;color:#FFF;border-color:#FFF;margin-left: 10px;"
@@ -1201,7 +1224,15 @@
                                 do_settings_sections( 'customisations-for-cg-woo-grid_budgeteer_tableprices' );
                                 ?>
 
-                                <?php submit_button(); ?>
+                                <?php
+                                submit_button(
+                                    null,
+                                    'primary',
+                                    null,
+                                    true,
+                                    [':disabled' => 'isUpdating']
+                                );
+                                ?>
                             </form>
 
                         </div><!-- .inside -->

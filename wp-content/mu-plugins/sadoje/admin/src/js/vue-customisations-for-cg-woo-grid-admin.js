@@ -198,9 +198,9 @@ async function gUpdatePriceTableColumns(self) {
             console.log(error);
         });
 }
-function gUpdateProfitRows(self) {
+async function gUpdateProfitRows(self) {
     let getURL = self.apiurl+'/serialize';
-    axios.post(getURL,{
+    await axios.post(getURL,{
         object: self.profitTable
     })
         .then(function (response) {
@@ -624,6 +624,7 @@ if (document.getElementById("formProfit")) {
                 activeTab: 'general',
                 isOpen: [],
                 isAccordionOpen: [true],
+                isUpdating: false,
             };
         },
         mounted: async function () {
@@ -649,8 +650,10 @@ if (document.getElementById("formProfit")) {
             buildTable: async function () {
                 await gBuildProfitTable(this);
             },
-            updateRows: function () {
-                gUpdateProfitRows(this);
+            updateRows: async function () {
+                this.isUpdating = true;
+                await gUpdateProfitRows(this);
+                this.isUpdating = false;
             },
             addProfitTable: function (type) {
                 switch (type) {
@@ -702,28 +705,36 @@ if (document.getElementById("formProfit")) {
                 this.isAccordionOpen[index] = !this.isAccordionOpen[index];
             },
             async selectCategory(category, index) {
+                this.isUpdating = true;
                 await selectItem('category', this, category, index);
                 this.searchCategory = '';
                 this.isOpen = this.isOpen.map(() => false);
                 this.profitTable.category[index].categories = this.selectedCategories[index];
-                gUpdateProfitRows(this);
+                await gUpdateProfitRows(this);
+                this.isUpdating = false
             },
             async selectProduct(product, index) {
+                this.isUpdating = true;
                 await selectItem('product', this, product, index);
                 this.searchProduct = ''
                 this.isOpen = this.isOpen.map(() => false);
                 this.profitTable.product[index].products = this.selectedProducts[index];
-                gUpdateProfitRows(this);
+                await gUpdateProfitRows(this);
+                this.isUpdating = false;
             },
-            removeCategory(category, groupIndex) {
+            async removeCategory(category, groupIndex) {
+                this.isUpdating = true;
                 this.selectedCategories[groupIndex] = this.selectedCategories[groupIndex].filter(c => c.id !== category.id);
                 this.profitTable.category[groupIndex].categories = this.selectedCategories[groupIndex];
-                gUpdateProfitRows(this);
+                await gUpdateProfitRows(this);
+                this.isUpdating = false;
             },
-            removeProduct(product, index) {
+            async removeProduct(product, index) {
+                this.isUpdating = true;
                 this.selectedProducts[index] = this.selectedProducts[index].filter(p => p.id !== product.id);
                 this.profitTable.product[index].products = this.selectedProducts[index];
-                gUpdateProfitRows(this);
+                await gUpdateProfitRows(this);
+                this.isUpdating = false
             },
             closeDropdown() {
                 this.isOpen = this.isOpen.map(() => false);
@@ -753,7 +764,8 @@ if (document.getElementById("formPriceTable")) {
                 refId: 'customisationsforcgwoogridbudgeteertablepricestypes',
                 activeTab: 'general',
                 isOpen: [false],
-                isAccordionOpen: [true]
+                isAccordionOpen: [true],
+                isUpdating: false,
             };
         },
         mounted: async function () {
@@ -779,8 +791,10 @@ if (document.getElementById("formPriceTable")) {
             buildTable: async function () {
                 await gBuildPriceTable(this);
             },
-            updateColumns: async function (index) {
+            updateColumns: async function () {
+                this.isUpdating = true;
                 await gUpdatePriceTableColumns(this);
+                this.isUpdating = false;
             },
             addPriceTable: function (type) {
                 switch (type) {
@@ -826,28 +840,36 @@ if (document.getElementById("formPriceTable")) {
                 this.isAccordionOpen[index] = !this.isAccordionOpen[index];
             },
             async selectCategory(category, index) {
+                this.isUpdating = true;
                 await selectItem('category', this, category, index);
                 this.searchCategory = '';
                 this.isOpen = this.isOpen.map(() => false);
                 this.priceTable.category[index].categories = this.selectedCategories[index];
                 await gUpdatePriceTableColumns(this);
+                this.isUpdating = false;
             },
             async selectProduct(product, index) {
+                this.isUpdating = true;
                 await selectItem('product', this, product, index);
                 this.searchProduct = ''
                 this.isOpen = this.isOpen.map(() => false);
                 this.priceTable.product[index].products = this.selectedProducts[index];
                 await gUpdatePriceTableColumns(this);
+                this.isUpdating = false;
             },
             async removeCategory(category,  index) {
+                this.isUpdating = true;
                 this.selectedCategories[index] = this.selectedCategories[index].filter(c => c.id !== category.id)
                 this.priceTable.category[index].categories = this.selectedCategories[index];
                 await gUpdatePriceTableColumns(this);
+                this.isUpdating = false;
             },
             async removeProduct(product, index) {
+                this.isUpdating = true;
                 this.selectedProducts[index] = this.selectedProducts[index].filter(p => p.id !== product.id)
                 this.priceTable.product[index].products = this.selectedProducts[index];
                 await gUpdatePriceTableColumns(this);
+                this.isUpdating = false;
             },
             closeDropdown() {
                 this.isOpen = this.isOpen.map(() => false);
