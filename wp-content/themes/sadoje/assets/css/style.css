@@ -48,10 +48,10 @@
     aspect-ratio: 1/1;
 }
 
-.agni-block-products-categories .has-display-style-1 .product-category {
+.cards-grey .agni-block-products-categories .has-display-style-1 .product-category {
     background-color: #f5f5f5;
 }
-.agni-block-products-categories .has-display-style-1 .product-category .category-details {
+.cards-grey .agni-block-products-categories .has-display-style-1 .product-category .category-details {
     padding-bottom: 10px;
   }
 
