@@ -43,13 +43,15 @@
     white-space: nowrap;
 }
 
-
-.agni-block-products-categories .product-category {
-    background-color: #f5f5f5;
-}
-.agni-block-products-categories .product-category .category-details {
-    padding-bottom: 10px;
-  }
+  /* Category Cards */
 .agni-block-products-categories .product-category img {
     aspect-ratio: 1/1;
 }
+
+.agni-block-products-categories .has-display-style-1 .product-category {
+    background-color: #f5f5f5;
+}
+.agni-block-products-categories .has-display-style-1 .product-category .category-details {
+    padding-bottom: 10px;
+  }
+
