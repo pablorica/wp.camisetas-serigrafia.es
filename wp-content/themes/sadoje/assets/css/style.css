@@ -44,6 +44,12 @@
 }
 
 
+.agni-block-products-categories .product-category {
+    background-color: #f5f5f5;
+}
+.agni-block-products-categories .product-category .category-details {
+    padding-bottom: 10px;
+  }
 .agni-block-products-categories .product-category img {
     aspect-ratio: 1/1;
 }
