@@ -44,9 +44,23 @@ function sdjthm_child_enqueue_scripts() {
             get_stylesheet_directory_uri() . '/assets/css/product.css'
         );
     }
+
+    
 }
 add_action( 'wp_enqueue_scripts', 'sdjthm_child_enqueue_scripts', 9 );
 
+// Add custom editor styles
+function sdjthm_gutenberg_editor_styles() {;
+    
+    wp_enqueue_style(
+        'sadoje-editor-style', 
+        get_stylesheet_directory_uri() . '/assets/css/editor-style.css', 
+        array(), 
+        wp_get_theme()->get('Version'), 
+        'all'
+    );
+}
+add_action( 'enqueue_block_editor_assets', 'sdjthm_gutenberg_editor_styles' );
 
 
 // Register Sidebar

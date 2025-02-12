@@ -4,7 +4,7 @@ Theme URI: http://demo.agnidesigns.com/cartify
 Author: Pablo Rica
 Author URI: https://codigo.co.uk/team/pablo-rica
 Description: WooCommerce WordPress Theme developed for Sadoje. It is a child theme of Cartify.
-Version: 0.1.0
+Version: 0.1.2
 template: cartify
 Requires at least: 5.0
 Tested up to: 5.6.1
@@ -15,45 +15,3 @@ Text Domain: sadoje
 Tags: custom-background, custom-logo, custom-menu, featured-images, threaded-comments, translation-ready
 
 */
-
-
-/*  Slider */
-.slick-dots {
-    bottom: 10px !important;
-  }
-  .slick-dots li button::before {
-      content:'' !important;
-    background: #3f3d8b;
-    border-radius: 10px;
-      border: 1px solid #fff;
-  }
-
-
-  /* Minicart */
-  .agni-sidecart__product .product-variations .variation {
-    display: grid;
-    grid-template-columns: 1fr 1fr;  /* Two equal columns */
-    gap: 0;  
-    align-items: center;  
-    width: 100%;
-}
-
-.agni-sidecart__product .product-variations .variation dt:before {
-    content:'' !important;
-    margin: 0 !important;
-}
-.agni-sidecart__product .product-variations .variation dt:after {
-    content:':' !important;
-}
-
-.agni-sidecart__product .product-variations .variation dt, 
-.agni-sidecart__product .product-variations .variation dd {
-    margin: 0;  
-    padding: 0;  
-    white-space: nowrap;  
-}
-
-.agni-sidecart__product .product-variations .variation dd p {
-    margin: 0;  
-    white-space: nowrap;
-}

@@ -1,0 +1,13 @@
+
+/*  Editor Style */
+
+.block-editor .agni-block-columns.has-columns-wide, 
+.block-editor .agni-block-group.has-columns-wide, 
+.block-editor .agni-block-banner.has-columns-wide, 
+.block-editor .agni-block-slider.has-columns-wide, 
+.block-editor .agni-block-separator.has-columns-wide, 
+.block-editor .agni-block-hotspot.has-columns-wide, 
+.block-editor .agni-block-image.has-columns-wide, 
+.block-editor .agni-block-gallery.has-columns-wide {
+    left: 0 !important;
+}
