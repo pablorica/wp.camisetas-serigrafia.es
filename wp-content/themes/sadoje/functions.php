@@ -8,40 +8,52 @@ function sdjthm_child_enqueue_scripts() {
     // Adding parent styles
     wp_enqueue_style( 
         'agni-parent-style', 
-        get_template_directory_uri() . '/style.css', 
-        array() 
+        get_template_directory_uri() . '/style.css',
+        array(), 
+        wp_get_theme()->get('Version'), 
     );
 
     // Adding rtl support
     if( is_rtl() ){
-	    wp_enqueue_style( 'agni-parent-rtl-style', 
-            get_template_directory_uri() . '/rtl.css' 
+	    wp_enqueue_style( 
+            'agni-parent-rtl-style', 
+            get_template_directory_uri() . '/rtl.css' ,
+            array(), 
+            wp_get_theme()->get('Version'), 
         );
     }
 
     // Adding child stylesheet
     wp_enqueue_style(
         'sadoje-style',
-        get_stylesheet_directory_uri() . '/style.css'
+        get_stylesheet_directory_uri() . '/style.css',
+        array(), 
+        wp_get_theme()->get('Version'), 
     );
 
     if (is_front_page()) {
         wp_enqueue_style(
             'sadoje-home-style',
-            get_stylesheet_directory_uri() . '/assets/css/home.css'
+            get_stylesheet_directory_uri() . '/assets/css/home.css',
+            array(), 
+            wp_get_theme()->get('Version'), 
         );
     }
     if (is_tax('product_cat')) { 
         wp_enqueue_style(
             'sadoje-product-category-style',
-            get_stylesheet_directory_uri() . '/assets/css/product_category.css'
+            get_stylesheet_directory_uri() . '/assets/css/product_category.css',
+            array(), 
+            wp_get_theme()->get('Version'), 
         );
     }
 
     if (is_product()) {
         wp_enqueue_style(
             'sadoje-product-style',
-            get_stylesheet_directory_uri() . '/assets/css/product.css'
+            get_stylesheet_directory_uri() . '/assets/css/product.css',
+            array(), 
+            wp_get_theme()->get('Version'), 
         );
     }
 

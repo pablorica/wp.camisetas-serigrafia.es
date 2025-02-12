@@ -42,3 +42,8 @@
     margin: 0;  
     white-space: nowrap;
 }
+
+
+.agni-block-products-categories .product-category img {
+    aspect-ratio: 1/1;
+}
