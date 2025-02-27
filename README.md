@@ -97,9 +97,8 @@ Use the pot file to generate the .po and .mo files of each language.
 
 Save them on the languages folder of the child theme, and name them using the <plugin-name>-<language> structure:
 
-- themes/cartify/languages/cartify-es_ES.po
-- languages/cartify-es_ES.mo
-- languages/cartify.pot
+- themes/sadoje/languages/es_ES.po
+- themes/sadoje/languages/es_ES.mo
 
 --
 
