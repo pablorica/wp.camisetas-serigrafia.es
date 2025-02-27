@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Updates
 
  - Theme translations
+ -  Ensure the Text Domain is Loaded Correctly
 
 
 ## [0.6.8] - 2025-02-27

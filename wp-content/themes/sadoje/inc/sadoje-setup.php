@@ -125,3 +125,13 @@ function sdjthm_close_main_section() {
     }
 }
 add_action('woocommerce_after_main_content', 'sdjthm_close_main_section', 15);
+
+
+// Add custom text domain
+function sadoje_load_custom_textdomain() {
+    load_theme_textdomain('cartify', WP_LANG_DIR . '/themes/');
+}
+add_action(
+    'after_setup_theme', 
+    'sadoje_load_custom_textdomain'
+);
