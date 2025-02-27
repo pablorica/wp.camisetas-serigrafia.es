@@ -1,6 +1,10 @@
 /*  General Style */
 
 
+/*  Category Menu */
+.site-header-menu-additional > li .agni-menu-item-text span {
+    display: none;
+}
 
 /*  Slider */
 .slick-dots {
