@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Updates
 
+ - Theme translations
  - Ocultar descripciones en el menu de categorías
 
 ## [0.6.7] - 2025-02-13
