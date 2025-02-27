@@ -4,18 +4,22 @@
 
 
 # ignore everything in the "wp-content" directory, except:
-# mu-plugins, plugins, and themes directories
+# mu-plugins, plugins, languages and themes directories
 wp-content/*
 !wp-content/mu-plugins/
 !wp-content/plugins/
 !wp-content/themes/
+!wp-content/languages/
 
-# ignore all mu-plugins, plugins, and themes
+
+# ignore all mu-plugins, plugins, languages and themes
 # unless explicitly whitelisted at the end of this file
 wp-content/mu-plugins/*
 wp-content/plugins/*
 wp-content/themes/*
-
+wp-content/languages/*
+!wp-content/languages/themes/
+wp-content/languages/themes/*
 
 # ignore all files starting with . or ~
 .*
@@ -140,6 +144,9 @@ wp-content/plugins/cg-woo-grid/public/css/cg-woo-grid.*
 # Ignore potentially dangerous files (dependabot alerts)
 wp-content/plugins/cg-woo-grid/yarn.lock 
 
+# track these translations
+!wp-content/languages/themes/cartify-es_ES.mo
+!wp-content/languages/themes/cartify-es_ES.po
 
 # track these themes
 !wp-content/themes/sadoje/

@@ -1,7 +1,7 @@
 # Camisetas Serigrafía (Wordpress)
 
 
-[![version](https://img.shields.io/badge/version-0.6.8-blue.svg)](https://semver.org)
+[![version](https://img.shields.io/badge/version-0.6.9-blue.svg)](https://semver.org)
 
 
 ## Live Site
@@ -99,6 +99,18 @@ Save them on the languages folder of the child theme, and name them using the <p
 
 - themes/sadoje/languages/es_ES.po
 - themes/sadoje/languages/es_ES.mo
+
+
+### Place the Translation Files in the Correct Directory
+
+Since Cartify (the parent theme) does not have translations, WordPress may not automatically detect translations stored in the child theme. Try placing your translation files in the recommended location:
+
+
+ - wp-content/languages/themes/cartify-es_ES.po
+ - wp-content/languages/themes/cartify-es_ES.mo
+
+WordPress prefers to load translation files from `wp-content/languages/themes/` instead of `wp-content/themes/sadoje/languages/`. This ensures that translations are used even after theme updates.
+
 
 --
 

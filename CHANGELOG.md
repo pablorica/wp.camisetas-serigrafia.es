@@ -6,12 +6,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [0.6.9] - 2025-02-27
+
+### Updates
+
+ - Theme translations
+
 
 ## [0.6.8] - 2025-02-27
 
 ### Updates
 
- - Theme translations
  - Ocultar descripciones en el menu de categorías
 
 ## [0.6.7] - 2025-02-13
