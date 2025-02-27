@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Cartify 1.2.6\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/cartify\n"
 "POT-Creation-Date: 2025-02-27T10:57:20+00:00\n"
-"PO-Revision-Date: 2025-02-27 14:32+0100\n"
+"PO-Revision-Date: 2025-02-27 16:27+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es\n"
@@ -279,7 +279,7 @@ msgstr "Buscar productos..."
 
 #: inc/agni-ajax-search.php:63
 msgid "All Categories"
-msgstr "Todas las categorías"
+msgstr "Categorías"
 
 #: inc/agni-ajax-search.php:241 inc/agni-ajax-search.php:242
 msgid "in"
