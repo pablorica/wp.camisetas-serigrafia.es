@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Cartify 1.2.6\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/cartify\n"
 "POT-Creation-Date: 2025-02-27T10:57:20+00:00\n"
-"PO-Revision-Date: 2025-02-27 13:56+0100\n"
+"PO-Revision-Date: 2025-02-27 14:32+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es\n"
@@ -173,17 +173,14 @@ msgstr ""
 "en el menú \"Cartify\" en el lado izquierdo."
 
 #: inc/admin/admin.php:234
-#, fuzzy
 msgid "Go to install plugins"
 msgstr "Ir a instalar plugins"
 
 #: inc/admin/admin.php:235
-#, fuzzy
 msgid "Register your product"
 msgstr "Registrar tu producto"
 
 #: inc/admin/admin.php:320
-#, fuzzy
 msgid "Update available - %s"
 msgstr "Actualización disponible - %s"
 
@@ -196,7 +193,6 @@ msgid "Failed to install theme"
 msgstr "Error al instalar el tema"
 
 #: inc/admin/admin.php:453
-#, fuzzy
 msgid "Theme updated successfully"
 msgstr "Tema actualizado con éxito"
 
@@ -210,17 +206,14 @@ msgstr "Error al eliminar la versión existente"
 
 #: inc/agni-additional-variation-images/admin-agni-additional-variation-images.php:48
 #: inc/agni-additional-variation-images/agni-additional-variation-images.php:39
-#, fuzzy
 msgid "Add More Images"
 msgstr "Añadir más imágenes"
 
 #: inc/agni-addon-products/admin-agni-addon-products.php:17
-#, fuzzy
 msgid "Cartify Addon Products"
 msgstr "Productos adicionales de Cartify"
 
 #: inc/agni-addon-products/admin-agni-addon-products.php:54
-#, fuzzy
 msgid "Products to addon products"
 msgstr "Productos adicionales"
 
@@ -229,22 +222,18 @@ msgid "Frequently Bought Together"
 msgstr "Frecuentemente comprados juntos"
 
 #: inc/agni-addon-products/agni-addon-products.php:152
-#, fuzzy
 msgid "This item: "
 msgstr "Este artículo: "
 
 #: inc/agni-addon-products/agni-addon-products.php:175
-#, fuzzy
 msgid "Sorry no variation chosen."
 msgstr "Lo sentimos, no se ha elegido ninguna variación."
 
 #: inc/agni-addon-products/agni-addon-products.php:234
-#, fuzzy
 msgid "Total:"
 msgstr "Total:"
 
 #: inc/agni-addon-products/agni-addon-products.php:247
-#, fuzzy
 msgid " items"
 msgstr " artículos"
 
@@ -253,12 +242,10 @@ msgid "Choose the variation first!"
 msgstr "¡Elige la variación primero!"
 
 #: inc/agni-addon-products/agni-addon-products.php:258
-#, fuzzy
 msgid "Add all to cart"
 msgstr "Añadir todo al carrito"
 
 #: inc/agni-ajax-login.php:52
-#, fuzzy
 msgid "Customer Login"
 msgstr "Inicio de sesión de cliente"
 
@@ -275,7 +262,6 @@ msgid "Password"
 msgstr "Contraseña"
 
 #: inc/agni-ajax-login.php:69
-#, fuzzy
 msgid "Lost your password?"
 msgstr "¿Olvidaste tu contraseña?"
 
@@ -288,12 +274,10 @@ msgid "Log in"
 msgstr "Iniciar sesión"
 
 #: inc/agni-ajax-search.php:57
-#, fuzzy
 msgid "Search Products.."
 msgstr "Buscar productos..."
 
 #: inc/agni-ajax-search.php:63
-#, fuzzy
 msgid "All Categories"
 msgstr "Todas las categorías"
 
@@ -306,22 +290,18 @@ msgid "categories"
 msgstr "categorías"
 
 #: inc/agni-ajax-search.php:258
-#, fuzzy
 msgid "View results"
 msgstr "Ver resultados"
 
 #: inc/agni-ajax-search.php:268
-#, fuzzy
 msgid "No products found."
 msgstr "No se encontraron productos."
 
 #: inc/agni-ajax-sidecart.php:33
-#, fuzzy
 msgid "Updating Cart!"
 msgstr "Actualizando carrito!"
 
 #: inc/agni-ajax-sidecart.php:44
-#, fuzzy
 msgid "Your Cart"
 msgstr "Tu carrito"
 
@@ -331,7 +311,6 @@ msgid "Remove"
 msgstr "Eliminar"
 
 #: inc/agni-ajax-sidecart.php:138
-#, fuzzy
 msgid "Cart is Empty"
 msgstr "El carrito está vacío"
 
@@ -375,7 +354,6 @@ msgid "Checkout"
 msgstr "Pagar"
 
 #: inc/agni-ajax-sidecart.php:257 inc/agni-ajax-sidecart.php:280
-#, fuzzy
 msgid "Go to Shopping Cart"
 msgstr "Ir al carrito"
 
@@ -396,17 +374,14 @@ msgid "Coupon has been removed."
 msgstr "El cupón ha sido eliminado."
 
 #: inc/agni-ajax-variation-swatches/admin-agni-ajax-variation-swatches.php:38
-#, fuzzy
 msgid "Insert Image"
 msgstr "Insertar imagen"
 
 #: inc/agni-ajax-variation-swatches/admin-agni-ajax-variation-swatches.php:59 inc/agni-ajax-variation-swatches/admin-agni-ajax-variation-swatches.php:108
-#, fuzzy
 msgid "Choose color"
 msgstr "Elegir color"
 
 #: inc/agni-ajax-variation-swatches/admin-agni-ajax-variation-swatches.php:68 inc/agni-ajax-variation-swatches/admin-agni-ajax-variation-swatches.php:116
-#, fuzzy
 msgid "Choose Image"
 msgstr "Elegir imagen"
 
@@ -415,12 +390,10 @@ msgid "Enter Label"
 msgstr "Introduce la etiqueta"
 
 #: inc/agni-ajax-variation-swatches/admin-agni-ajax-variation-swatches.php:192
-#, fuzzy
 msgid "Color"
 msgstr "Color"
 
 #: inc/agni-ajax-variation-swatches/admin-agni-ajax-variation-swatches.php:193
-#, fuzzy
 msgid "Image"
 msgstr "Imagen"
 
@@ -433,7 +406,6 @@ msgid "Select terms"
 msgstr "Seleccionar términos"
 
 #: inc/agni-ajax-variation-swatches/admin-agni-ajax-variation-swatches.php:222
-#, fuzzy
 msgid "Select all"
 msgstr "Seleccionar todo"
 
@@ -442,7 +414,6 @@ msgid "Select none"
 msgstr "Deseleccionar todo"
 
 #: inc/agni-ajax-variation-swatches/admin-agni-ajax-variation-swatches.php:224
-#, fuzzy
 msgid "Add new"
 msgstr "Añadir nuevo"
 
@@ -455,27 +426,22 @@ msgid "Cartify Compare"
 msgstr "Comparar en Cartify"
 
 #: inc/agni-compare/admin-agni-compare.php:44
-#, fuzzy
 msgid "Products to compare"
 msgstr "Productos para comparar"
 
 #: inc/agni-compare/agni-compare.php:55
-#, fuzzy
 msgid "Go to compare"
 msgstr "Ir a comparar"
 
 #: inc/agni-compare/agni-compare.php:55
-#, fuzzy
 msgid "Add to compare"
 msgstr "Añadir para comparar"
 
 #: inc/agni-compare/agni-compare.php:137
-#, fuzzy
 msgid "Compare Products (%s)"
 msgstr "Comparar productos (%s)"
 
 #: inc/agni-compare/agni-compare.php:139
-#, fuzzy
 msgid "Clear all"
 msgstr "Borrar todo"
 
@@ -484,12 +450,10 @@ msgid "It looks like nothing to compare at this page. Check the link below."
 msgstr "Parece que no hay nada para comparar en esta página. Revisa el siguiente enlace."
 
 #: inc/agni-compare/agni-compare.php:149
-#, fuzzy
 msgid "Add Products to Compare"
 msgstr "Añadir productos para comparar"
 
 #: inc/agni-compare/agni-compare.php:160
-#, fuzzy
 msgid "Similar products to compare"
 msgstr "Productos similares para comparar"
 
@@ -507,7 +471,6 @@ msgid "Cartify Additional Tabs"
 msgstr "Pestañas adicionales de Cartify"
 
 #: inc/agni-custom-tabs/admin-agni-custom-tabs.php:15
-#, fuzzy
 msgid "Cartify Additional Info"
 msgstr "Información adicional de Cartify"
 
@@ -520,7 +483,6 @@ msgid "Model"
 msgstr "Modelo"
 
 #: inc/agni-custom-tabs/admin-agni-custom-tabs.php:33
-#, fuzzy
 msgid "Data Value"
 msgstr "Valor de datos"
 
@@ -534,12 +496,10 @@ msgid "Remove"
 msgstr "Eliminar"
 
 #: inc/agni-custom-tabs/admin-agni-custom-tabs.php:47 inc/agni-custom-tabs/admin-agni-custom-tabs.php:48
-#, fuzzy
 msgid "Icon"
 msgstr "Icono"
 
 #: inc/agni-custom-tabs/admin-agni-custom-tabs.php:51 inc/agni-custom-tabs/admin-agni-custom-tabs.php:52 inc/agni-custom-tabs/admin-agni-custom-tabs.php:64
-#, fuzzy
 msgid "Text"
 msgstr "Texto"
 
@@ -549,7 +509,6 @@ msgid "Remove"
 msgstr "Eliminar"
 
 #: inc/agni-custom-tabs/admin-agni-custom-tabs.php:65
-#, fuzzy
 msgid "Offer Text"
 msgstr "Texto de oferta"
 
@@ -573,32 +532,26 @@ msgid "Duplicate"
 msgstr "Duplicar"
 
 #: inc/agni-custom-tabs/admin-agni-custom-tabs.php:121
-#, fuzzy
 msgid "Shipping Info Tab"
 msgstr "Pestaña de información de envío"
 
 #: inc/agni-custom-tabs/admin-agni-custom-tabs.php:141 inc/custom-kirki-options.php:1803
-#, fuzzy
 msgid "Content"
 msgstr "Contenido"
 
 #: inc/agni-custom-tabs/admin-agni-custom-tabs.php:176
-#, fuzzy
 msgid "Shipping Info"
 msgstr "Información de envío"
 
 #: inc/agni-custom-tabs/admin-agni-custom-tabs.php:193
-#, fuzzy
 msgid "Short Description"
 msgstr "Descripción corta"
 
 #: inc/agni-custom-tabs/admin-agni-custom-tabs.php:199
-#, fuzzy
 msgid "Link Text"
 msgstr "Texto del enlace"
 
 #: inc/agni-custom-tabs/admin-agni-custom-tabs.php:204
-#, fuzzy
 msgid "Popup Content"
 msgstr "Contenido emergente"
 
@@ -611,17 +564,14 @@ msgid "Offers"
 msgstr "Ofertas"
 
 #: inc/agni-custom-tabs/admin-agni-custom-tabs.php:255
-#, fuzzy
 msgid "360 Degree Image"
 msgstr "Imagen 360°"
 
 #: inc/agni-custom-tabs/admin-agni-custom-tabs.php:258
-#, fuzzy
 msgid "Choose Images"
 msgstr "Elegir imágenes"
 
 #: inc/agni-custom-tabs/admin-agni-custom-tabs.php:280
-#, fuzzy
 msgid "Add Images"
 msgstr "Añadir imágenes"
 
@@ -638,17 +588,14 @@ msgid "Embed URL"
 msgstr "Insertar URL"
 
 #: inc/agni-megamenu.php:29
-#, fuzzy
 msgid "Agni Menu Options"
 msgstr "Opciones del menú de Agni"
 
 #: inc/agni-megamenu.php:33
-#, fuzzy
 msgid "Label Text"
 msgstr "Texto del rótulo"
 
 #: inc/agni-megamenu.php:40
-#, fuzzy
 msgid "Show Dropdown Menu on"
 msgstr "Mostrar menú desplegable en"
 
@@ -677,12 +624,10 @@ msgid "Fullwidth"
 msgstr "Ancho completo"
 
 #: inc/agni-megamenu.php:88
-#, fuzzy
 msgid "Hide Menu Text"
 msgstr "Ocultar texto del menú"
 
 #: inc/agni-megamenu.php:93
-#, fuzzy
 msgid "Icon Class"
 msgstr "Clase de icono"
 
@@ -703,7 +648,6 @@ msgid "Billing & shipping address"
 msgstr "Dirección de facturación y envío"
 
 #: inc/agni-multistep-navigation.php:60
-#, fuzzy
 msgid "Review order"
 msgstr "Revisar pedido"
 
@@ -716,12 +660,10 @@ msgid "Skip login"
 msgstr "Omitir inicio de sesión"
 
 #: inc/agni-multistep-navigation.php:98 inc/agni-multistep-navigation.php:103 inc/agni-multistep-navigation.php:107
-#, fuzzy
 msgid "Go back"
 msgstr "Volver"
 
 #: inc/agni-multistep-navigation.php:100 inc/agni-multistep-navigation.php:104
-#, fuzzy
 msgid "Continue"
 msgstr "Continuar"
 
@@ -730,12 +672,10 @@ msgid "Quickview"
 msgstr "Vista rápida"
 
 #: inc/agni-quickview.php:79
-#, fuzzy
 msgid "More Details"
 msgstr "Más detalles"
 
 #: inc/agni-recently-viewed-products.php:11
-#, fuzzy
 msgid "Recently viewed items"
 msgstr "Artículos vistos recientemente"
 
@@ -744,7 +684,6 @@ msgid "My Wishlist"
 msgstr "Mi lista de deseos"
 
 #: inc/agni-wishlist/agni-wishlist.php:55
-#, fuzzy
 msgid "Add to wishlist"
 msgstr "Añadir a la lista de deseos"
 
@@ -753,12 +692,10 @@ msgid "Existing Wishlist"
 msgstr "Lista de deseos existente"
 
 #: inc/agni-wishlist/agni-wishlist.php:99
-#, fuzzy
 msgid "Create New Wishlist"
 msgstr "Crear nueva lista de deseos"
 
 #: inc/agni-wishlist/agni-wishlist.php:101 inc/agni-wishlist/class-wishlist-page.php:37
-#, fuzzy
 msgid "Wishlist name"
 msgstr "Nombre de la lista de deseos"
 
@@ -796,7 +733,6 @@ msgid "Already in list."
 msgstr "Ya está en la lista."
 
 #: inc/agni-wishlist/class-wishlist-api.php:139
-#, fuzzy
 msgid "Product added to list."
 msgstr "Producto añadido a la lista."
 
@@ -809,7 +745,6 @@ msgid "Wishlists"
 msgstr "Listas de deseos"
 
 #: inc/agni-wishlist/class-wishlist-page.php:32
-#, fuzzy
 msgid "Create new wishlist"
 msgstr "Crear nueva lista de deseos"
 
@@ -818,29 +753,24 @@ msgid "Creating wishlist."
 msgstr "Creando lista de deseos."
 
 #: inc/agni-wishlist/class-wishlist-page.php:114
-#, fuzzy
 msgid "No items in Wishlist"
 msgstr "No hay artículos en la lista de deseos"
 
 #: inc/agni-wishlist/class-wishlist-page.php:133
-#, fuzzy
 msgid "%s Product"
 msgid_plural "%s Products"
 msgstr[0] "%s Producto"
 msgstr[1] "%s Productos"
 
 #: inc/agni-wishlist/class-wishlist-page.php:135
-#, fuzzy
 msgid "Settings"
 msgstr "Configuración"
 
 #: inc/agni-wishlist/class-wishlist-page.php:140
-#, fuzzy
 msgid "Edit name"
 msgstr "Editar nombre"
 
 #: inc/agni-wishlist/class-wishlist-page.php:146
-#, fuzzy
 msgid "Saving new settings."
 msgstr "Guardando nueva configuración."
 
@@ -849,12 +779,10 @@ msgid "Delete"
 msgstr "Eliminar"
 
 #: inc/agni-wishlist/class-wishlist-page.php:156
-#, fuzzy
 msgid "Add more products"
 msgstr "Añadir más productos"
 
 #: inc/agni-wishlist/class-wishlist-page.php:243
-#, fuzzy
 msgid "Remove from wishlist"
 msgstr "Eliminar de la lista de deseos"
 
@@ -867,7 +795,6 @@ msgid "Top Center"
 msgstr "Arriba centro"
 
 #: inc/custom-kirki-options.php:43
-#, fuzzy
 msgid "Top Right"
 msgstr "Arriba derecha"
 
@@ -880,48 +807,39 @@ msgid "Center Center"
 msgstr "Centro"
 
 #: inc/custom-kirki-options.php:46
-#, fuzzy
 msgid "Center Right"
 msgstr "Centro derecha"
 
 #: inc/custom-kirki-options.php:47
-#, fuzzy
 msgid "Bottom Left"
 msgstr "Abajo izquierda"
 
 #: inc/custom-kirki-options.php:48
-#, fuzzy
 msgid "Bottom Center"
 msgstr "Abajo centro"
 
 #: inc/custom-kirki-options.php:49
-#, fuzzy
 msgid "Bottom Right"
 msgstr "Abajo derecha"
 
 #: inc/custom-kirki-options.php:75
-#, fuzzy
 msgid "Cartify Theme Options"
 msgstr "Opciones del tema Cartify"
 
 #: inc/custom-kirki-options.php:76
-#, fuzzy
 msgid "My panel description"
 msgstr "Descripción de mi panel"
 
 #: inc/custom-kirki-options.php:80
-#, fuzzy
 msgid "Header Settings"
 msgstr "Configuración del encabezado"
 
 #: inc/custom-kirki-options.php:88 inc/custom-kirki-options.php:1025 inc/custom-kirki-options.php:1441 inc/custom-kirki-options.php:1601
 #: inc/custom-kirki-options.php:1657 inc/custom-kirki-options.php:1723 inc/custom-kirki-options.php:1782
-#, fuzzy
 msgid "General"
 msgstr "General"
 
 #: inc/custom-kirki-options.php:97
-#, fuzzy
 msgid "Header Source"
 msgstr "Fuente del encabezado"
 
@@ -930,12 +848,10 @@ msgid "Builder"
 msgstr "Constructor"
 
 #: inc/custom-kirki-options.php:101 inc/custom-kirki-options.php:124 inc/custom-kirki-options.php:1796
-#, fuzzy
 msgid "Content Block"
 msgstr "Bloque de contenido"
 
 #: inc/custom-kirki-options.php:111
-#, fuzzy
 msgid "Footer Settings"
 msgstr "Configuración del pie de página"
 
@@ -944,7 +860,6 @@ msgid "Footer Source"
 msgstr "Fuente del pie de página"
 
 #: inc/custom-kirki-options.php:123 inc/custom-kirki-options.php:1204
-#, fuzzy
 msgid "Default"
 msgstr "Predeterminado"
 
@@ -953,7 +868,6 @@ msgid "Block Choice"
 msgstr "Selección de bloque"
 
 #: inc/custom-kirki-options.php:1017
-#, fuzzy
 msgid "Shop Settings"
 msgstr "Configuración de la tienda"
 
@@ -966,12 +880,10 @@ msgid "It will add hot label to chosen products on archive & product page"
 msgstr "Añadirá una etiqueta de destacado a los productos seleccionados en la página de archivo y de producto"
 
 #: inc/custom-kirki-options.php:1037 inc/custom-kirki-options.php:1049
-#, fuzzy
 msgid "Select products..."
 msgstr "Seleccionar productos..."
 
 #: inc/custom-kirki-options.php:1045
-#, fuzzy
 msgid "New label"
 msgstr "Nueva etiqueta"
 
@@ -2092,12 +2004,12 @@ msgstr "Cantidad de %s"
 
 #: woocommerce/global/quantity-input.php:31
 msgid "Qty"
-msgstr "Cant."
+msgstr "Cant"
 
 #: woocommerce/global/quantity-input.php:42
 msgctxt "Product quantity input tooltip"
 msgid "Qty"
-msgstr "Cant."
+msgstr "Cant"
 
 #: woocommerce/order/order-details.php:47
 msgid "Order details"
