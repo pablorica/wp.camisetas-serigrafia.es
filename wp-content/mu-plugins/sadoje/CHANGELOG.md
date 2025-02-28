@@ -12,6 +12,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
     - *public/customisations-for-cg-woo-grid-public.php:l.182* `$variation_map` needs to be populated automatically from CMS
 
 
+## [0.14.7] - 2025-02-28
+
+### Updates
+
+ - Update `package.json` in pluigns to build admins JS and CSS
+
+
 ## [0.14.6] - 2025-02-03
 
  - [Tabla de precios: Margen beneficio por producto y categoría](https://app.asana.com/0/1203117341882428/1209050961520871) 
