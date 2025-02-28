@@ -1,3 +1,10 @@
+/*  General Style */
+
+
+/*  Category Menu */
+.site-header-menu-additional > li .agni-menu-item-text span {
+    display: none;
+}
 
 /*  Slider */
 .slick-dots {
@@ -9,3 +16,46 @@
   border-radius: 10px;
 	border: 1px solid #fff;
 }
+
+
+  /* Minicart */
+  .agni-sidecart__product .product-variations .variation {
+    display: grid;
+    grid-template-columns: 1fr 1fr;  /* Two equal columns */
+    gap: 0;  
+    align-items: center;  
+    width: 100%;
+}
+
+.agni-sidecart__product .product-variations .variation dt:before {
+    content:'' !important;
+    margin: 0 !important;
+}
+.agni-sidecart__product .product-variations .variation dt:after {
+    content:':' !important;
+}
+
+.agni-sidecart__product .product-variations .variation dt, 
+.agni-sidecart__product .product-variations .variation dd {
+    margin: 0;  
+    padding: 0;  
+    white-space: nowrap;  
+}
+
+.agni-sidecart__product .product-variations .variation dd p {
+    margin: 0;  
+    white-space: nowrap;
+}
+
+  /* Category Cards */
+.agni-block-products-categories .product-category img {
+    aspect-ratio: 1/1;
+}
+
+.cards-grey .agni-block-products-categories .has-display-style-1 .product-category {
+    background-color: #f5f5f5;
+}
+.cards-grey .agni-block-products-categories .has-display-style-1 .product-category .category-details {
+    padding-bottom: 10px;
+  }
+

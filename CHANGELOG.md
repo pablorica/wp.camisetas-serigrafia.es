@@ -6,6 +6,41 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [0.6.10] - 2025-02-28
+
+### Updates
+
+ - Plgin code updates
+
+
+## [0.6.9] - 2025-02-27
+
+### Updates
+
+ - Theme translations
+ -  Ensure the Text Domain is Loaded Correctly
+
+
+## [0.6.8] - 2025-02-27
+
+### Updates
+
+ - Ocultar descripciones en el menu de categorías
+
+## [0.6.7] - 2025-02-13
+
+### Updates
+
+ - [Editor de productos forzado a usar Gutenberg](https://app.asana.com/0/1203117341882428/1209397188060092) 
+
+
+## [0.6.6] - 2025-02-03
+
+### Updates
+
+ - [Nueva plantilla](https://app.asana.com/0/1203117341882428/1209387493727969) 
+    - Gutenberg style for editor page
+
 
 ## [0.6.5] - 2025-02-03
 

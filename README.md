@@ -1,7 +1,7 @@
 # Camisetas Serigrafía (Wordpress)
 
 
-[![version](https://img.shields.io/badge/version-0.6.5-blue.svg)](https://semver.org)
+[![version](https://img.shields.io/badge/version-0.6.10-blue.svg)](https://semver.org)
 
 
 ## Live Site
@@ -62,18 +62,10 @@ In case you are using NGINX, this configuration has the same effect:
     }
 
 
-# Codigo Wordpress Site for Camisetas Serigrafia
-A clean slate Wordpress theme template with Bootstrap(5), Sass, and a Webpack config with Babel.
-Based in [understrap.com](https://understrap.com)
-And in customised version https://github.com/pablorica/wordpress_codigo_theme
+# Codigo Wordpress Template for Camisetas Serigrafia
+A clean slate Wordpress child theme template of [Cartify](http://demo.agnidesigns.com/cartify) for Camisetas Serigrafia.
 
-Website: [understrap.com](https://understrap.com)
-
-Parent Theme Project: [github.com/understrap/understrap](https://github.com/understrap/understrap)
-
-Premium Child Themes: [understrap.com/child-themes/](https://understrap.com/child-themes/)
-
-And in customised version [Pablo Rica Understrap Theme](https://github.com/pablorica/understrap-academy)
+Parent Theme: [Cartify](http://demo.agnidesigns.com/cartify)
 
 ## Basic Features
 
@@ -88,49 +80,41 @@ And in customised version [Pablo Rica Understrap Theme](https://github.com/pablo
 -   Translation ready
 
 
-## Installation
+## Theme Translation
 
-Understrap uses [npm](https://www.npmjs.com/) as manager for dependency packages like Bootstrap and Underscores. And it uses tools like [rollup.js](https://www.rollupjs.org/) and [postCSS](https://postcss.org) as taskrunners to compile .scss code into .css, minify .js code, etc. The following chapter describes the usage and workflow.
+### Create .pot files with WP-CLI
 
-### [Preparations: Install node.js](https://docs.understrap.com/#/understrap-child/npm?id=preparations-install-nodejs)
+Navigate to the cartify folder and execute the following command (be sure WP-CLI is installed):
 
-At first you need node.js installed on your computer globally. If you already done this before skip this section. If not: You have to install node.js (comes along with npm) before you can proceed. To install node.js visit the node.js website for the latest installer for your OS. Download and install it like any other program, too.
+    cd wp-content/themes/cartify
+    wp i18n make-pot . languages/cartify.pot
 
-We also recommend using [NVM - Node Version Manager](https://github.com/nvm-sh/nvm) to keep closer control over your version of node.js and switch between versions.
 
-### [Installing dependencies](https://docs.understrap.com/#/understrap-child/npm?id=installing-dependencies)
+ [make-pot documentation](https://developer.wordpress.org/cli/commands/i18n/make-pot/) 
 
--   Make sure you have installed Node.js and Browser-Sync* (* optional, if you wanna use it) on your computer globally
--   Then open your terminal and browse to the location of your Understrap copy
--   Run: `npm install`
+You can then edit this file with Poedit or any other handy translation tool.
+Use the pot file to generate the .po and .mo files of each language.
 
-### [Running](https://docs.understrap.com/#/understrap-child/npm?id=running)
+Save them on the languages folder of the child theme, and name them using the <plugin-name>-<language> structure:
 
-To work and compile your Sass files on the fly start:
+- themes/sadoje/languages/es_ES.po
+- themes/sadoje/languages/es_ES.mo
 
-```
-npm run watch
-```
 
-Or, to run with Browser-Sync:
+### Place the Translation Files in the Correct Directory
 
-First change the browser-sync options to reflect your environment in the file `/src/build/browser-sync.config.js` in the beginning of the file:
+Since Cartify (the parent theme) does not have translations, WordPress may not automatically detect translations stored in the child theme. Try placing your translation files in the recommended location:
 
-```
-module.exports = {
-    "proxy": "localhost/", // Change here
-    "notify": false,
-    "files": ["./css/*.min.css", "./js/*.min.js", "./**/*.php"]
-};
-```
 
-Replace `localhost/theme_test/` with the URL to your local WordPress test environment. For example if you run MAMP and your WordPress installation is placed in a htdocs subfolder called `/understrap` you have to add `localhost:8888/understrap`. Its the same URL you have to type in to see your local WordPress installation. Then run:
+ - wp-content/languages/themes/cartify-es_ES.po
+ - wp-content/languages/themes/cartify-es_ES.mo
 
-```
-npm run watch-bs
-```
+WordPress prefers to load translation files from `wp-content/languages/themes/` instead of `wp-content/themes/sadoje/languages/`. This ensures that translations are used even after theme updates.
 
-## Development
+
+--
+
+# Custom Plugins Development
 
 ### Codigo Woo Grid plugin
 
