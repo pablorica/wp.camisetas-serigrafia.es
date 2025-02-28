@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Updates
 
- - Update `package.json` in pluigns to build admins JS and CSS
+ - Update `package.json` to build admins JS and CSS
 
 
 ## [0.14.6] - 2025-02-03

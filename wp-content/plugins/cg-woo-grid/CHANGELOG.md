@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 
+## [0.12.13] - 2025-02-28
+
+### Updates
+
+ - Update `package.json` to build admins JS and CSS
+
 ## [0.12.12] - 2025-01-30
 
 ### Fixed
