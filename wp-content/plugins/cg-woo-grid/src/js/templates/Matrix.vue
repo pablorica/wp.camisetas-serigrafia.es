@@ -78,7 +78,7 @@
                         <br/>
                         <i v-if="valueX.showStock">
                           <small v-if="valueX.stock > 0" v-html="valueX.stock"></small>
-                          <small v-else>Fuera de stcok</small>
+                          <small v-else>Fuera de stock</small>
                         </i>
                     </span>
                 </div>

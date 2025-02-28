@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [0.6.10] - 2025-02-28
+
+### Updates
+
+ - Plgin code updates
+
+
 ## [0.6.9] - 2025-02-27
 
 ### Updates
