@@ -6,11 +6,18 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [0.6.11] - 2025-03-07
+
+### Updates
+
+ - Colors filter: Override custom Yith colors with Product Attribute colors
+
+
 ## [0.6.10] - 2025-02-28
 
 ### Updates
 
- - Plgin code updates
+ - Plugin code updates
 
 
 ## [0.6.9] - 2025-02-27

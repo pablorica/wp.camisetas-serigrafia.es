@@ -1,14 +1,14 @@
 <?php
 /**
  * Basic setup for Sadoje template
- * 
+ *
  * Adds the needed template hooks.
  * php version 7.4.1
  *
  * @package    Agni Framework
  * @subpackage Sadoje
  * @author     Pablo Rica <pablo@codigo.co.uk>
- * @license    MIT 
+ * @license    MIT
  * @version    GIT: @1.0.0@
  * @link       link
  * @since      Sadoje 1.0
@@ -18,20 +18,20 @@ defined( 'ABSPATH' ) || exit;
 
 function sdjthm_child_enqueue_scripts() {
     // Adding parent styles
-    wp_enqueue_style( 
-        'agni-parent-style', 
+    wp_enqueue_style(
+        'agni-parent-style',
         get_template_directory_uri() . '/style.css',
-        array(), 
-        wp_get_theme()->get('Version'), 
+        array(),
+        wp_get_theme()->get('Version'),
     );
 
     // Adding rtl support
     if( is_rtl() ){
-	    wp_enqueue_style( 
-            'agni-parent-rtl-style', 
+	    wp_enqueue_style(
+            'agni-parent-rtl-style',
             get_template_directory_uri() . '/rtl.css' ,
-            array(), 
-            wp_get_theme()->get('Version'), 
+            array(),
+            wp_get_theme()->get('Version'),
         );
     }
 
@@ -39,31 +39,31 @@ function sdjthm_child_enqueue_scripts() {
     wp_enqueue_style(
         'sadoje-style',
         get_stylesheet_directory_uri() . 'style.css',
-        array(), 
-        wp_get_theme()->get('Version'), 
+        array(),
+        wp_get_theme()->get('Version'),
     );
 
     wp_enqueue_style(
         'sadoje-style-general',
         get_stylesheet_directory_uri() . '/assets/css/style.css',
-        array(), 
-        wp_get_theme()->get('Version'), 
+        array(),
+        wp_get_theme()->get('Version'),
     );
 
     if (is_front_page()) {
         wp_enqueue_style(
             'sadoje-home-style',
             get_stylesheet_directory_uri() . '/assets/css/home.css',
-            array(), 
-            wp_get_theme()->get('Version'), 
+            array(),
+            wp_get_theme()->get('Version'),
         );
     }
-    if (is_tax('product_cat')) { 
+    if (is_tax('product_cat')) {
         wp_enqueue_style(
             'sadoje-product-category-style',
             get_stylesheet_directory_uri() . '/assets/css/product_category.css',
-            array(), 
-            wp_get_theme()->get('Version'), 
+            array(),
+            wp_get_theme()->get('Version'),
         );
     }
 
@@ -71,23 +71,23 @@ function sdjthm_child_enqueue_scripts() {
         wp_enqueue_style(
             'sadoje-product-style',
             get_stylesheet_directory_uri() . '/assets/css/product.css',
-            array(), 
-            wp_get_theme()->get('Version'), 
+            array(),
+            wp_get_theme()->get('Version'),
         );
     }
 
-    
+
 }
 add_action( 'wp_enqueue_scripts', 'sdjthm_child_enqueue_scripts', 9 );
 
 // Add custom editor styles
 function sdjthm_gutenberg_editor_styles() {;
-    
+
     wp_enqueue_style(
-        'sadoje-editor-style', 
-        get_stylesheet_directory_uri() . '/assets/css/editor-style.css', 
-        array(), 
-        wp_get_theme()->get('Version'), 
+        'sadoje-editor-style',
+        get_stylesheet_directory_uri() . '/assets/css/editor-style.css',
+        array(),
+        wp_get_theme()->get('Version'),
         'all'
     );
 }
@@ -126,12 +126,25 @@ function sdjthm_close_main_section() {
 }
 add_action('woocommerce_after_main_content', 'sdjthm_close_main_section', 15);
 
+// Override custom Yith colors with Product Attribute colors
+function sdjthm_yith_save_filter_data($preset, $data) {
+    if ($preset->filters) {
+        $filters = $preset->get_raw_filters();
+        foreach ($filters as $key => $filter) {
+            if ($filter['taxonomy'] === 'pa_color' && $filter['filter_design'] === 'color') {
+                foreach ($filter['terms'] as $k => $term) {
+                    $meta_color = get_term_meta($term['term_id'], 'agni_variation_swatch_field', true);
 
-// Add custom text domain
-function sadoje_load_custom_textdomain() {
-    load_theme_textdomain('cartify', WP_LANG_DIR . '/themes/');
+                    if ($meta_color) {
+                        $filter['terms'][$k]['color_1'] = $meta_color;
+                    }
+                }
+            }
+
+            $filters[$key] = $filter;
+        }
+
+        $preset->set_filters($filters);
+    }
 }
-add_action(
-    'after_setup_theme', 
-    'sadoje_load_custom_textdomain'
-);
+add_action('yith_wcan_before_data_object_save', 'sdjthm_yith_save_filter_data', 10, 2);
