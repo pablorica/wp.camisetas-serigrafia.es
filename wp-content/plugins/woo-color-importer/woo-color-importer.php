@@ -3,8 +3,8 @@
  * Plugin Name: WooCommerce Color Importer
  * Description: Import RGB color attribute from a CSV file.
  * Version: 1.0
- * Author:      Pablo Rica
- * Author URI:  https://codigo.co.uk/team/pablo-rica
+ * Author:      Yoshua Lino
+ * Author URI:  https://github.com/yoshualino
  */
 
 if (!defined('ABSPATH')) {
