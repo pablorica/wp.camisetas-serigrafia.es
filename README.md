@@ -1,7 +1,7 @@
 # Camisetas Serigrafía (Wordpress)
 
 
-[![version](https://img.shields.io/badge/version-0.6.11-blue.svg)](https://semver.org)
+[![version](https://img.shields.io/badge/version-0.6.12-blue.svg)](https://semver.org)
 
 
 ## Live Site

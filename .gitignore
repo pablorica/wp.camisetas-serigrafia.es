@@ -79,7 +79,7 @@ Thumbs.db
 *.orig
 
 # Ignore potentially dangerous files (dependabot alerts)
-yarn.lock 
+yarn.lock
 package-lock.json
 
 # -------------------------
@@ -114,6 +114,7 @@ package-lock.json
 
 !wp-content/plugins/cg-woo-grid
 !wp-content/plugins/sadoje-template
+!wp-content/plugins/woo-color-importer
 
 # Ignore build folders of plugin
 wp-content/mu-plugins/sadoje/.babelrc
@@ -142,7 +143,7 @@ wp-content/plugins/cg-woo-grid/public/js/cg-woo-grid.*
 wp-content/plugins/cg-woo-grid/public/css/cg-woo-grid.*
 
 # Ignore potentially dangerous files (dependabot alerts)
-wp-content/plugins/cg-woo-grid/yarn.lock 
+wp-content/plugins/cg-woo-grid/yarn.lock
 
 # track these translations
 !wp-content/languages/themes/cartify-es_ES.mo
