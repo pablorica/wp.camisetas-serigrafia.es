@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [0.6.12] - 2025-03-07
+
+### Add
+
+ - [Plugin para importar código de colores](https://app.asana.com/1/355454733208534/project/1203117341882428/task/1209606747447919) Custom custom plugin to import RGB colors from a CSV file
+
+
 ## [0.6.11] - 2025-03-07
 
 ### Updates
