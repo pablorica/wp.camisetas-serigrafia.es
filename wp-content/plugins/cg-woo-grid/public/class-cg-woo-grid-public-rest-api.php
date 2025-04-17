@@ -279,14 +279,29 @@ class Rest_Api {
 
             //Taxes
             $tax_p = 0;
-            $tax_rates = \WC_Tax::get_rates($_product->get_tax_class());
-            if (!empty($tax_rates)) {
-                $tax_rate = reset($tax_rates);
-                $tax_p = sprintf(_x('%.2f', '', 'wptheme.foundation'), $tax_rate['rate']);
-            }
+            $prices_include_tax = false;
+            $is_tax_enabled = get_option( 'woocommerce_calc_taxes' ) === 'yes';
+            if ( $is_tax_enabled ) {
+                //error_log('Taxes are enabled.');
+                $tax_rates = \WC_Tax::get_rates($_product->get_tax_class());
+                if (!empty($tax_rates)) {
+                    $tax_rate = reset($tax_rates);
+                    $tax_p = sprintf(_x('%.2f', '', 'wptheme.foundation'), $tax_rate['rate']);
+                }
+                //error_log('Tax: '.$tax_p);
 
-            $taxes  	  = $price / 100 * $tax_p;
-            $priceTax     = $price + $taxes;
+                $prices_include_tax = get_option( 'woocommerce_prices_include_tax' ) === 'yes';
+                if ( $prices_include_tax ) {
+                    //error_log('Prices include tax.');
+                    $taxes    = $price * $tax_p / (100 + $tax_p);
+                    $priceTax = $price;
+                } else {
+                    //error_log('Prices exclude tax.');
+                    $taxes    = $price * $tax_p / 100;
+                    $priceTax = $price + $taxes;
+                }
+            } 
+            
             $unitPrice    = $price / $numberofprods;
             $unitPriceTax = $priceTax / $numberofprods;
 
@@ -297,6 +312,9 @@ class Rest_Api {
             $return->subtotal          = $price;
 
             $return->subtotalformatted = wc_price($price);
+
+            $return->istaxenabled      = $is_tax_enabled;
+            $return->priceincludetax   = $prices_include_tax;
             $return->taxesformatted    = wc_price($taxes);
             $return->totalformatted    = wc_price($priceTax);
             $return->description       = $description;

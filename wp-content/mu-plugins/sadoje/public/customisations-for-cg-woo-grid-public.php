@@ -278,7 +278,8 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
         $quantity, 
         $baseprices, 
         $profit,
-        $tax_p
+        $tax_p,
+        $prices_include_tax
     ) {
         $variation_id = $variation['variation_id'];
         $product = wc_get_product($variation_id);
@@ -294,9 +295,15 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
             $price = $regular_price * (1 + $profit / 100) ?? 0;
         }
 
-        $taxes = $price / 100 * $tax_p;
-
-        $raw_price = $price + $taxes;
+        if ( $prices_include_tax ) {
+            //error_log('Prices include tax.');
+            $taxes     = $price * $tax_p / (100 + $tax_p);
+            $raw_price = $price;
+        } else {
+            //error_log('Prices exclude tax.');
+            $taxes     = $price * $tax_p / 100;
+            $raw_price = $price + $taxes;
+        }
 
         if (!isset( $this->min_prices[$product->id]) || $raw_price <  $this->min_prices[$product->id])  $this->min_prices[$product->id] = $raw_price;
 
@@ -321,11 +328,19 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
 
         // get the tax rate
         $tax_p = 0;
-        $tax_rates = \WC_Tax::get_rates($product->get_tax_class());
-        if (!empty($tax_rates)) {
-            $tax_rate = reset($tax_rates);
-            $tax_p = sprintf(_x('%.2f', '', 'wptheme.foundation'), $tax_rate['rate']);
-        }
+        $prices_include_tax = false;
+        $is_tax_enabled = get_option( 'woocommerce_calc_taxes' ) === 'yes';
+        if ( $is_tax_enabled ) {
+            //error_log('Taxes are enabled.');
+            $tax_rates = \WC_Tax::get_rates($product->get_tax_class());
+            if (!empty($tax_rates)) {
+                $tax_rate = reset($tax_rates);
+                $tax_p = sprintf(_x('%.2f', '', 'wptheme.foundation'), $tax_rate['rate']);
+            }
+            //error_log('Tax: '.$tax_p);
+            $prices_include_tax = get_option( 'woocommerce_prices_include_tax' ) === 'yes';
+        } 
+
         $profit = 0;
 
         $profit_types = get_option($this->get_element_name().'_budgeteer_profit_types');
@@ -432,7 +447,8 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                         $quantity, 
                         $baseprices, 
                         $profit, 
-                        $tax_p
+                        $tax_p,
+                        $prices_include_tax
                     );
                     
                 }

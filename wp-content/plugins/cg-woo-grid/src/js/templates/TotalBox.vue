@@ -66,27 +66,27 @@
             <div class="total">
                 
                 <h5>
-                    <small v-html="results.subtotaltitle + ' :'"></small> 
+                    <small v-html="results.subtotaltitle + ': '"></small> 
                     <span id="subtotal"
                         v-html="results.subtotalformatted"
                     ></span>
                 </h5>
-                <h5>
-                    <small v-html="results.vattitle + ' :'"></small> 
+                <h5 v-if="results.istaxenabled">
+                    <span v-if="results.priceincludetax">(<small>Incluye </small></span>
+                    <small v-html="results.vattitle + ': '"></small> 
                     <span id="taxes"
                         v-html="results.taxesformatted"
                     ></span>
+                    <span v-if="results.priceincludetax">)</span>
                 </h5>
                 <h5 style="margin-bottom: 15px;">
-                    ( 
-                    <small v-html="results.unitpricetitle + ' :'"></small> 
+                    (<small v-html="results.unitpricetitle + ': '"></small> 
                     <span id="span_unitpricetax" 
                         v-html="results.unitpricetax"
-                    ></span> 
-                    )
+                    ></span>)
                 </h5>
                 <h4>
-                    <small v-html="results.totaltitle + ' :'"></small> 
+                    <small v-html="results.totaltitle + ': '"></small> 
                     <span id="total"
                         v-html="results.totalformatted"
                     ></span>
