@@ -12,6 +12,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
     - *public/customisations-for-cg-woo-grid-public.php:l.182* `$variation_map` needs to be populated automatically from CMS
 
 
+## [0.14.8] - 2025-04-17
+
+### Updates
+
+ - Aplicación de IVA corregido
+
+
 ## [0.14.7] - 2025-02-28
 
 ### Updates

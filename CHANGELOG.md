@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+
+## [0.6.13] - 2025-04-17
+
+### Updates
+
+ - Aplicación de IVA corregido
+
+
 ## [0.6.12] - 2025-03-07
 
 ### Add

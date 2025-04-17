@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 
+## [0.12.14] - 2025-04-17
+
+### Updates
+
+ - Aplicación de IVA corregido
+
 ## [0.12.13] - 2025-02-28
 
 ### Fix
