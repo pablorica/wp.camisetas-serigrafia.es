@@ -1,5 +1,5 @@
 <template>
-    <table class="cdg_table">
+    <table class="cdg_table cdg_table_printer">
       <tbody>
           <tr v-for="(row, rindex) in rows"
               v-bind:id="'row_'+rindex" 
@@ -59,13 +59,13 @@
                   <p style="text-align:right">
                       <button class="button button-secondary" 
                           @click="addRow($event)"
-                      >Añadir personalización</button>
+                      >Añadir otra personalización</button>
                   </p>
               </th>
           </tr>
       </tfoot>
     </table>
-    <table class="cdg_table">
+    <table class="cdg_table cdg_table_bagged">
       <tbody>
         <tr>
             <th>{{baggedtitle}} </th>
@@ -94,7 +94,7 @@
 </template>
 
 <script>  
-console.log('customisations-for-cg-woo-grid: VUE Estimator loaded')
+//console.log('customisations-for-cg-woo-grid: VUE Estimator loaded')
 import { emitter } from '../vue-customisations-for-cg-woo-grid.js';
 
 
@@ -147,7 +147,8 @@ export default {
             }
         )
 
-        
+        // Automatically add the first row on load
+        this.addRow(new Event('init'));
     },
     methods: {
 

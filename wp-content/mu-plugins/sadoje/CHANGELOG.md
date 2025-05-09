@@ -12,6 +12,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
     - *public/customisations-for-cg-woo-grid-public.php:l.182* `$variation_map` needs to be populated automatically from CMS
 
 
+
+
+## [0.14.10] - 2025-05-09
+
+### Updates
+
+ - [Estampador](https://app.asana.com/1/355454733208534/project/1203117341882428/task/1210143831408687)
+
+
+
 ## [0.14.9] - 2025-05-09
 
 ### Fixes
@@ -20,6 +30,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ### Updates
+
 
  - [Tabla de Precios](https://app.asana.com/1/355454733208534/project/1203117341882428/task/1209041529810865) La tabla de precios tiene que mostrar SIEMPRE los PRECIOS sin IVA
 
