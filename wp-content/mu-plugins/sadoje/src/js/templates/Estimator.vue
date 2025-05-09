@@ -7,6 +7,7 @@
             >
                 <td style="text-align:right">
                     <table>
+                      <tbody>
                         <tr>
                             <td v-for="(column, cindex) in columns[rindex]">
                                 {{column.title}}
@@ -33,6 +34,7 @@
                                 </label>
                             </td>
                         </tr>
+                      </tbody>
                     </table>
                 </td>
                 <td style="text-align:right">
