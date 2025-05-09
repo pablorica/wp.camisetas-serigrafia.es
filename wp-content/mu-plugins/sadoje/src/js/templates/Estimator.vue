@@ -1,71 +1,72 @@
 <template>
     <table class="cdg_table">
-        <tbody>
-            <tr v-for="(row, rindex) in rows"
-                v-bind:id="'row_'+rindex" 
-                v-bind:class = "[(rindex % 2 == 1)?'':'alternate', (loading===true && rindex == rows.length - 1)?'rowloading':''] "
-            >
-                <td style="text-align:right">
-                    <table>
-                      <tbody>
-                        <tr>
-                            <td v-for="(column, cindex) in columns[rindex]">
-                                {{column.title}}
-                                <select v-model="row[cindex]"
-                                    @change="updateSelects(rindex,cindex,column.slug)"
-                                    >
-                                    <option disabled 
-                                        value="">
-                                        Seleccione un valor
-                                    </option>
-                                    <option v-for="(option, vindex) in column.options" 
-                                        :value="option"
-                                    >{{option}}</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td :colspan="columns[rindex]?columns[rindex].length:4">
-                                <label>Subir archivo
-                                    <input type="file" 
-                                        @change="handleFileUpload( $event, rindex )"
-                                        accept="image/png, image/jpeg"
-                                    />
-                                </label>
-                            </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                </td>
-                <td style="text-align:right">
-                    <button class="button button-secondary button-delete" 
-                        style="background:#DC3232;color:#FFF;border-color:#FFF;"
-                        @click="deleteRow(rindex, $event)"
-                    >Borrar</button>
-                </td>
-            </tr>
-            <tr v-bind:class = "(loading===false)?'hide':''">
-                <th colspan='2'>
-                    <div class="loading">
-                        <i class="fa fa-refresh fa-spin"></i>
-                    </div>
-                </th>
-            </tr>
-            
-        </tbody>
-        <tfoot>
-            <tr>
-                <th colspan='2'>
-                    <p style="text-align:right">
-                        <button class="button button-secondary" 
-                            @click="addRow($event)"
-                        >Añadir personalización</button>
-                    </p>
-                </th>
-            </tr>
-        </tfoot>
+      <tbody>
+          <tr v-for="(row, rindex) in rows"
+              v-bind:id="'row_'+rindex" 
+              v-bind:class = "[(rindex % 2 == 1)?'':'alternate', (loading===true && rindex == rows.length - 1)?'rowloading':''] "
+          >
+              <td style="text-align:right">
+                  <table>
+                    <tbody>
+                      <tr>
+                          <td v-for="(column, cindex) in columns[rindex]">
+                              {{column.title}}
+                              <select v-model="row[cindex]"
+                                  @change="updateSelects(rindex,cindex,column.slug)"
+                                  >
+                                  <option disabled 
+                                      value="">
+                                      Seleccione un valor
+                                  </option>
+                                  <option v-for="(option, vindex) in column.options" 
+                                      :value="option"
+                                  >{{option}}</option>
+                              </select>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td :colspan="columns[rindex]?columns[rindex].length:4">
+                              <label>Subir archivo
+                                  <input type="file" 
+                                      @change="handleFileUpload( $event, rindex )"
+                                      accept="image/png, image/jpeg"
+                                  />
+                              </label>
+                          </td>
+                      </tr>
+                    </tbody>
+                  </table>
+              </td>
+              <td style="text-align:right">
+                  <button class="button button-secondary button-delete" 
+                      style="background:#DC3232;color:#FFF;border-color:#FFF;"
+                      @click="deleteRow(rindex, $event)"
+                  >Borrar</button>
+              </td>
+          </tr>
+          <tr v-bind:class = "(loading===false)?'hide':''">
+              <th colspan='2'>
+                  <div class="loading">
+                      <i class="fa fa-refresh fa-spin"></i>
+                  </div>
+              </th>
+          </tr>
+          
+      </tbody>
+      <tfoot>
+          <tr>
+              <th colspan='2'>
+                  <p style="text-align:right">
+                      <button class="button button-secondary" 
+                          @click="addRow($event)"
+                      >Añadir personalización</button>
+                  </p>
+              </th>
+          </tr>
+      </tfoot>
     </table>
     <table class="cdg_table">
+      <tbody>
         <tr>
             <th>{{baggedtitle}} </th>
             <td class="cdg_radio">
@@ -88,6 +89,7 @@
                 <small v-html="baggedwording"></small>
             </td>
         </tr>
+      </tbody>
     </table>
 </template>
 

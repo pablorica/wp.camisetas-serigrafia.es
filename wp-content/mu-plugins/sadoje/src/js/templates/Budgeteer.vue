@@ -1,111 +1,111 @@
 <template>
     <table class="cdg_table">
-        <tbody>
-            <tr>
-                <th>
-                    <span class="cdg_alert">1</span>{{wording.title1}}
-                </th>
-                <td>
-                    <div>
-                        <b>{{wording.titleFront1}}</b><br>
-                        <select 
-                            v-model="indexFront"
-                            @change="changeCookie()"
-                        >
-                            <option value="">{{wording.defaultSelect1}}</option>
-                            <template v-for="(row, index) in rows">
-                                <option :value="index"
-                                    v-html="row.stamping"
-                                ></option>
-                            </template>						
-                        </select>
-                    </div>
-                    <div>
-                        <b>{{wording.titleRear1}}</b><br>
-                        <select 
-                            v-model="indexRear"
-                            @change="changeCookie()"
-                        >
-                            <option value="">{{wording.defaultSelect1}}</option>
-                            <template v-for="(row, index) in rows">
-                                <option :value="index"
-                                    v-html="row.stamping"
-                                ></option>
-                            </template>						
-                        </select>
-                    </div>
-                    <div style="clear: both;float: none"></div>
-                </td>
-            </tr>
-            <tr>
-                <th>
-                    <span class="cdg_alert">2</span>{{wording.title2}}
-                </th>
-                <td>
-                    <div
-                      :class="(Number.isInteger(indexFront)? '' : 'disabled')"
-                    >
-                        <b>{{wording.titleFront2}}</b><br>
-                        <select 
-                            v-model="areaFront"
-                            @change="changeCookie()"
-                            :disabled="!Number.isInteger(indexFront)"
-                        >
-                            <option v-if="!Number.isInteger(indexFront)"
-                                value=""
-                            >{{wording.disabledSelect2}}</option>
-                            <template v-if="Number.isInteger(indexFront)">
-                                <option value="">{{wording.defaultSelect2}}</option>
-                                <option value="1" v-html="rows[indexFront].area1"></option>
-                                <option value="2" v-html="rows[indexFront].area2"></option>
-                            </template>
-                        </select>
-                    </div>
-                    <div
-                      :class="(Number.isInteger(indexRear)? '' : 'disabled')"
-                    >
-                        <b>{{wording.titleRear2}}</b><br>
-                        <select 
-                            v-model="areaRear"
-                            @change="changeCookie()"
-                            :disabled="!Number.isInteger(indexRear)"
-                        >
-                            <option v-if="!Number.isInteger(indexRear)"
-                                value=""
-                            >{{wording.disabledSelect2}}</option>
-                            <template v-if="Number.isInteger(indexRear)">
-                                <option value="">{{wording.defaultSelect2}}</option>
-                                <option value="1" v-html="rows[indexRear].area1"></option>
-                                <option value="2" v-html="rows[indexRear].area2"></option>
-                            </template>
-                        </select>
-                    </div>
-                    <div style="clear: both;float: none"></div>
-                </td>
-            </tr>
-            <tr>
-                <th><span class="cdg_alert">3</span> {{baggedtitle}} </th>
-                <td class="cdg_radio">
-                    <input type="radio" 
-                        id="yes" 
-                        v-bind:value="baggedprice" 
-                        v-model="bagged" 
-                        @change="changeCookie()"
-                    />
-                    <label for="yes">Si</label>
+      <tbody>
+          <tr>
+              <th>
+                  <span class="cdg_alert">1</span>{{wording.title1}}
+              </th>
+              <td>
+                  <div>
+                      <b>{{wording.titleFront1}}</b><br>
+                      <select 
+                          v-model="indexFront"
+                          @change="changeCookie()"
+                      >
+                          <option value="">{{wording.defaultSelect1}}</option>
+                          <template v-for="(row, index) in rows">
+                              <option :value="index"
+                                  v-html="row.stamping"
+                              ></option>
+                          </template>						
+                      </select>
+                  </div>
+                  <div>
+                      <b>{{wording.titleRear1}}</b><br>
+                      <select 
+                          v-model="indexRear"
+                          @change="changeCookie()"
+                      >
+                          <option value="">{{wording.defaultSelect1}}</option>
+                          <template v-for="(row, index) in rows">
+                              <option :value="index"
+                                  v-html="row.stamping"
+                              ></option>
+                          </template>						
+                      </select>
+                  </div>
+                  <div style="clear: both;float: none"></div>
+              </td>
+          </tr>
+          <tr>
+              <th>
+                  <span class="cdg_alert">2</span>{{wording.title2}}
+              </th>
+              <td>
+                  <div
+                    :class="(Number.isInteger(indexFront)? '' : 'disabled')"
+                  >
+                      <b>{{wording.titleFront2}}</b><br>
+                      <select 
+                          v-model="areaFront"
+                          @change="changeCookie()"
+                          :disabled="!Number.isInteger(indexFront)"
+                      >
+                          <option v-if="!Number.isInteger(indexFront)"
+                              value=""
+                          >{{wording.disabledSelect2}}</option>
+                          <template v-if="Number.isInteger(indexFront)">
+                              <option value="">{{wording.defaultSelect2}}</option>
+                              <option value="1" v-html="rows[indexFront].area1"></option>
+                              <option value="2" v-html="rows[indexFront].area2"></option>
+                          </template>
+                      </select>
+                  </div>
+                  <div
+                    :class="(Number.isInteger(indexRear)? '' : 'disabled')"
+                  >
+                      <b>{{wording.titleRear2}}</b><br>
+                      <select 
+                          v-model="areaRear"
+                          @change="changeCookie()"
+                          :disabled="!Number.isInteger(indexRear)"
+                      >
+                          <option v-if="!Number.isInteger(indexRear)"
+                              value=""
+                          >{{wording.disabledSelect2}}</option>
+                          <template v-if="Number.isInteger(indexRear)">
+                              <option value="">{{wording.defaultSelect2}}</option>
+                              <option value="1" v-html="rows[indexRear].area1"></option>
+                              <option value="2" v-html="rows[indexRear].area2"></option>
+                          </template>
+                      </select>
+                  </div>
+                  <div style="clear: both;float: none"></div>
+              </td>
+          </tr>
+          <tr>
+              <th><span class="cdg_alert">3</span> {{baggedtitle}} </th>
+              <td class="cdg_radio">
+                  <input type="radio" 
+                      id="yes" 
+                      v-bind:value="baggedprice" 
+                      v-model="bagged" 
+                      @change="changeCookie()"
+                  />
+                  <label for="yes">Si</label>
 
-                    <input type="radio" 
-                        id="no" 
-                        value="0" 
-                        v-model="bagged"
-                        @change="changeCookie()" 
-                    />
-                    <label for="no">No</label>
-                    &nbsp;
-                    <small v-html="baggedwording"></small>
-                </td>
-            </tr>
-        </tbody>
+                  <input type="radio" 
+                      id="no" 
+                      value="0" 
+                      v-model="bagged"
+                      @change="changeCookie()" 
+                  />
+                  <label for="no">No</label>
+                  &nbsp;
+                  <small v-html="baggedwording"></small>
+              </td>
+          </tr>
+      </tbody>
     </table>
 </template>
 
