@@ -16,7 +16,7 @@
 
 
 <div id="cdg_toolbox" 
-    class="cdg_box"
+    class="cdg_box cdg_box_framed"
 >
     <h3 class="cdg_title">
         <?php echo get_option($this->plugin_name.'_totalbox_title'); ?>

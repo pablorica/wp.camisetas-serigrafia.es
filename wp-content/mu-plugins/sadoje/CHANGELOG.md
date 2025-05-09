@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
  - [Estampador](https://app.asana.com/1/355454733208534/project/1203117341882428/task/1210143831408687)
 
-
+- [Números y Bordes](https://app.asana.com/1/355454733208534/project/1203117341882428/task/1210143831408697)
 
 ## [0.14.9] - 2025-05-09
 

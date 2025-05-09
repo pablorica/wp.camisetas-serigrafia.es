@@ -15,7 +15,7 @@
 </div>
  / Vue  -->
 
-<div class="cdg_box">
+<div class="cdg_box cdg_box_framed">
     <h3 class="cdg_title">
         <?php echo get_option($elementName.'_budgeteer_info_header') ?>
     </h3>
@@ -42,4 +42,5 @@
         <?php echo get_option($elementName.'_budgeteer_info_wording') ?>
     </div>
     <?php endif; ?>
+    <p>&nbsp;</p>
 </div>
