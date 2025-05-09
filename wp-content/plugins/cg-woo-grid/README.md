@@ -3,7 +3,7 @@ Adds a matrix of Woocommerce Products variations
 
 Website: [codigo.co.uk](https://codigo.co.uk)
 
-[![version](https://img.shields.io/badge/version-0.12.14-blue.svg)](https://semver.org)
+[![version](https://img.shields.io/badge/version-0.12.15-blue.svg)](https://semver.org)
 
 
 ## Basic Features

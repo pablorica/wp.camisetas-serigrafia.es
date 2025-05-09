@@ -113,9 +113,22 @@
             <div class="total">
                 
                 <h5 v-html="results.numberofprods + ' ' +itemsTitle"></h5>
+                <h5 v-if="results.istaxenabled && !results.pricesincludetax">
+                    <small v-html="results.rsmpriceunitnotaxmsg + ': '"></small> 
+                    <div v-html="results.unitprice"></div> 
+                </h5>
                 <h5>
                     <small v-html="results.rsmpriceunitmsg + ': '"></small> 
                     <div v-html="results.unitpricetax"></div> 
+                </h5>
+                <h5>
+                    <small v-html="results.rsmsubtotalmsg + ': '"></small> 
+                    <div v-html="results.subtotalformatted"></div> 
+                </h5>
+                <h5 v-if="results.istaxenabled">
+                    <small v-if="!results.pricesincludetax" v-html="results.rsmtaxesmsg + ': '"></small> 
+                    <small v-if="results.pricesincludetax" v-html="results.rsminctaxesmsg + ': '"></small> 
+                    <div v-html="results.taxesformatted"></div> 
                 </h5>
                 <h4 v-html="results.totaltitle + '<br/>' + results.totalformatted"></h4>
             </div>
@@ -132,15 +145,15 @@ export default {
         name: 'total-box',
         data: function() {
             return {
-            	loading: 	    false,
+            	loading: 	      false,
             	noresults:      config.noresults,
-                itemsTitle:     config.bar_itemstitle,
-            	empty: 		    false,
-                product_id:     null,
-                addcartenabled: false,
-                addurl:         null,
-                results: 	    [],
-                fixed: 	        []
+              itemsTitle:     config.bar_itemstitle,
+            	empty: 		      false,
+              product_id:     null,
+              addcartenabled: false,
+              addurl:         null,
+              results: 	      [],
+              fixed: 	        []
             }
         },
         mounted: function () {

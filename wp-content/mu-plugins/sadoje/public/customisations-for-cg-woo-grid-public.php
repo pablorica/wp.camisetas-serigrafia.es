@@ -118,7 +118,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
             foreach($quantities as $quantity) {
                 $objectPrice = new \stdClass();
                 $objectPrice->quantity = $quantity;
-                $objectPrice->price =  $this->cdg_get_regular_price_by_type($quantity, $product);
+                $objectPrice->price =  $this->cdg_get_regular_price_by_type($quantity, $product, true);
                 $this->prices[] = $objectPrice;
             }
 
@@ -320,7 +320,8 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
      */
     function cdg_get_regular_price_by_type(
         $quantity, 
-        $product
+        $product,
+        $exclude_tax = false
     ) {
         // get the quantity of products to establish the type of price (regular, package, box)
         $baseprice = get_option($this->get_element_name().'_budgeteer_baseprice_types');
@@ -330,6 +331,9 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
         $tax_p = 0;
         $prices_include_tax = false;
         $is_tax_enabled = get_option( 'woocommerce_calc_taxes' ) === 'yes';
+        if($exclude_tax) {
+            $is_tax_enabled = false;
+        }
         if ( $is_tax_enabled ) {
             //error_log('Taxes are enabled.');
             $tax_rates = \WC_Tax::get_rates($product->get_tax_class());

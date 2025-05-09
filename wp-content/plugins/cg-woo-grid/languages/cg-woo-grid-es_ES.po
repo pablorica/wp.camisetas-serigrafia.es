@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Codigo Woo Grid 0.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/cg-woo-grid\n"
-"POT-Creation-Date: 2023-01-27T15:45:14+00:00\n"
-"PO-Revision-Date: 2023-01-27 16:46+0100\n"
+"POT-Creation-Date: 2025-05-09T08:43:28+00:00\n"
+"PO-Revision-Date: 2025-05-09 10:52+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es_ES\n"
@@ -13,26 +13,31 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.6\n"
 "X-Domain: cg-woo-grid\n"
 
 #. Plugin Name of the plugin
+#: cg-woo-grid.php
 msgid "Codigo Woo Grid"
 msgstr "Código Woo Malla de Atributos"
 
 #. Plugin URI of the plugin
+#: cg-woo-grid.php
 msgid "http://codigo.co.uk/cg-woo-grid"
 msgstr ""
 
 #. Description of the plugin
+#: cg-woo-grid.php
 msgid "Adds a matrix of Woocommerce Products variations"
 msgstr "Muestra todas las variaciones de un producto Woocommerce en una malla"
 
 #. Author of the plugin
+#: cg-woo-grid.php
 msgid "Pablo Rica <pablo@codigo.co.uk>"
 msgstr ""
 
 #. Author URI of the plugin
+#: cg-woo-grid.php
 msgid "http://codigo.co.uk/pablo-rica"
 msgstr ""
 
@@ -148,58 +153,90 @@ msgid "Display resume box"
 msgstr "Mostrar caja resumen"
 
 #: admin/class-cg-woo-grid-admin.php:590
+msgid "Price unit (no tax) message"
+msgstr "Mensaje de precio unidad sin IVA"
+
+#: admin/class-cg-woo-grid-admin.php:600
+msgid "The unit price (without tax) is"
+msgstr "La unidad (sin IVA) sale a"
+
+#: admin/class-cg-woo-grid-admin.php:607
 msgid "Price unit message"
 msgstr "Mensaje de precio unidad"
 
-#: admin/class-cg-woo-grid-admin.php:600
+#: admin/class-cg-woo-grid-admin.php:617
 msgid "The unit price is"
 msgstr "La unidad sale a"
 
-#: admin/class-cg-woo-grid-admin.php:615
+#: admin/class-cg-woo-grid-admin.php:624
+msgid "Subtotal message"
+msgstr "Mensaje Subtotal"
+
+#: admin/class-cg-woo-grid-admin.php:634
+msgid "Subtotal"
+msgstr "Subtotal"
+
+#: admin/class-cg-woo-grid-admin.php:641
+msgid "Taxes message"
+msgstr "Mensaje de IVA"
+
+#: admin/class-cg-woo-grid-admin.php:651
+msgid "Taxes"
+msgstr "IVA"
+
+#: admin/class-cg-woo-grid-admin.php:658
+msgid "Included Taxes message"
+msgstr "Mensaje IVA incluído"
+
+#: admin/class-cg-woo-grid-admin.php:668
+msgid "Included taxes"
+msgstr "IVA incluído"
+
+#: admin/class-cg-woo-grid-admin.php:683
 msgid "Pop Up Message 1"
 msgstr "Mensaje 1 del pop-up"
 
-#: admin/class-cg-woo-grid-admin.php:625
+#: admin/class-cg-woo-grid-admin.php:693
 msgid "Continue the purchase"
 msgstr "Continuar comprando"
 
-#: admin/class-cg-woo-grid-admin.php:632
+#: admin/class-cg-woo-grid-admin.php:700
 msgid "Pop Up Message 2"
 msgstr "Mensaje 2 del pop-up"
 
-#: admin/class-cg-woo-grid-admin.php:642
+#: admin/class-cg-woo-grid-admin.php:710
 msgid "Go to cart"
 msgstr "Ir al carrito"
 
-#: admin/class-cg-woo-grid-admin.php:649
+#: admin/class-cg-woo-grid-admin.php:717
 msgid "Pop Up Success Title"
 msgstr "Titulo del pop-up"
 
-#: admin/class-cg-woo-grid-admin.php:659
+#: admin/class-cg-woo-grid-admin.php:727
 msgid "Shopping cart"
 msgstr "Carrito de compras"
 
-#: admin/class-cg-woo-grid-admin.php:666
+#: admin/class-cg-woo-grid-admin.php:734
 msgid "Pop Up Success Message"
 msgstr "Mensaje del pop-up"
 
-#: admin/class-cg-woo-grid-admin.php:676
+#: admin/class-cg-woo-grid-admin.php:744
 msgid "The cart has been successfully updated"
 msgstr "El carrito ha sido actualizado"
 
-#: admin/class-cg-woo-grid-admin.php:683
+#: admin/class-cg-woo-grid-admin.php:751
 msgid "Pop Up Error Title"
 msgstr "Título de error del pop-up"
 
-#: admin/class-cg-woo-grid-admin.php:693
+#: admin/class-cg-woo-grid-admin.php:761
 msgid "Insufficient items"
 msgstr "Productos insuficientes"
 
-#: admin/class-cg-woo-grid-admin.php:700
+#: admin/class-cg-woo-grid-admin.php:768
 msgid "Pop Up Error Message"
 msgstr "Mensaje de error del pop-up"
 
-#: admin/class-cg-woo-grid-admin.php:710
+#: admin/class-cg-woo-grid-admin.php:778
 msgid "There must be a minimum of %1 products"
 msgstr "Tiene que haber %1 productos como mínimo"
 
@@ -278,7 +315,7 @@ msgstr "Configuración de la caja resumen"
 
 #: admin/partials/cg-woo-grid-admin-display.php:191
 msgid "Pop-up"
-msgstr ""
+msgstr "Pop-up"
 
 #: admin/partials/cg-woo-grid-admin-display.php:195
 msgid "Messages to show in the pop-up"
@@ -297,47 +334,47 @@ msgid "items"
 msgstr "uds"
 
 #: public/class-cg-woo-grid-public-rest-api.php:114
-#: public/class-cg-woo-grid-public-rest-api.php:341
-#: public/class-cg-woo-grid-public-rest-api.php:478
-#: public/class-cg-woo-grid-public.php:416
+#: public/class-cg-woo-grid-public-rest-api.php:365
+#: public/class-cg-woo-grid-public-rest-api.php:527
+#: public/class-cg-woo-grid-public.php:411
 msgid "No results"
 msgstr "Sin resultados"
 
-#: public/class-cg-woo-grid-public-rest-api.php:125
+#: public/class-cg-woo-grid-public-rest-api.php:129
 msgid "Unit price"
 msgstr "Precio unitario"
 
-#: public/class-cg-woo-grid-public-rest-api.php:126
+#: public/class-cg-woo-grid-public-rest-api.php:130
 msgid "Price"
 msgstr "Precio"
 
-#: public/class-cg-woo-grid-public-rest-api.php:127
+#: public/class-cg-woo-grid-public-rest-api.php:131
 msgid "Items"
 msgstr "Productos"
 
-#: public/class-cg-woo-grid-public-rest-api.php:128
+#: public/class-cg-woo-grid-public-rest-api.php:132
 msgid "Amount"
 msgstr "Cantidad"
 
-#: public/class-cg-woo-grid-public-rest-api.php:129
+#: public/class-cg-woo-grid-public-rest-api.php:133
 msgid "Sub-total"
 msgstr "Subtotal"
 
-#: public/class-cg-woo-grid-public-rest-api.php:130
+#: public/class-cg-woo-grid-public-rest-api.php:134
 msgid "VAT"
 msgstr "IVA"
 
-#: public/class-cg-woo-grid-public-rest-api.php:131
+#: public/class-cg-woo-grid-public-rest-api.php:135
 msgid "Total"
 msgstr "Total"
 
-#: public/class-cg-woo-grid-public-rest-api.php:132
+#: public/class-cg-woo-grid-public-rest-api.php:136
 msgid "Add to cart"
 msgstr "Añadir al carrito"
 
-#: public/class-cg-woo-grid-public-rest-api.php:168
-#: public/class-cg-woo-grid-public-rest-api.php:312
-#: public/class-cg-woo-grid-public-rest-api.php:396
+#: public/class-cg-woo-grid-public-rest-api.php:172
+#: public/class-cg-woo-grid-public-rest-api.php:336
+#: public/class-cg-woo-grid-public-rest-api.php:441
 #: public/class-cg-woo-grid-public.php:385
 msgid "Something went wrong"
 msgstr "Algo ha ido mal"
