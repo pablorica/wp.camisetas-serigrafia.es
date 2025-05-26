@@ -128,6 +128,7 @@ body.single-product #page {
       width: calc(100% + 60px);
       border: 5px solid #FCDFB0;
       border-top: none;
+      z-index: -1;
     }
     
   }

@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+
+## [0.12.17] - 2025-05-26
+
+### Updates
+
+- [Números y Bordes](https://app.asana.com/1/355454733208534/project/1203117341882428/task/1210143831408697)
+
+
 ## [0.12.16] - 2025-05-09
 
 ### Updates
