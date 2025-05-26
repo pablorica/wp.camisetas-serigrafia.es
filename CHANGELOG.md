@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 
+## [0.6.14] - 2025-05-26
+
+### Updates
+
+- [Estampador](https://app.asana.com/1/355454733208534/project/1203117341882428/task/1210143831408687) El estampador tendrá ahora SOLO dos campos: Ubicación & Tamaño
+
+
+- [Números y Bordes](https://app.asana.com/1/355454733208534/project/1203117341882428/task/1210143831408697)
+
+
 ## [0.6.13] - 2025-04-17
 
 ### Updates
