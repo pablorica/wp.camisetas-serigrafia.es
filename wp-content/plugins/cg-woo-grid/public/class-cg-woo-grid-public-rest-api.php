@@ -206,7 +206,9 @@ class Rest_Api {
                     $attr 		= $single_variation->get_variation_attributes();
 
                     foreach ($gridattributes as $gakey => $gavalue) {
-                        if ($gavalue['y'] == $gavalue[$tax_y_slug]) $nk = $gakey;
+                        if(isset($gavalue[$tax_y_slug])) {
+                          if ($gavalue['y'] == $gavalue[$tax_y_slug]) $nk = $gakey;
+                        }
                     }
                     if ($nk === false) {
                         $gridattributes[] = array(

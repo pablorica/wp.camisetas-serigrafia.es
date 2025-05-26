@@ -427,9 +427,6 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
             )
         );
 
-
-
-
         array_push($settings_pages,$settings_page);
 
 
@@ -524,7 +521,7 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
 
 
 
-     /**
+  /**
 	 * Hello World (for testing purposes)
 	 *
 	 * @access public
