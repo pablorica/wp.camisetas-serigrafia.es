@@ -584,6 +584,23 @@ class Functions {
                 'onchange'         => ''
             )
         );
+        $field_id = $this->plugin_name.'_resumebox_priceunit_notax_message';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Price unit (no tax) message","cg-woo-grid").":",
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'text',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'placeholder'      => esc_html__("The unit price (without tax) is","cg-woo-grid"),
+                'class'            => '',
+            )
+        );
         $field_id = $this->plugin_name.'_resumebox_priceunit_message';
         $settings_page->fields[] = array(
             'id'    => $field_id,
@@ -598,6 +615,57 @@ class Functions {
                 'value_type'       => 'normal',
                 'wp_data'          => 'option',
                 'placeholder'      => esc_html__("The unit price is","cg-woo-grid"),
+                'class'            => '',
+            )
+        );
+        $field_id = $this->plugin_name.'_resumebox_subtotal_message';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Subtotal message","cg-woo-grid").":",
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'text',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'placeholder'      => esc_html__("Subtotal","cg-woo-grid"),
+                'class'            => '',
+            )
+        );
+        $field_id = $this->plugin_name.'_resumebox_taxes_message';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Taxes message","cg-woo-grid").":",
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'text',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'placeholder'      => esc_html__("Taxes","cg-woo-grid"),
+                'class'            => '',
+            )
+        );
+        $field_id = $this->plugin_name.'_resumebox_inc_taxes_message';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Included Taxes message","cg-woo-grid").":",
+            'args'  => array (
+                'type'             => 'input',
+                'subtype'          => 'text',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'placeholder'      => esc_html__("Included taxes","cg-woo-grid"),
                 'class'            => '',
             )
         );

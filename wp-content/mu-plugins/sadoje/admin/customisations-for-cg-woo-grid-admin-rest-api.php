@@ -201,9 +201,6 @@ class Customisations_For_Cg_Woo_Grid_Admin_Rest_Api extends Customisations_For_C
                     array( 'status' => 404 ) 
                 );
             }
-        
-            
-        
         //wp_redirect( site_url() . '/thank-you/' );
         //die();
     }

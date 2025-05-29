@@ -427,9 +427,6 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
             )
         );
 
-
-
-
         array_push($settings_pages,$settings_page);
 
 
@@ -456,10 +453,28 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
             )
         );
 
+        $field_id = $this->get_element_name().'_budgeteer_topinfo_wording';
+        $settings_page->fields[] = array(
+            'id'    => $field_id,
+            'title' => __("Cabecera informativa","sadoje").":",
+            'args'  => array (
+                'type'             => 'wp_editor',
+                'id'               => $field_id,
+                'name'             => $field_id,
+                'required'         => '',
+                'get_options_list' => '',
+                'value_type'       => 'normal',
+                'wp_data'          => 'option',
+                'class'            => '',
+            )
+        );
+
+        
+
         $field_id = $this->get_element_name().'_budgeteer_info_wording';
         $settings_page->fields[] = array(
             'id'    => $field_id,
-            'title' => __("Texto informativo","sadoje").":",
+            'title' => __("Texto informativo final","sadoje").":",
             'args'  => array (
                 'type'             => 'wp_editor',
                 'id'               => $field_id,
@@ -506,7 +521,7 @@ class Customisations_For_Cg_Woo_Grid_Admin extends Customisations_For_Cg_Woo_Gri
 
 
 
-     /**
+  /**
 	 * Hello World (for testing purposes)
 	 *
 	 * @access public

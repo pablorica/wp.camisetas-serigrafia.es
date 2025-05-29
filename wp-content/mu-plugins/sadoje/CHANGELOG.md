@@ -12,6 +12,37 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
     - *public/customisations-for-cg-woo-grid-public.php:l.182* `$variation_map` needs to be populated automatically from CMS
 
 
+
+
+## [0.14.11] - 2025-05-26
+
+### Updates
+
+- [Estampador](https://app.asana.com/1/355454733208534/project/1203117341882428/task/1210143831408687) El estampador tendrá ahora SOLO dos campos: Ubicación & Tamaño
+
+
+## [0.14.10] - 2025-05-09
+
+### Updates
+
+ - [Estampador](https://app.asana.com/1/355454733208534/project/1203117341882428/task/1210143831408687)
+
+- [Números y Bordes](https://app.asana.com/1/355454733208534/project/1203117341882428/task/1210143831408697)
+
+## [0.14.9] - 2025-05-09
+
+### Fixes
+
+-  <tr> cannot be child of <table>, according to HTML specifications. This can cause hydration errors or potentially disrupt future functionality.
+
+
+### Updates
+
+
+ - [Tabla de Precios](https://app.asana.com/1/355454733208534/project/1203117341882428/task/1209041529810865) La tabla de precios tiene que mostrar SIEMPRE los PRECIOS sin IVA
+
+
+
 ## [0.14.8] - 2025-04-17
 
 ### Updates

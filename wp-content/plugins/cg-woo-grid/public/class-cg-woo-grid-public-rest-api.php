@@ -118,9 +118,13 @@ class Rest_Api {
 
 
         //$return->boxtitle        = __("Your budget","cg-woo-grid");
-        $return->boxtitle        = get_option($this->plugin_name.'_totalbox_title');
-        $return->rsmdisplay      = get_option($this->plugin_name.'_show_resumebox');
-        $return->rsmpriceunitmsg = get_option($this->plugin_name.'_resumebox_priceunit_message');
+        $return->boxtitle             = get_option($this->plugin_name.'_totalbox_title');
+        $return->rsmdisplay           = get_option($this->plugin_name.'_show_resumebox');
+        $return->rsmpriceunitnotaxmsg = get_option($this->plugin_name.'_resumebox_priceunit_notax_message');
+        $return->rsmpriceunitmsg      = get_option($this->plugin_name.'_resumebox_priceunit_message');
+        $return->rsmsubtotalmsg       = get_option($this->plugin_name.'_resumebox_subtotal_message');
+        $return->rsmtaxesmsg          = get_option($this->plugin_name.'_resumebox_taxes_message');
+        $return->rsminctaxesmsg       = get_option($this->plugin_name.'_resumebox_inc_taxes_message');
 
         $return->unitpricetitle  = __("Unit price","cg-woo-grid");
         $return->pricetitle      = __("Price","cg-woo-grid");
@@ -202,7 +206,9 @@ class Rest_Api {
                     $attr 		= $single_variation->get_variation_attributes();
 
                     foreach ($gridattributes as $gakey => $gavalue) {
-                        if ($gavalue['y'] == $gavalue[$tax_y_slug]) $nk = $gakey;
+                        if(isset($gavalue[$tax_y_slug])) {
+                          if ($gavalue['y'] == $gavalue[$tax_y_slug]) $nk = $gakey;
+                        }
                     }
                     if ($nk === false) {
                         $gridattributes[] = array(
@@ -307,6 +313,8 @@ class Rest_Api {
 
             $return = new \stdClass();
             $return->numberofprods     = $numberofprods;
+            $return->istaxenabled      = $is_tax_enabled;
+            $return->pricesincludetax  = $prices_include_tax;
             $return->unitpricetax      = strip_tags(html_entity_decode(wc_price($unitPriceTax)));
             $return->unitprice         = strip_tags(html_entity_decode(wc_price($unitPrice)));
             $return->subtotal          = $price;

@@ -1,69 +1,72 @@
 <template>
-    <table class="cdg_table">
-        <tbody>
-            <tr v-for="(row, rindex) in rows"
-                v-bind:id="'row_'+rindex" 
-                v-bind:class = "[(rindex % 2 == 1)?'':'alternate', (loading===true && rindex == rows.length - 1)?'rowloading':''] "
-            >
-                <td style="text-align:right">
-                    <table>
-                        <tr>
-                            <td v-for="(column, cindex) in columns[rindex]">
-                                {{column.title}}
-                                <select v-model="row[cindex]"
-                                    @change="updateSelects(rindex,cindex,column.slug)"
-                                    >
-                                    <option disabled 
-                                        value="">
-                                        Seleccione un valor
-                                    </option>
-                                    <option v-for="(option, vindex) in column.options" 
-                                        :value="option"
-                                    >{{option}}</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td :colspan="columns[rindex]?columns[rindex].length:4">
-                                <label>Subir archivo
-                                    <input type="file" 
-                                        @change="handleFileUpload( $event, rindex )"
-                                        accept="image/png, image/jpeg"
-                                    />
-                                </label>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-                <td style="text-align:right">
-                    <button class="button button-secondary button-delete" 
-                        style="background:#DC3232;color:#FFF;border-color:#FFF;"
-                        @click="deleteRow(rindex, $event)"
-                    >Borrar</button>
-                </td>
-            </tr>
-            <tr v-bind:class = "(loading===false)?'hide':''">
-                <th colspan='2'>
-                    <div class="loading">
-                        <i class="fa fa-refresh fa-spin"></i>
-                    </div>
-                </th>
-            </tr>
-            
-        </tbody>
-        <tfoot>
-            <tr>
-                <th colspan='2'>
-                    <p style="text-align:right">
-                        <button class="button button-secondary" 
-                            @click="addRow($event)"
-                        >Añadir personalización</button>
-                    </p>
-                </th>
-            </tr>
-        </tfoot>
+    <table class="cdg_table cdg_table_printer">
+      <tbody>
+          <tr v-for="(row, rindex) in rows"
+              v-bind:id="'row_'+rindex" 
+              v-bind:class = "[(rindex % 2 == 1)?'':'alternate', (loading===true && rindex == rows.length - 1)?'rowloading':''] "
+          >
+              <td style="text-align:right">
+                  <table class="cdg_table_estimator_row">
+                    <tbody>
+                      <tr>
+                          <td v-for="(column, cindex) in columns[rindex]">
+                              {{column.title}}
+                              <select v-model="row[cindex]"
+                                  @change="updateSelects(rindex,cindex,column.slug)"
+                                  >
+                                  <option disabled 
+                                      value="">
+                                      Seleccione un valor
+                                  </option>
+                                  <option v-for="(option, vindex) in column.options" 
+                                      :value="option"
+                                  >{{option}}</option>
+                              </select>
+                          </td>
+                      </tr>
+                      <tr>
+                          <td :colspan="columns[rindex]?columns[rindex].length:4">
+                              <label>Subir archivo
+                                  <input type="file" 
+                                      @change="handleFileUpload( $event, rindex )"
+                                      accept="image/png, image/jpeg"
+                                  />
+                              </label>
+                          </td>
+                      </tr>
+                    </tbody>
+                  </table>
+              </td>
+              <td style="text-align:right">
+                  <button class="button button-secondary button-delete" 
+                      style="background:#DC3232;color:#FFF;border-color:#FFF;"
+                      @click="deleteRow(rindex, $event)"
+                  >Borrar</button>
+              </td>
+          </tr>
+          <tr v-bind:class = "(loading===false)?'hide':''">
+              <th colspan='2'>
+                  <div class="loading">
+                      <i class="fa fa-refresh fa-spin"></i>
+                  </div>
+              </th>
+          </tr>
+          
+      </tbody>
+      <tfoot>
+          <tr>
+              <th colspan='2'>
+                  <p style="text-align:right">
+                      <button class="button button-secondary" 
+                          @click="addRow($event)"
+                      >Añadir otra personalización</button>
+                  </p>
+              </th>
+          </tr>
+      </tfoot>
     </table>
-    <table class="cdg_table">
+    <table class="cdg_table cdg_table_bagged">
+      <tbody>
         <tr>
             <th>{{baggedtitle}} </th>
             <td class="cdg_radio">
@@ -86,11 +89,12 @@
                 <small v-html="baggedwording"></small>
             </td>
         </tr>
+      </tbody>
     </table>
 </template>
 
 <script>  
-console.log('customisations-for-cg-woo-grid: VUE Estimator loaded')
+//console.log('customisations-for-cg-woo-grid: VUE Estimator loaded')
 import { emitter } from '../vue-customisations-for-cg-woo-grid.js';
 
 
@@ -120,43 +124,47 @@ export default {
     },
     mounted: function () {
 
-        let element        = this.$el;
-        this.apiurl        = element.parentElement.dataset.apiurl;
-        this.imprint       = element.parentElement.dataset.imprint;
-        this.prices        = element.parentElement.dataset.prices;
+      let element        = this.$el;
+      this.apiurl        = element.parentElement.dataset.apiurl;
+      this.imprint       = element.parentElement.dataset.imprint;
+      this.prices        = element.parentElement.dataset.prices;
+      
+
+      this.serwording    = element.parentElement.dataset.wording;
+
+      this.baggedprice   = element.parentElement.dataset.baggedprice;
+      this.baggedtitle   = element.parentElement.dataset.baggedtitle;
+      this.baggedwording = element.parentElement.dataset.baggedwording;
         
+      this.buildEstimator(); 
 
-        this.serwording    = element.parentElement.dataset.wording;
+      let self = this
+      document.getElementById("cdg_add_products").addEventListener(
+          'click',
+          function() {
+              self.submitFile()
+              
+          }
+      )
 
-        this.baggedprice   = element.parentElement.dataset.baggedprice;
-        this.baggedtitle   = element.parentElement.dataset.baggedtitle;
-        this.baggedwording = element.parentElement.dataset.baggedwording;
-        
-        this.buildEstimator(); 
-
-        let self = this
-        document.getElementById("cdg_add_products").addEventListener(
-            'click',
-            function() {
-                self.submitFile()
-                
-            }
-        )
-
-        
+      // Automatically add the first row on load
+      this.addRow(new Event('init'));
     },
     methods: {
 
         buildEstimator: function() {
-            //console.log('buildEstimator');
+            console.log('buildEstimator');
             let self   = this
             let getURL = self.apiurl+'/encode';
+
+            //console.log('getURL', getURL);
 
             if(self.prices !== ''){
 
                 //console.log('prices');
                 //console.log(self.prices);
-
+                
+                //https://camisetas-serigrafia.localhost/index.php/wp-json/customisations-for-cg-woo-grid/v1/encode
                 axios.post(getURL,{
                         serialized: self.prices
                     })
@@ -184,89 +192,96 @@ export default {
                     });
             }
         },
+        updatePricecolors: function(rowindex, colindex, colslug) {
+          let self = this
+          //console.log('options to filter');
+          //console.log(self.selectoptionsinrow);
+          //console.log('filter by');
+          //console.log(colslug);
+
+          let selected = self.selectoptionsinrow.filter(function (el) {
+              return el[colslug] == self.rows[rowindex][colindex];
+          });
+          //console.log('filtered otions');
+          //console.log(selected);
+          if(!selected.length) {
+              
+              // Filter again but this time using the original options value, 
+              // becasue the current row options was returning false
+              //console.log('default options to filter');
+              //console.log(self.selectoptions);
+              selected = self.selectoptions.filter(function (el) {
+                  return el[colslug] == self.rows[rowindex][colindex];
+              });
+          }
+          self.selectoptionsinrow = selected;
+
+          //console.log('Update pricecolors', self.selectoptionsinrow);
+
+          //Add prices by color to row
+          self.rows[rowindex].pricecolors = [];
+          self.selectoptionsinrow.forEach(function(selrow){
+              self.rows[rowindex].pricecolors.push({
+                  color: selrow.color,
+                  pricecloth: selrow.pricecloth,
+                  priceclothval: selrow.priceclothval,
+                  pricescreen: selrow.pricescreen,
+                  pricescreenval: selrow.pricescreenval
+              }); 
+          });
+
+          return self.selectoptionsinrow;
+        },
         updateSelects: function(
-            rowindex,
-            colindex,
-            colslug
+          rowindex,
+          colindex,
+          colslug
         ) {
-            let self   = this
-            //console.log("updateSelects row:"+rowindex+" col:"+colindex+" "+colslug);
-            //console.log("selected "+colslug+": "+self.rows[rowindex][colindex]);
-            let nextColumnIndex = colindex + 1;
-            if(nextColumnIndex < self.columns[rowindex].length) {
-                //delete values of selects on the right of the current element, if any
-                for( let i = nextColumnIndex; i < self.columns[rowindex].length; i++) {
-                    console.log("deleting currentColumns id "+rowindex+" options "+i);
-                    self.columns[rowindex][i].options = []
-                    console.log("deleting self.rows id "+rowindex+"  values "+i);
-                    self.rows[rowindex][i] = null;
-                }
-                
-                //Set the values of the current select
-                console.log('next column:');
-                console.log(nextColumnIndex);
-                let nextColumn = self.columns[rowindex][nextColumnIndex];
-                console.log('next column slug');
-                console.log(nextColumn.slug);
+          let self = this
+          //console.log("updateSelects row:"+rowindex+" col:"+colindex+" "+colslug);
+          //console.log("selected "+colslug+": "+self.rows[rowindex][colindex]);
+          let selected = self.updatePricecolors(rowindex, colindex, colslug);
 
-                if(self.columns[rowindex][colindex].all) {
-                    // The current select can have any value, 
-                    // we must use one of the previous select to filter the values
-                    colslug  = self.columns[rowindex][colindex].all.slug
-                    colindex = self.columns[rowindex][colindex].all.index
-                }
-
-                console.log('options to filter');
-                console.log(self.selectoptionsinrow);
-                console.log('filter by');
-                console.log(colslug);
-                
-                let selected = self.selectoptionsinrow.filter(function (el) {
-                    return el[colslug] == self.rows[rowindex][colindex];
-                });
-                console.log('filtered otions');
-                console.log(selected);
-                if(!selected.length) {
-                    
-                    // Filter again but this time using the original options value, 
-                    // becasue the current row options was returning false
-                    console.log('default options to filter');
-                    console.log(self.selectoptions);
-
-
-                    selected = self.selectoptions.filter(function (el) {
-                        return el[colslug] == self.rows[rowindex][colindex];
-                    });
-                }
-                self.selectoptionsinrow = selected;
-
-                //Add prices by color to row
-                self.rows[rowindex].pricecolors = [];
-                self.selectoptionsinrow.forEach(function(selrow){
-                    self.rows[rowindex].pricecolors.push({
-                        color: selrow.color,
-                        pricecloth: selrow.pricecloth,
-                        priceclothval: selrow.priceclothval,
-                        pricescreen: selrow.pricescreen,
-                        pricescreenval: selrow.pricescreenval
-                    }); 
-                });
-                
-                let nextuniqueoptions = [...new Set(selected.map(item => item[nextColumn.slug]))];
-                
-                console.log('next column values');
-                console.log(nextuniqueoptions);
-                if(nextuniqueoptions[0] === "all") {
-                    nextColumn.options = self.columns[rowindex][nextColumnIndex].default
-                    nextColumn.all    = {'index':colindex, 'slug':colslug}
-                } else {
-                    nextColumn.options = nextuniqueoptions;
-                }
-                self.columns[rowindex][nextColumnIndex] = nextColumn;
+          let nextColumnIndex = colindex + 1;
+          if(nextColumnIndex < self.columns[rowindex].length) {
+            //delete values of selects on the right of the current element, if any
+            for( let i = nextColumnIndex; i < self.columns[rowindex].length; i++) {
+                //console.log("deleting currentColumns id "+rowindex+" options "+i);
+                self.columns[rowindex][i].options = []
+                //console.log("deleting self.rows id "+rowindex+"  values "+i);
+                self.rows[rowindex][i] = null;
             }
-            //console.log("Current saved columns");
-            //console.log(self.columns);
-            self.changeCookie();
+              
+            //Set the values of the current select
+            //console.log('next column:');
+            //console.log(nextColumnIndex);
+            let nextColumn = self.columns[rowindex][nextColumnIndex];
+            //console.log('next column slug');
+            //console.log(nextColumn.slug);
+
+            if(self.columns[rowindex][colindex].all) {
+                // The current select can have any value, 
+                // we must use one of the previous select to filter the values
+                colslug  = self.columns[rowindex][colindex].all.slug
+                colindex = self.columns[rowindex][colindex].all.index
+            }
+            
+            let nextuniqueoptions = [...new Set(selected.map(item => item[nextColumn.slug]))];
+            
+            //console.log('next column values');
+            //console.log(nextuniqueoptions);
+            if(nextuniqueoptions[0] === "all") {
+                nextColumn.options = self.columns[rowindex][nextColumnIndex].default
+                nextColumn.all    = {'index':colindex, 'slug':colslug}
+            } else {
+                nextColumn.options = nextuniqueoptions;
+            }
+            self.columns[rowindex][nextColumnIndex] = nextColumn;
+          } 
+          //console.log("Current saved columns");
+          //console.log(self.columns);
+          
+          self.changeCookie();
         },
         addRow: function(event) {
             event.preventDefault()
@@ -277,8 +292,8 @@ export default {
 
             if(self.imprint !== ''){
 
-                console.log('imprint');
-                console.log(self.imprint);
+                //console.log('imprint');
+                //console.log(self.imprint);
 
                 axios.post(getURL,{
                         serialized: self.imprint
@@ -288,20 +303,24 @@ export default {
                         //self.columns.push(response.data)
                         //console.log(response.data);
                         let defaultSelects = []; 
+                        let firstItem = true;
                         for (let i = 0; i < response.data.length; i++) {
                             const item = response.data[i];
 
                             const defaultValues = item.imprint_values
-                                                        .split('|')
-                                                        .map(function(ele) {
-                                                            return ele.trim();
-                                                        });
+                            .split('|')
+                            .map(function(ele) {
+                                return ele.trim();
+                            });
+
+                            //console.log('item', item);
+
                             if(item.imprint_hide) {
-                                continue;
+                              continue;
                             }
 
                             if(item.imprint_unpublish) {
-                                continue;
+                              continue;
                             }
 
 
@@ -310,16 +329,19 @@ export default {
                                 title:      item.imprint_label,
                                 default:    defaultValues,   
                                 options:    [],
-                                all:        false
+                                all:        false // if all== true The current select can have any value,  we must use one of the previous select to filter the values
                             }
-                            if(i === 0) {
+                            if(firstItem) { //This is the first item to get here, so it will have the default values
                                 imprintObject.options = defaultValues 
+                                firstItem = false;
                             }
+
+                            //console.log('imprintObject', imprintObject);
 
                             defaultSelects.push(imprintObject);
                         }
 
-                        //console.log('defaultSelects', defaultSelects);
+                        console.log('defaultSelects', defaultSelects);
                         self.columns.push(defaultSelects);
                         //console.log('self.columns', self.columns);
                         self.loading = false;
@@ -366,8 +388,8 @@ export default {
             */
             self.rows.push({});
 
-            console.log("Current created columns");
-            console.log(self.columns);
+            //console.log("Current created columns");
+            //console.log(self.columns);
         },
         deleteRow: function(rowid, event) {
             event.preventDefault()
@@ -376,7 +398,7 @@ export default {
             self.rows.splice(rowid, 1)
             self.columns.splice(rowid, 1)
             //self.updateRows()
-            console.log("Current saved rows");
+            console.log("Current saved rows sfter delete one");
             console.log(self.rows);
             self.changeCookie();
         },
@@ -389,21 +411,21 @@ export default {
             let self      = this
             let cookieObj = {}
 
-            console.log("Current saved rows");
-            console.log(self.rows);
+            //console.log("Current saved rows before updating cookie");
+            //console.log(self.rows);
             if(typeof self.columns[0] !== 'undefined') {
                 let slugs = self.columns[0].map(a => a.slug);
-                console.log('addOn new changeCookie')
+                //console.log('addOn new changeCookie')
                 //console.log('slugs:')
                 //console.log(slugs);
                 cookieObj.stamping = [];
                 self.rows.forEach(function(row){
                     let rowkeys = Object.keys(row);
                     let rowvalues = Object.values(row);
-                    console.log('rowkeys:')
-                    console.log(rowkeys)
-                    console.log('rowvalues:')
-                    console.log(rowvalues)
+                    //console.log('rowkeys:')
+                    //console.log(rowkeys)
+                    //console.log('rowvalues:')
+                    //console.log(rowvalues)
                     let stamping = {};
                     rowkeys.forEach(function(key){
                         //console.log('slug: '+ slugs[key])
@@ -444,8 +466,10 @@ export default {
                 cookieObj.totalProducts = self.totalProducts
             }
 
-            console.log('current cookie object');
-            console.log(cookieObj);
+            //console.log('current cookie object');
+            //console.log(cookieObj);
+
+
 
             //console.log('Is cookie? '+window.$cookies.isKey(self.cookieName))
             /*
@@ -489,8 +513,8 @@ export default {
 
             const cookieJSON = JSON.stringify(cookieObj);
             window.$cookies.set(self.cookieName,cookieJSON);
-            console.log('AddOn cookie')
-            console.log(window.$cookies.get(self.cookieName))
+            //console.log('AddOn cookie')
+            //console.log(window.$cookies.get(self.cookieName))
 
             /*  TODO this works and trigers the updateTotal function, 
             but it would be better to find a way to triger that function 

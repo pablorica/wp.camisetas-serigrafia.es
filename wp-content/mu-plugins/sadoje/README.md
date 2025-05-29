@@ -3,7 +3,7 @@ Updates prices in the matrix of Woocommerce Products variations
 
 Website: [codigo.co.uk](https://codigo.co.uk)
 
-[![version](https://img.shields.io/badge/version-0.14.8-blue.svg)](https://semver.org)
+[![version](https://img.shields.io/badge/version-0.14.11-blue.svg)](https://semver.org)
 
 ## Basic Features
 

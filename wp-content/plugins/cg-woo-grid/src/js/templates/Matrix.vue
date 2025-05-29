@@ -236,7 +236,7 @@ export default {
                     for(var ikey in _data['quantities']){
                         purchaseAmount += parseInt(_data['quantities'][ikey]);
                     }
-                    console.log('Plugin: total products '+purchaseAmount)
+                    //console.log('Plugin: total products '+purchaseAmount)
 
                     self.updateCookie({  totalProducts: purchaseAmount }) 
 
@@ -354,8 +354,8 @@ export default {
 
                 const cookieJSON = JSON.stringify(cookieObj);
                 window.$cookies.set(self.cookieName,cookieJSON);
-                console.log('Plugin cookie')
-                console.log(window.$cookies.get(self.cookieName))
+                //console.log('Plugin cookie')
+                //console.log(window.$cookies.get(self.cookieName))
             },
             removeCookie: function() {
                 let self = this

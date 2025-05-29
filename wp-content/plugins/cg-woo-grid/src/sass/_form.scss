@@ -35,81 +35,101 @@ body.single-product #page {
 		z-index: 10;
 	}
 	h3.cdg_title {
-		background-color: #ececec;
+		background-color: #FCDFB0;
 		font-size: 19px;
 		font-weight: bold;
 		margin: 15px -30px;
 		padding: 15px 30px;
 		text-transform: uppercase;
 	}
+  .cdg_info {
+    background-color:#ececec;
+    padding: 20px;
+  }
 	.sidebar_configurator {
 		position: relative;
 	}
-    #appBar {
-        @media screen and (min-width: 768px) {
-			//position: -webkit-sticky; /* Safari */
-			position: sticky;
-			top:110px;
-            z-index: 10;
-		}
+  #appBar {
+      @media screen and (min-width: 768px) {
+    //position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top:110px;
+          z-index: 10;
+  }
+  }
+  
+  .cdg_total {
+      & > div {
+          border: 1px solid gray;
+      
+          h3 {
+              border-bottom: 1px solid gray;
+              margin: 0;
+              padding: 15px;
+              text-align: center;
+          }
+      }
+      .units {
+          border-bottom: 1px solid gray;
+          padding: 15px;
+      
+          & > div {
+              clear: both;
+              text-transform: uppercase;
+          }
+          input {
+              background: transparent;
+              border: none;
+              float: right;
+              text-align: right;
+              width: 80px;
+          }
+          &#cdg_units {
+          display:none;
+          }
+          #prizes_table {
+              width: 100%;
+              th, td {
+                  padding: 0;
+                  background-color: transparent;
+              }
+          }
+      }
+      .total {
+          padding: 15px 15px 10px;
+          text-align: right;
+      }
+      .add_to_cart_button {
+          width: 100%;
+          margin-top: 15px;
+      } 
+  .loading {
+    left: 0;
+    right:0;
+    .fa {
+      position: absolute;
+      top: 50%;
+      left: calc(50% - 20px);
+    }
+  }
+  }
+  button#updateTotal {
+      display: none;
+  }
+
+  &.cdg_box_framed {
+    position: relative;
+    &::after {
+      content: "";
+      position: absolute;
+      top:30px;
+      left: -30px;
+      height: calc(100% - 30px);
+      width: calc(100% + 60px);
+      border: 5px solid #FCDFB0;
+      border-top: none;
+      z-index: -1;
     }
     
-    .cdg_total {
-        & > div {
-            border: 1px solid gray;
-        
-            h3 {
-                border-bottom: 1px solid gray;
-                margin: 0;
-                padding: 15px;
-                text-align: center;
-            }
-        }
-        .units {
-            border-bottom: 1px solid gray;
-            padding: 15px;
-        
-            & > div {
-                clear: both;
-                text-transform: uppercase;
-            }
-            input {
-                background: transparent;
-                border: none;
-                float: right;
-                text-align: right;
-                width: 80px;
-            }
-            &#cdg_units {
-            display:none;
-            }
-            #prizes_table {
-                width: 100%;
-                th, td {
-                    padding: 0;
-                    background-color: transparent;
-                }
-            }
-        }
-        .total {
-            padding: 15px 15px 10px;
-            text-align: right;
-        }
-        .add_to_cart_button {
-            width: 100%;
-            margin-top: 15px;
-        } 
-		.loading {
-			left: 0;
-			right:0;
-			.fa {
-				position: absolute;
-				top: 50%;
-				left: calc(50% - 20px);
-			}
-		}
-    }
-    button#updateTotal {
-        display: none;
-    }
+  }
 }

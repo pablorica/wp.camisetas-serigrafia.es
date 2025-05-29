@@ -15,10 +15,15 @@
 </div>
  / Vue  -->
 
-<div class="cdg_box">
+<div class="cdg_box cdg_box_framed">
     <h3 class="cdg_title">
         <?php echo get_option($elementName.'_budgeteer_info_header') ?>
     </h3>
+    <?php if ( get_option($elementName.'_budgeteer_topinfo_wording')): ?>
+    <div class="cdg_info cdg_info_top">
+        <?php echo get_option($elementName.'_budgeteer_topinfo_wording') ?>
+    </div>
+    <?php endif; ?>
     <!-- Vue -->
     <div id="appEstimator"
         data-apiurl        = "<?php echo $urlspace; ?>"
@@ -31,10 +36,11 @@
     >
         <estimator></estimator>
     </div>
-    <p>&nbsp;</p>
-
     <!-- / Vue  -->
-    <div>
+    <?php if ( get_option($elementName.'_budgeteer_info_wording')): ?>
+    <div class="cdg_info cdg_info_bottom">
         <?php echo get_option($elementName.'_budgeteer_info_wording') ?>
     </div>
+    <?php endif; ?>
+    <p>&nbsp;</p>
 </div>

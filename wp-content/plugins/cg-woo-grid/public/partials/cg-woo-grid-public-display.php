@@ -22,7 +22,7 @@
 <!-- / Vue  -->
 
 <div id="cdg_form" 
-    class="cdg_box"
+    class="cdg_box cdg_box_framed"
 >
 
     <?php if($header = get_option($this->plugin_name.'_header_setting')):?>
