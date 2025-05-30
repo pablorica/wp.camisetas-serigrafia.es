@@ -13,6 +13,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 
+## [0.14.12] - 2025-05-30
+
+### Updates
+
+- [Add order item meta for customizations](https://app.asana.com/1/355454733208534/project/1203117341882428/task/1210409351761295)
+
+
 
 ## [0.14.11] - 2025-05-26
 
