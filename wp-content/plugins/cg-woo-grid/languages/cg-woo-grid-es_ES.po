@@ -393,3 +393,8 @@ msgstr "Algo ha ido mal"
 
 #~ msgid "ITEMS"
 #~ msgstr "UDS"
+
+#: public/class-cg-woo-grid-public.php:524
+#: public/class-cg-woo-grid-public.php:566
+msgid "Stamping"
+msgstr "Estampado"
