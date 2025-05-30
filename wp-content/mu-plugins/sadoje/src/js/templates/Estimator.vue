@@ -139,13 +139,16 @@ export default {
       this.buildEstimator(); 
 
       let self = this
-      document.getElementById("cdg_add_products").addEventListener(
-          'click',
-          function() {
-              self.submitFile()
-              
-          }
-      )
+      // Do not send when adding to cart because it is executed later 
+      // and removed from the cookie and then cannot be processed, 
+      // better to process them when selected.
+      // document.getElementById("cdg_add_products").addEventListener(
+      //     'click',
+      //     function() {
+      //         self.submitFile()
+      //         
+      //     }
+      // )
 
       // Automatically add the first row on load
       this.addRow(new Event('init'));
@@ -562,19 +565,21 @@ export default {
         },
         handleFileUpload( event, rindex ){
             this.rows[rindex].file = event.target.files[0];
+            
+            // Process when the file is selected to make it available when adding to cart
+            this.submitFile(this.rows[rindex]);
         },
         /**
          * @see https://serversideup.net/uploading-files-vuejs-axios/
          * @see https://github.com/serversideup/uploading-files-vuejs-axios/blob/main/src/components/SingleFile.vue
          */
-        submitFile(){
+        submitFile(row){
             
             let self = this;
             let getURL = this.apiurl+'/upload-image';
             
-            this.rows.forEach(function(row){
+            // this.rows.forEach(function(row){
                 if(row.file) {
-                    
                     let formData = new FormData();
                     
                     formData.append('file', row.file);
@@ -598,7 +603,7 @@ export default {
                         console.log(error);
                     });
                 }
-            });
+            // });
             //TODO:  Reset the estimator once the cookie is updated with the images IDs
             // Also, be sure that the image ID (and image URL) is added to the Invoice and cart descripption
             //this.resetEstimator()

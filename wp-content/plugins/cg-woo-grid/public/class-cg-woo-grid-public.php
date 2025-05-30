@@ -447,7 +447,6 @@ class Functions {
         $quantity
      ){
         if(isset($_COOKIE['cgWooGrid'])) {
-
             $cgWooGrid = json_decode( 
                 html_entity_decode( 
                     stripslashes (
@@ -461,6 +460,37 @@ class Functions {
                     "<br/>", $cgWooGrid->description
                 )
             );
+
+            // Process the stamping data if it exists
+            if (isset($cgWooGrid->stamping) && is_array($cgWooGrid->stamping)) {
+                $imprint_types = maybe_unserialize(
+                    get_option('customisations-for-cg-woo-grid_budgeteer_imprint_types', [])
+                ) ?: [];
+
+                $customizations = [];
+                foreach ($cgWooGrid->stamping as $stamp) {
+                    $details = [];
+
+                    foreach ($imprint_types as $type) {
+                        if (isset($stamp->{$type['imprint']})) {
+                            $details[] = $stamp->{$type['imprint']};
+                        }
+                    }
+
+                    if ($stamp->imageid) {
+                        $details[] = sprintf('<a href="%s" target="_blank">Ver archivo</a>', esc_url(wp_get_attachment_url($stamp->imageid)));
+                    }
+
+                    if ($details) {
+                        $customizations[] = implode(', ', $details);
+                    }
+                }
+                
+                // If there are customizations, add to cart item data
+                if (!empty($customizations)) {
+                    $cart_item_data['cdg_stamping'] = implode('<br/>', $customizations);
+                }
+            }
         }
 
         return $cart_item_data;
@@ -481,11 +511,18 @@ class Functions {
         $item_data, 
         $cart_item  
     ) {
-        if ( isset( $cart_item['cdg_description'] ) ) {
+        if (isset($cart_item['cdg_description'])) {
             $item_data[] = array(
                 'key' => 'cdg_description',
                 'keystyle' => 'display:none', 
                 'display' => $cart_item['cdg_description']
+            );
+        }
+        
+        if (isset($cart_item['cdg_stamping'])) {
+            $item_data[] = array(
+                'key' => __('Stamping', 'cg-woo-grid'),
+                'display' => $cart_item['cdg_stamping']
             );
         }
 
@@ -514,7 +551,6 @@ class Functions {
         $values, 
         $order
     ) {
-
         //error_log('$order->item[values]: '.print_r($values,true));
         if(isset($values['cdg_description'])) {
             $item->set_name( $item->get_name() .'<br/>'. $values['cdg_description'] );
@@ -525,6 +561,9 @@ class Functions {
             );
         }
         
+        if(isset($values['cdg_stamping'])) {
+            $item->add_meta_data(__('Stamping', 'cg-woo-grid'), $values['cdg_stamping']);
+        }
     }
 
 }
