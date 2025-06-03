@@ -16,3 +16,40 @@
         width: 12% !important;
     }
 }
+
+
+.woocommerce-tabs  {
+  margin-top:20px;
+}
+.woocommerce-tabs .tabs {
+    margin-bottom: 0;
+    gap: 0;
+    
+}
+.woocommerce-tabs .tabs li {
+  border: 1px solid #ddd;
+  border-bottom: none;
+  border-radius: 3px 3px 0 0;
+  padding: 5px 10px 0 5px;
+}
+.woocommerce-tabs .tabs li.active {
+  background: rgb(252, 223, 176);
+  border-color: rgb(252, 223, 176);
+}
+.woocommerce-tabs > ul li.active a {
+  text-decoration: none;
+}
+.woocommerce-tabs .woocommerce-Tabs-panel {
+  margin-top: 0;
+  border: 2px solid rgb(252, 223, 176);
+  border-radius: 0 8px 8px 8px;
+  padding: 10px;
+}
+
+#appTableprices .price-container .table-header {
+  background: rgb(252, 223, 176);
+  
+}
+#appTableprices .price-container .table-header b {
+  color: #000;
+}

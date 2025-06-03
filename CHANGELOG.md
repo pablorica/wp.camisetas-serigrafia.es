@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Updates
 
+- Single Product Tabs
 - Registration Form
 - Checkout & Cart styles
 

@@ -157,3 +157,10 @@ function sdjthm_yith_save_filter_data($preset, $data) {
     }
 }
 add_action('yith_wcan_before_data_object_save', 'sdjthm_yith_save_filter_data', 10, 2);
+
+
+
+// Add tabs before the 'cdg_pricetable' 
+remove_action( 'woocommerce_after_single_product_summary', 'woocommerce_output_product_data_tabs', 11 );
+
+add_action( 'woocommerce_share', 'woocommerce_output_product_data_tabs', 10 );
