@@ -66,7 +66,7 @@ function sdjthm_child_enqueue_scripts() {
             wp_get_theme()->get('Version'),
         );
     }
-
+    //https://developer.woocommerce.com/docs/theming/theme-development/conditional-tags
     if (is_product()) {
         wp_enqueue_style(
             'sadoje-product-style',
@@ -75,6 +75,15 @@ function sdjthm_child_enqueue_scripts() {
             wp_get_theme()->get('Version'),
         );
     }
+    if(is_cart() || is_checkout()) {
+      wp_enqueue_style(
+        'sadoje-cart-style',
+        get_stylesheet_directory_uri() . '/assets/css/cart.css',
+        array(),
+        wp_get_theme()->get('Version'),
+      );
+    }
+    
 
 
 }

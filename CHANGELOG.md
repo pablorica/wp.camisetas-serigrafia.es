@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 
+## [0.6.16] - 2025-06-03
+
+### Updates
+
+- Registration Form
+- Checkout & Cart styles
+
+
 ## [0.6.15] - 2025-05-30
 
 ### Updates

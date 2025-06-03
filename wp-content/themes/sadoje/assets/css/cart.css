@@ -1,0 +1,13 @@
+
+/*  Cart */
+.woocommerce .product-variations {
+  display: inline-flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+.woocommerce .product-variations .variation {
+  flex-wrap: wrap;
+}
+.woocommerce .product-variations .variation dt {
+  margin-right: 5px;
+}
