@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
  - Add the new column 'Color Code' in colors attribute taxonomy list
  - Make the 'Color Code' column sortable
+ - Filter dropdown for color codes
 
 ## [0.6.16] - 2025-06-03
 

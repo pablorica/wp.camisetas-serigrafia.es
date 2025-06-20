@@ -182,7 +182,7 @@ function show_color_code_column_content($content, $column_name, $term_id) {
             $content = '<span style="display:inline-block;width:20px;height:20px;background:' . esc_attr($color_code) . ';border:1px solid #ccc;margin-right:5px;vertical-align:middle;"></span>';
             $content .= '<code>' . esc_html($color_code) . '</code>';
         } else {
-            $content = '<em>No color</em>';
+            $content = '<em>No color code</em>';
         }
     }
     return $content;
@@ -190,18 +190,48 @@ function show_color_code_column_content($content, $column_name, $term_id) {
 // Make the 'Color Code' column sortable
 add_action('pre_get_terms', 'sort_color_code_column');
 function sort_color_code_column($query) {
-    // Only target admin screen for pa_color taxonomy
     if (!is_admin()) return;
 
     $screen = get_current_screen();
     if (!$screen || $screen->taxonomy !== 'pa_color') return;
 
-    // Check if sorting by our custom column
+    // Sorting logic
     if (isset($_GET['orderby']) && $_GET['orderby'] === 'color_code') {
         $query->query_vars['meta_key'] = 'agni_variation_swatch_field';
-        $query->query_vars['orderby'] = 'meta_value'; // Or 'meta_value_num' if numeric
+        $query->query_vars['orderby'] = 'meta_value';
+    }
+
+    // Filtering logic
+    if (isset($_GET['color_code_filter'])) {
+        if ($_GET['color_code_filter'] === 'none') {
+            $query->query_vars['meta_query'][] = array(
+                'key' => 'agni_variation_swatch_field',
+                'compare' => 'NOT EXISTS',
+            );
+        } elseif ($_GET['color_code_filter'] === 'has') {
+            $query->query_vars['meta_query'][] = array(
+                'key' => 'agni_variation_swatch_field',
+                'compare' => 'EXISTS',
+            );
+        }
     }
 }
+
+// Add a filter dropdown for color codes in the 'pa_color' taxonomy list
+add_action('restrict_manage_posts', 'add_color_code_filter_dropdown');
+function add_color_code_filter_dropdown($taxonomy) {
+    if ($taxonomy !== 'pa_color') return;
+
+    $selected = isset($_GET['color_code_filter']) ? $_GET['color_code_filter'] : '';
+    ?>
+    <select name="color_code_filter">
+        <option value=""><?php _e('All Color Codes', 'your-textdomain'); ?></option>
+        <option value="has" <?php selected($selected, 'has'); ?>><?php _e('Has Color Code', 'your-textdomain'); ?></option>
+        <option value="none" <?php selected($selected, 'none'); ?>><?php _e('No Color Code', 'your-textdomain'); ?></option>
+    </select>
+    <?php
+}
+
 
 
 
