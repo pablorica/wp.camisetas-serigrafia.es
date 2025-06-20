@@ -158,6 +158,28 @@ function sdjthm_yith_save_filter_data($preset, $data) {
 }
 add_action('yith_wcan_before_data_object_save', 'sdjthm_yith_save_filter_data', 10, 2);
 
+// Add the new column 'Color Code' in colors attribute taxonomy list
+add_filter('manage_edit-pa_color_columns', 'add_color_code_column');
+function add_color_code_column($columns) {
+    $columns['color_code'] = __('Color Code', 'your-textdomain');
+    return $columns;
+}
+
+// Display content in the new column 'Color Code'
+add_filter('manage_pa_color_custom_column', 'show_color_code_column_content', 10, 3);
+function show_color_code_column_content($content, $column_name, $term_id) {
+    if ($column_name === 'color_code') {
+        $color_code = get_term_meta($term_id, 'agni_variation_swatch_field', true); // Use your actual meta key
+        if ($color_code) {
+            // Show color preview + hex code
+            $content = '<span style="display:inline-block;width:20px;height:20px;background:' . esc_attr($color_code) . ';border:1px solid #ccc;margin-right:5px;vertical-align:middle;"></span>';
+            $content .= '<code>' . esc_html($color_code) . '</code>';
+        } else {
+            $content = '<em>No color</em>';
+        }
+    }
+    return $content;
+}
 
 
 // Add tabs before the 'cdg_pricetable' 

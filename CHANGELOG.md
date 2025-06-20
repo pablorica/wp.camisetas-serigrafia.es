@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 
+## [0.6.17] - 2025-06-20
+
+### Updates
+
+Add the new column 'Color Code' in colors attribute taxonomy list
+
 
 ## [0.6.16] - 2025-06-03
 
