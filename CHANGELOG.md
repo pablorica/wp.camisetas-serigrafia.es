@@ -11,8 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Updates
 
-Add the new column 'Color Code' in colors attribute taxonomy list
-
+ - Add the new column 'Color Code' in colors attribute taxonomy list
+ - Make the 'Color Code' column sortable
 
 ## [0.6.16] - 2025-06-03
 

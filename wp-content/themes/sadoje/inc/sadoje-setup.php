@@ -164,6 +164,13 @@ function add_color_code_column($columns) {
     $columns['color_code'] = __('Color Code', 'your-textdomain');
     return $columns;
 }
+// Make the 'Color Code' column sortable
+add_filter('manage_edit-pa_color_sortable_columns', 'make_color_code_column_sortable');
+function make_color_code_column_sortable($sortable_columns) {
+    $sortable_columns['color_code'] = 'color_code';
+    return $sortable_columns;
+}
+
 
 // Display content in the new column 'Color Code'
 add_filter('manage_pa_color_custom_column', 'show_color_code_column_content', 10, 3);
@@ -180,6 +187,22 @@ function show_color_code_column_content($content, $column_name, $term_id) {
     }
     return $content;
 }
+// Make the 'Color Code' column sortable
+add_action('pre_get_terms', 'sort_color_code_column');
+function sort_color_code_column($query) {
+    // Only target admin screen for pa_color taxonomy
+    if (!is_admin()) return;
+
+    $screen = get_current_screen();
+    if (!$screen || $screen->taxonomy !== 'pa_color') return;
+
+    // Check if sorting by our custom column
+    if (isset($_GET['orderby']) && $_GET['orderby'] === 'color_code') {
+        $query->query_vars['meta_key'] = 'color_code';
+        $query->query_vars['orderby'] = 'meta_value'; // Or 'meta_value_num' if numeric
+    }
+}
+
 
 
 // Add tabs before the 'cdg_pricetable' 
