@@ -198,7 +198,7 @@ function sort_color_code_column($query) {
 
     // Check if sorting by our custom column
     if (isset($_GET['orderby']) && $_GET['orderby'] === 'color_code') {
-        $query->query_vars['meta_key'] = 'color_code';
+        $query->query_vars['meta_key'] = 'agni_variation_swatch_field';
         $query->query_vars['orderby'] = 'meta_value'; // Or 'meta_value_num' if numeric
     }
 }
