@@ -158,21 +158,50 @@ function sdjthm_yith_save_filter_data($preset, $data) {
 }
 add_action('yith_wcan_before_data_object_save', 'sdjthm_yith_save_filter_data', 10, 2);
 
-// Add the new column 'Color Code' in colors attribute taxonomy list
+
+
+/**
+ * Add a new column 'Color Code' to the colors attribute taxonomy list
+ * and make it sortable.
+ */
+
+/** 
+ * Adds a new column 'Color Code' to the colors attribute taxonomy list
+ * @since 1.0.0
+ * @param array $columns The existing columns in the taxonomy list.
+ * @return array The modified columns with the new 'Color Code' column added.
+ * 
+ * @package Sadoje
+ * 
+*/
 add_filter('manage_edit-pa_color_columns', 'add_color_code_column');
 function add_color_code_column($columns) {
     $columns['color_code'] = __('Color Code', 'your-textdomain');
     return $columns;
 }
-// Make the 'Color Code' column sortable
+/** Make the 'Color Code' column sortable
+ * @since 1.0.0
+ * @param array $sortable_columns The existing sortable columns.
+ * @return array The modified sortable columns with the 'Color Code' column added.
+ * 
+ * @package Sadoje
+ * 
+*/
 add_filter('manage_edit-pa_color_sortable_columns', 'make_color_code_column_sortable');
 function make_color_code_column_sortable($sortable_columns) {
     $sortable_columns['color_code'] = 'color_code';
     return $sortable_columns;
 }
-
-
-// Display content in the new column 'Color Code'
+/** Show the content of the 'Color Code' column in the colors attribute taxonomy list
+ * @since 1.0.0
+ * @param string $content The existing content of the column.
+ * @param string $column_name The name of the column.
+ * @param int $term_id The ID of the term being displayed.
+ * @return string The modified content for the 'Color Code' column.
+ * 
+ * @package Sadoje
+ * 
+*/
 add_filter('manage_pa_color_custom_column', 'show_color_code_column_content', 10, 3);
 function show_color_code_column_content($content, $column_name, $term_id) {
     if ($column_name === 'color_code') {
@@ -187,7 +216,14 @@ function show_color_code_column_content($content, $column_name, $term_id) {
     }
     return $content;
 }
-// Make the 'Color Code' column sortable
+/** Sort and filter the 'Color Code' column in the colors attribute taxonomy list
+ * 
+ * @since 1.0.0
+ * @param WP_Term_Query $query The term query object.
+ * 
+ * @package Sadoje
+ * 
+*/
 add_action('pre_get_terms', 'sort_color_code_column');
 function sort_color_code_column($query) {
     if (!is_admin()) return;
@@ -195,10 +231,27 @@ function sort_color_code_column($query) {
     $screen = get_current_screen();
     if (!$screen || $screen->taxonomy !== 'pa_color') return;
 
+    // Ensure meta_query is initialized as an array
+    if (!isset($query->query_vars['meta_query']) || !is_array($query->query_vars['meta_query'])) {
+        $query->query_vars['meta_query'] = array();
+    }
+
     // Sorting logic
     if (isset($_GET['orderby']) && $_GET['orderby'] === 'color_code') {
         $query->query_vars['meta_key'] = 'agni_variation_swatch_field';
         $query->query_vars['orderby'] = 'meta_value';
+
+        $query->query_vars['meta_query'][] = array(
+            'relation' => 'OR',
+            array(
+                'key' => 'agni_variation_swatch_field',
+                'compare' => 'EXISTS',
+            ),
+            array(
+                'key' => 'agni_variation_swatch_field',
+                'compare' => 'NOT EXISTS',
+            ),
+        );
     }
 
     // Filtering logic
@@ -217,21 +270,55 @@ function sort_color_code_column($query) {
     }
 }
 
-// Add a filter dropdown for color codes in the 'pa_color' taxonomy list
-add_action('restrict_manage_posts', 'add_color_code_filter_dropdown');
-function add_color_code_filter_dropdown($taxonomy) {
-    if ($taxonomy !== 'pa_color') return;
+/** Add a dropdown filter for the 'Color Code' column in the colors attribute taxonomy list
+ * 
+ * @since 1.0.0
+ * @param string $taxonomy The taxonomy being filtered.
+ * @param string $post_type The post type being filtered.
+ * 
+ * @package Sadoje
+ * 
+*/
+add_action('admin_footer-edit-tags.php', 'inject_color_code_filter_dropdown');
+function inject_color_code_filter_dropdown() {
+    if (!isset($_GET['taxonomy']) || $_GET['taxonomy'] !== 'pa_color') {
+        return;
+    }
 
     $selected = isset($_GET['color_code_filter']) ? $_GET['color_code_filter'] : '';
+
     ?>
-    <select name="color_code_filter">
-        <option value=""><?php _e('All Color Codes', 'your-textdomain'); ?></option>
-        <option value="has" <?php selected($selected, 'has'); ?>><?php _e('Has Color Code', 'your-textdomain'); ?></option>
-        <option value="none" <?php selected($selected, 'none'); ?>><?php _e('No Color Code', 'your-textdomain'); ?></option>
-    </select>
+    <script>
+    jQuery(function($) {
+        const currentUrl = new URL(window.location.href);
+        const selected = "<?php echo esc_js($selected); ?>";
+
+        const filterHtml = `
+            <select name="color_code_filter" id="color_code_filter">
+                <option value="">All Color Codes</option>
+                <option value="has" ${selected === 'has' ? 'selected' : ''}>Has Color Code</option>
+                <option value="none" ${selected === 'none' ? 'selected' : ''}>No Color Code</option>
+            </select>
+        `;
+
+        const $filter = $(filterHtml);
+
+        $filter.on('change', function () {
+            const value = $(this).val();
+            const url = new URL(window.location.href);
+            if (value) {
+                url.searchParams.set('color_code_filter', value);
+            } else {
+                url.searchParams.delete('color_code_filter');
+            }
+            window.location.href = url.toString();
+        });
+
+        $('.tablenav.top .actions.bulkactions').append($filter);
+    });
+    </script>
     <?php
 }
-
 
 
 
