@@ -38,7 +38,7 @@ function sdjthm_child_enqueue_scripts() {
     // Adding child stylesheet
     wp_enqueue_style(
         'sadoje-style',
-        get_stylesheet_directory_uri() . 'style.css',
+        get_stylesheet_directory_uri() . '/style.css',
         array(),
         wp_get_theme()->get('Version'),
     );
