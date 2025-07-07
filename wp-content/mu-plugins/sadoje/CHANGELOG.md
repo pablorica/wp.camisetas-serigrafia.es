@@ -14,6 +14,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 
+## [1.0.2] - 2025-07-07
+
+
+### Fixed
+
+- [Fallo en presupuestador](https://app.asana.com/1/355454733208534/project/1203117341882428/task/1210729685536229)
+
+
+
 ## [1.0.1] - 2025-07-07
 
 

@@ -208,30 +208,34 @@ export default {
             }
         },
         updatePricecolors: function(rowindex, colindex, colslug) {
-          let self = this
-          //console.log('options to filter');
-          //console.log(self.selectoptionsinrow);
-          //console.log('filter by');
-          //console.log(colslug);
+          console.log('Update pricecolors');
 
+          let self = this
+          console.log('options to filter');
+          console.log(self.selectoptionsinrow);
+          console.log('filter by');
+          console.log(colslug);
+
+          console.log('Filter the options selected in the previous step. If any option is set to "all" then get it');
           let selected = self.selectoptionsinrow.filter(function (el) {
-              return el[colslug] == self.rows[rowindex][colindex];
+              return el[colslug] == self.rows[rowindex][colindex] || 'all';
           });
-          //console.log('filtered otions');
-          //console.log(selected);
+          console.log('filtered otions');
+          console.log(selected);
           if(!selected.length) {
-              
-              // Filter again but this time using the original options value, 
-              // becasue the current row options was returning false
-              //console.log('default options to filter');
-              //console.log(self.selectoptions);
+              console.log('Filter again but this time using the original options value because the current row options were returning false');
+              console.log(self.selectoptions);
+              console.log('colslug',colslug);
+              console.log('rowindex',rowindex);
+              console.log('colindex',colindex);
+              console.log('self.rows[rowindex][colindex]',self.rows[rowindex][colindex]);
               selected = self.selectoptions.filter(function (el) {
                   return el[colslug] == self.rows[rowindex][colindex];
               });
           }
           self.selectoptionsinrow = selected;
 
-          //console.log('Update pricecolors', self.selectoptionsinrow);
+          console.log('The new pricecolors are: ', self.selectoptionsinrow);
 
           //Add prices by color to row
           self.rows[rowindex].pricecolors = [];
@@ -253,8 +257,8 @@ export default {
           colslug
         ) {
           let self = this
-          //console.log("updateSelects row:"+rowindex+" col:"+colindex+" "+colslug);
-          //console.log("selected "+colslug+": "+self.rows[rowindex][colindex]);
+          console.log("updateSelects row:"+rowindex+" col:"+colindex+" "+colslug);
+          console.log("selected column | "+colslug+": "+self.rows[rowindex][colindex]);
           let selected = self.updatePricecolors(rowindex, colindex, colslug);
 
           let nextColumnIndex = colindex + 1;
@@ -283,18 +287,18 @@ export default {
             
             let nextuniqueoptions = [...new Set(selected.map(item => item[nextColumn.slug]))];
             
-            //console.log('next column values');
-            //console.log(nextuniqueoptions);
+            console.log('next column values');
+            console.log(nextuniqueoptions);
             if(nextuniqueoptions[0] === "all") {
                 nextColumn.options = self.columns[rowindex][nextColumnIndex].default
-                nextColumn.all    = {'index':colindex, 'slug':colslug}
+                nextColumn.all = {'index':colindex, 'slug':colslug}
             } else {
                 nextColumn.options = nextuniqueoptions;
             }
             self.columns[rowindex][nextColumnIndex] = nextColumn;
           } 
-          //console.log("Current saved columns");
-          //console.log(self.columns);
+          console.log("Current saved columns");
+          console.log(self.columns);
           
           self.changeCookie();
         },

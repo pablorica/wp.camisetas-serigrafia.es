@@ -627,7 +627,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
       $this->log('l.628 cdg_alter_regular_price: Colour -> '.$attr['attribute_pa_color']);
       $this->log('l.629 cdg_alter_regular_price: Original Price -> '.$regular_price);
       $this->log('l.630 cdg_alter_regular_price: Quantity -> '.$quantity);
-      $this->log('l.631 verbose -> '.print_r($this->verbose,true));
+      //$this->log('l.631 verbose -> '.print_r($this->verbose,true));
       
       $baseprice = get_option($this->get_element_name().'_budgeteer_baseprice_types');
       $baseprices = maybe_unserialize($baseprice)[0];
@@ -637,7 +637,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
 
       if($quantity >= $baseprices['boxpricemin']) {
 
-        $this->log('l.639 cdg_alter_regular_price: The quantity of this item is bigger than  '.$baseprices['boxpricemin'].' , therefore the sale price is the box price');
+        //$this->log('l.639 cdg_alter_regular_price: The quantity of this item is bigger than  '.$baseprices['boxpricemin'].' , therefore the sale price is the box price');
           
         $regular_price = get_post_meta(
             $single_variation->get_id(),
@@ -647,7 +647,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
       }
       elseif($quantity >= $baseprices['packagepricemin']) {
 
-        $this->log('l.649 cdg_alter_regular_price: The quantity of this item is bigger than  '.$baseprices['packagepricemin'].' , therefore the sale price is the package price');
+        //$this->log('l.649 cdg_alter_regular_price: The quantity of this item is bigger than  '.$baseprices['packagepricemin'].' , therefore the sale price is the package price');
           
         $regular_price = get_post_meta(
             $single_variation->get_id(),
@@ -656,7 +656,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
         );
       }
 
-      $this->log('l.658 cdg_alter_regular_price: Altered price due the quantity of this item -> '.$regular_price);
+      //$this->log('l.658 cdg_alter_regular_price: Altered price due the quantity of this item -> '.$regular_price);
       
       if(isset($_COOKIE['cgWooGrid'])) {
 
@@ -672,7 +672,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
         );
 
         //$this->log('l.667 cdg_alter_regular_price: COOKIE -> '.print_r($_COOKIE['cgWooGrid'],true));
-        //$this->log('l.667 cdg_alter_regular_price: JSON -> '.print_r($cgWooGrid,true));
+        $this->log('l.667 cdg_alter_regular_price: JSON -> '.print_r($cgWooGrid,true));
         
         if( isset($cgWooGrid->totalProducts)
             && $cgWooGrid->totalProducts > 0
@@ -683,7 +683,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
               $totalprods  = $cgWooGrid->totalProducts;
           }
 
-          $this->log('l.681 cdg_alter_regular_price: $totalprods -> '.$totalprods);
+          //$this->log('l.681 cdg_alter_regular_price: $totalprods -> '.$totalprods);
             
           $profit = 0;
 
@@ -704,17 +704,19 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
 
           $regular_price = $regular_price * (1 + $profit/100);
 
-          $this->log('l.705 cdg_alter_regular_price: Profit due the number of items -> '.$profit);
-          $this->log('l.706 cdg_alter_regular_price: Altered price due the number of items -> '.$regular_price);
+          //$this->log('l.705 cdg_alter_regular_price: Profit due the number of items -> '.$profit);
+          //$this->log('l.706 cdg_alter_regular_price: Altered price due the number of items -> '.$regular_price);
 
           if( isset($cgWooGrid->stamping)) {
+            //$this->log('l.711 cdg_alter_regular_price: Stampings: '-print_r($cgWooGrid->stamping,true));
             foreach($cgWooGrid->stamping as $stamping) {
               $addScreenVal           = false;
               $objIterator            = new \ArrayIterator($stamping);
               $current_stamping_title = $objIterator->current();
               $pricecolors            = $stamping->pricecolors??[];
 
-              $this->log('l.717  cdg_alter_regular_price: Is this is a new stamping ('.$current_stamping_title.')? ');
+              $this->log('l.718 cdg_alter_regular_price: Current stamping: '.print_r($stamping,true));
+              $this->log('l.719 cdg_alter_regular_price: Is this is a new stamping ('.$current_stamping_title.')? ');
                   
 
               if( ! $addScreenVal
@@ -723,25 +725,33 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                       $this->saved_stamping_titles
                   )
               ) {
-                $this->log('cdg_alter_regular_price: This is a new stamping ('.$current_stamping_title.') so we must add a new photolite and save the stamping name and color value ('.$pricecolors[0]->pricescreenval.') to avoid duplicates in the next loops');
+
+                $this->log('l.728 cdg_alter_regular_price:: YEs, this is a new stamping ('.$current_stamping_title.') so we must save the stamping name to avoid duplicates in the next loops');
                 
                 $addScreenVal = true;
-                $this->saved_stamping_titles[]  = $current_stamping_title;
-                $this->saved_price_screenvals[] = $pricecolors[0]->pricescreenval;
+                $photolite_price = 0; //This is a photolite zero option by default
+                $this->saved_stamping_titles[] = $current_stamping_title;
+                if( isset($pricecolors[0]->pricescreenval) ) {
+                  $this->log('l.734 cdg_alter_regular_price:: We must add the photolite and its value ('.$pricecolors[0]->pricescreenval.') to avoid duplicates in the next loops');
+                  $photolite_price = $pricecolors[0]->pricescreenval;
+                }
+                $this->saved_price_screenvals[] = $photolite_price;
               }
 
               if( ! $addScreenVal ) {
                 foreach($pricecolors as $pricecolor) {
-                  if( ! in_array(
+                  if( isset($pricecolor->pricescreenval) 
+                       && !in_array(
                           $pricecolor->pricescreenval,
                           $this->saved_price_screenvals
                       )
                   ) {
 
-                      $this->log('l.43 cdg_alter_regular_price: Something has changed with the configuration of this stamping ('.$current_stamping_title.'), probably the number of tints, there is a new color value ('.$pricecolor->pricescreenval.') so we must add a new photolite');
-                        
-                      $addScreenVal = true;
-                      $this->saved_price_screenvals[] = $pricecolor->pricescreenval;
+                    $this->log('l.748 cdg_alter_regular_price: Something has changed with the configuration of this stamping ('.$current_stamping_title.'), probably the number of tints, there is a new color value ('.$pricecolor->pricescreenval.') so we must add a new photolite');
+                      
+                    $addScreenVal = true;
+                    $this->saved_price_screenvals[] = $pricecolor->pricescreenval;
+
                     break;
                   }
                 }
@@ -752,13 +762,13 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                   
               }
 
+              $this->log('l.758 cdg_alter_regular_price: Calculating the new price for stamping: '.print_r($stamping, true));
+
               $allFilled = count(array_filter((array)$stamping)) === count((array)$stamping);
               if( ! $allFilled ) {
-                $this->log('l.757 cdg_alter_regular_price: There are empty components in the array $stamping, so we will not alter the price for this stamping');
+                $this->log('l.762 cdg_alter_regular_price: There are empty components in the array $stamping, so we will not alter the price for this stamping');
                 continue;
               }
-
-              $this->log('l.761 cdg_alter_regular_price: Calculating the new price for stamping: '.print_r($stamping, true));
 
               $regular_price = $this->cdg_get_price_addiction(
                   $regular_price,
