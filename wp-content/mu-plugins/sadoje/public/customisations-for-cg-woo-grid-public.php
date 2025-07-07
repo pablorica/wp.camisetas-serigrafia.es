@@ -35,8 +35,9 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
   public $verbose = null; //null or 'write' to write debug messages to the error log
 
   protected function log($message) {
+    //error_log($message);
     if ($this->verbose === 'write') {
-        $this->log($message);
+        error_log($message);
     }
   }
 
@@ -737,7 +738,7 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                       )
                   ) {
 
-                      $this->log('l.43 cdg_alter_regular_price: Something has changed with the configuration of this stamping ('.$current_stamping_title.'), probably the number of tints, ther is a new color value ('.$pricecolor->pricescreenval.') so we must add a new photolite');
+                      $this->log('l.43 cdg_alter_regular_price: Something has changed with the configuration of this stamping ('.$current_stamping_title.'), probably the number of tints, there is a new color value ('.$pricecolor->pricescreenval.') so we must add a new photolite');
                         
                       $addScreenVal = true;
                       $this->saved_price_screenvals[] = $pricecolor->pricescreenval;
@@ -751,8 +752,13 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
                   
               }
 
-              $this->log('l.754 cdg_alter_regular_price: Calculating the new price for stamping: '.print_r($stamping, true));
-              
+              $allFilled = count(array_filter((array)$stamping)) === count((array)$stamping);
+              if( ! $allFilled ) {
+                $this->log('l.757 cdg_alter_regular_price: There are empty components in the array $stamping, so we will not alter the price for this stamping');
+                continue;
+              }
+
+              $this->log('l.761 cdg_alter_regular_price: Calculating the new price for stamping: '.print_r($stamping, true));
 
               $regular_price = $this->cdg_get_price_addiction(
                   $regular_price,

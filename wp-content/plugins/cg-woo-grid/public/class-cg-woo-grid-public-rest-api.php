@@ -15,12 +15,14 @@ namespace Cg_Woo_Grid_Public;
 
 class Rest_Api {
 
-    protected $plugin_name;
-    protected $version;
+  public $verbose = null; //null or 'write' to write debug messages to the error log
 
-    /**** Custom Plugin Properties ****/
+  protected $plugin_name;
+  protected $version;
 
-    protected $restapinamespace;
+  /**** Custom Plugin Properties ****/
+
+  protected $restapinamespace;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -38,6 +40,15 @@ class Rest_Api {
 
         $this->restapinamespace = 'cg-woo-grid/v1';
 	}
+
+  
+
+  protected function log($message) {
+    //error_log($message);
+    if ($this->verbose === 'write') {
+        error_log($message);
+    }
+  }
 
 
 
@@ -94,7 +105,7 @@ class Rest_Api {
         global $post;
         
         $parameters = $request_data->get_params();
-        //error_log('l.158 - build_total_box: '.print_r($parameters,true));
+        $this->log('l.108 public/class-cg-woo-grid-public-rest-api.php - build_total_box: '.print_r($parameters,true));
         $return = new \stdClass();
 
         $return->product_id = null;
@@ -138,8 +149,7 @@ class Rest_Api {
         $return->zeroprice       = strip_tags(wc_price(0));
         $return->formatzeroprice = wc_price(0);
 
-        //error_log($this->plugin_name.'_taxonomy_y_setting');
-        //error_log(get_option($this->plugin_name.'_taxonomy_y_setting'));
+        $this->log('l.152 public/class-cg-woo-grid-public-rest-api.php: '.$this->plugin_name.'_taxonomy_y_setting');
         //$return->taxonomy_y = 'pa_color'; 
         $return->taxonomy_y = get_option($this->plugin_name.'_taxonomy_y_setting');
         //$return->taxonomy_y_name = 'Color';
@@ -164,184 +174,185 @@ class Rest_Api {
     function get_prices($args)
     {
 
-        $_product = $args['product'];
+      $this->log('l.178 public/class-cg-woo-grid-public-rest-api.php: get_prices');
 
-        if(!$_product instanceof \WC_Product) {
-            return new \WP_Error( 
-                'rest_api_sad', 
-                esc_html__( 'Something went wrong', 'cg-woo-grid' ), 
-                array( 'status' => 500 ) 
-            );
-        }
+      $_product = $args['product'];
 
-        $nameproduct = $_product->get_name();
+      if(!$_product instanceof \WC_Product) {
+          return new \WP_Error( 
+              'rest_api_sad', 
+              esc_html__( 'Something went wrong', 'cg-woo-grid' ), 
+              array( 'status' => 500 ) 
+          );
+      }
 
-        $gridattributes = array();
-        $description = '';
+      $nameproduct = $_product->get_name();
 
-        $numberofprods = 0;
-        $price = 0;
-        $rowPrices = array();
+      $gridattributes = array();
+      $description = '';
 
-
-        if($_product->is_type('variable')){
-
-            $tax_y_slug = get_option($this->plugin_name.'_taxonomy_y_setting');
-            $tax_x_slug = get_option($this->plugin_name.'_taxonomy_x_setting');
-
-            $variations = $_product->get_children();
-            foreach ($variations as $value) {
-                $single_variation = new \WC_Product_Variation($value);
-                /*
-                echo '<option  value="'.$value.'">'.implode(" / ", $single_variation->get_variation_attributes()).'-'.get_woocommerce_currency_symbol().$single_variation->price.'</option>';
-                */
-                $variation_slug = $single_variation->get_slug();
-                $variation_id   = $single_variation->get_id();
-
-                if (isset($args['quantities'][$variation_slug])) {
-
-                    $quantity   = (int) $args['quantities'][$variation_slug];
-                    $rowPrice   = array();
-                    $nk    		= false;
-                    $attr 		= $single_variation->get_variation_attributes();
-
-                    foreach ($gridattributes as $gakey => $gavalue) {
-                        if(isset($gavalue[$tax_y_slug])) {
-                          if ($gavalue['y'] == $gavalue[$tax_y_slug]) $nk = $gakey;
-                        }
-                    }
-                    if ($nk === false) {
-                        $gridattributes[] = array(
-                            'y'	=> $attr['attribute_'.$tax_y_slug],
-                            'x'	=> array()
-                        );
-                        end($gridattributes);
-                        $nk = key($gridattributes);
-                    }
-                    $gridattributes[$nk]['x'][] = array($attr['attribute_'.$tax_x_slug], $quantity);
-    
-                    //$miprecio = (float) $single_variation->get_price();
-                    $numberofprods += $quantity;
-
-                    //$uprice = (float) $single_variation->get_regular_price();
-                    $uprice = apply_filters( 
-                        'cg-woo-grid_get_regular_price', 
-                        $single_variation->get_regular_price(),
-                        $single_variation,
-                        $quantity
-                    );
-
-                    $price  += $quantity * $uprice;
-                    
-                    $rowPrice["tp_ubase_price"]  = $uprice;
-                    $rowPrice["tp_y"]            = $attr['attribute_'.$tax_y_slug];
-                    $rowPrice["tp_x"]            = $attr['attribute_'.$tax_x_slug];
-                    $rowPrice["tp_qant"]         = $quantity;	
-                    $rowPrice["tp_addurl"]       = $variation_id.':'.$quantity.',';				
-
-                    //error_log(print_r($rowPrices, true));
-                    $rowPrices[] = $rowPrice;
-                }
-            }
-        }
-
-        if($numberofprods > 0){
-
-            // $description .= $nameproduct." - ".$numberofprods ." ".__("products","cg-woo-grid").": ";
-            // foreach ($gridattributes as $k => $v) {
-            //     $description .= ($k != 0 ? ' - ' : '') . ucfirst($v['y']) . ', ';
-            //     foreach ($v['x'] as $kx => $vx) {
-            //         $description .= ($kx != 0 ? ', ' : '') . strtoupper($vx[0]) . ' (' . $vx[1] . ')';
-            //     }
-            // }
-            $description = ''; //No description for now
-
-            $html = '';
-            $addurl = '';
-            foreach($rowPrices as $rowPrice) {
-
-                $nuprice = $rowPrice["tp_ubase_price"];
-                $nqprice = $nuprice * $rowPrice["tp_qant"];
-
-                $html .= '
-                <tr>
-                    <td class="tp_y">'.ucfirst($rowPrice["tp_y"]).'</td>
-                    <td class="tp_x">'.strtoupper($rowPrice["tp_x"]).'</td>
-                    <td class="tp_uprice">'.wc_price($nuprice).'</td>
-                    <td class="tp_qant">'.$rowPrice["tp_qant"].'</td>
-                    <td class="text-right tp_subtotal">'.wc_price($nqprice).'</td>
-                </tr>';
-
-                $addurl .= $rowPrice["tp_addurl"];
-                
-            }
-            $addurl = rtrim($addurl, ',');
+      $numberofprods = 0;
+      $price = 0;
+      $rowPrices = array();
 
 
-            $price = apply_filters( 
-                'cg-woo-grid_get_total_price', 
-                $price
-            );
+      if($_product->is_type('variable')){
 
-            //Taxes
-            $tax_p = 0;
-            $prices_include_tax = false;
-            $is_tax_enabled = get_option( 'woocommerce_calc_taxes' ) === 'yes';
-            if ( $is_tax_enabled ) {
-                //error_log('Taxes are enabled.');
-                $tax_rates = \WC_Tax::get_rates($_product->get_tax_class());
-                if (!empty($tax_rates)) {
-                    $tax_rate = reset($tax_rates);
-                    $tax_p = sprintf(_x('%.2f', '', 'wptheme.foundation'), $tax_rate['rate']);
-                }
-                //error_log('Tax: '.$tax_p);
+          $tax_y_slug = get_option($this->plugin_name.'_taxonomy_y_setting');
+          $tax_x_slug = get_option($this->plugin_name.'_taxonomy_x_setting');
 
-                $prices_include_tax = get_option( 'woocommerce_prices_include_tax' ) === 'yes';
-                if ( $prices_include_tax ) {
-                    //error_log('Prices include tax.');
-                    $taxes    = $price * $tax_p / (100 + $tax_p);
-                    $priceTax = $price;
-                } else {
-                    //error_log('Prices exclude tax.');
-                    $taxes    = $price * $tax_p / 100;
-                    $priceTax = $price + $taxes;
-                }
-            } 
-            
-            $unitPrice    = $price / $numberofprods;
-            $unitPriceTax = $priceTax / $numberofprods;
+          $variations = $_product->get_children();
+          foreach ($variations as $value) {
+              $single_variation = new \WC_Product_Variation($value);
+              /*
+              echo '<option  value="'.$value.'">'.implode(" / ", $single_variation->get_variation_attributes()).'-'.get_woocommerce_currency_symbol().$single_variation->price.'</option>';
+              */
+              $variation_slug = $single_variation->get_slug();
+              $variation_id   = $single_variation->get_id();
 
-            $return = new \stdClass();
-            $return->numberofprods     = $numberofprods;
-            $return->istaxenabled      = $is_tax_enabled;
-            $return->pricesincludetax  = $prices_include_tax;
-            $return->unitpricetax      = strip_tags(html_entity_decode(wc_price($unitPriceTax)));
-            $return->unitprice         = strip_tags(html_entity_decode(wc_price($unitPrice)));
-            $return->subtotal          = $price;
+              if (isset($args['quantities'][$variation_slug])) {
 
-            $return->subtotalformatted = wc_price($price);
+                  $quantity   = (int) $args['quantities'][$variation_slug];
+                  $rowPrice   = array();
+                  $nk    		= false;
+                  $attr 		= $single_variation->get_variation_attributes();
 
-            $return->istaxenabled      = $is_tax_enabled;
-            $return->priceincludetax   = $prices_include_tax;
-            $return->taxesformatted    = wc_price($taxes);
-            $return->totalformatted    = wc_price($priceTax);
-            $return->description       = $description;
-            $return->html              = $html;
-            $return->addurl            = $addurl;
+                  foreach ($gridattributes as $gakey => $gavalue) {
+                      if(isset($gavalue[$tax_y_slug])) {
+                        if ($gavalue['y'] == $gavalue[$tax_y_slug]) $nk = $gakey;
+                      }
+                  }
+                  if ($nk === false) {
+                      $gridattributes[] = array(
+                          'y'	=> $attr['attribute_'.$tax_y_slug],
+                          'x'	=> array()
+                      );
+                      end($gridattributes);
+                      $nk = key($gridattributes);
+                  }
+                  $gridattributes[$nk]['x'][] = array($attr['attribute_'.$tax_x_slug], $quantity);
+  
+                  //$miprecio = (float) $single_variation->get_price();
+                  $numberofprods += $quantity;
 
-            return $return;
+                  //$uprice = (float) $single_variation->get_regular_price();
+                  $this->log('l.240 public/class-cg-woo-grid-public-rest-api.php: variation unit price before hook: '. print_r($single_variation->get_regular_price(),true));
 
-        } else {
+                  $uprice = apply_filters( 
+                      'cg-woo-grid_get_regular_price',  //<-- mu-plugins/sadoje/sadoje/customisations-for-cg-woo-grid.php l.217
+                      $single_variation->get_regular_price(),
+                      $single_variation,
+                      $quantity
+                  );
+                  $this->log('l.248 public/class-cg-woo-grid-public-rest-api.php: variation unit price after hook: '. print_r($uprice,true));
 
-            return new \WP_Error( 
-                'wrong_products_quantity', 
-                esc_html__( 'Something went wrong', 'cg-woo-grid' ), 
-                array( 'status' => 500 ) 
-            );
+                  $price  += $quantity * $uprice;
+                  
+                  $rowPrice["tp_ubase_price"]  = $uprice;
+                  $rowPrice["tp_y"]            = $attr['attribute_'.$tax_y_slug];
+                  $rowPrice["tp_x"]            = $attr['attribute_'.$tax_x_slug];
+                  $rowPrice["tp_qant"]         = $quantity;	
+                  $rowPrice["tp_addurl"]       = $variation_id.':'.$quantity.',';				
 
-        }       
+                  $rowPrices[] = $rowPrice;
+              }
+          }
+      }
 
-        //wp_die();
+      if($numberofprods > 0){
+
+          // $description .= $nameproduct." - ".$numberofprods ." ".__("products","cg-woo-grid").": ";
+          // foreach ($gridattributes as $k => $v) {
+          //     $description .= ($k != 0 ? ' - ' : '') . ucfirst($v['y']) . ', ';
+          //     foreach ($v['x'] as $kx => $vx) {
+          //         $description .= ($kx != 0 ? ', ' : '') . strtoupper($vx[0]) . ' (' . $vx[1] . ')';
+          //     }
+          // }
+          $description = ''; //No description for now
+
+          $html = '';
+          $addurl = '';
+          foreach($rowPrices as $rowPrice) {
+
+              $nuprice = $rowPrice["tp_ubase_price"];
+              $nqprice = $nuprice * $rowPrice["tp_qant"];
+
+              $html .= '
+              <tr>
+                  <td class="tp_y">'.ucfirst($rowPrice["tp_y"]).'</td>
+                  <td class="tp_x">'.strtoupper($rowPrice["tp_x"]).'</td>
+                  <td class="tp_uprice">'.wc_price($nuprice).'</td>
+                  <td class="tp_qant">'.$rowPrice["tp_qant"].'</td>
+                  <td class="text-right tp_subtotal">'.wc_price($nqprice).'</td>
+              </tr>';
+
+              $addurl .= $rowPrice["tp_addurl"];
+              
+          }
+          $addurl = rtrim($addurl, ',');
+
+          $price = apply_filters( 
+              'cg-woo-grid_get_total_price', 
+              $price
+          );
+
+          //Taxes
+          $tax_p = 0;
+          $prices_include_tax = false;
+          $is_tax_enabled = get_option( 'woocommerce_calc_taxes' ) === 'yes';
+          if ( $is_tax_enabled ) {
+              $this->log('l.306 public/class-cg-woo-grid-public-rest-api.php: Taxes are enabled');
+              $tax_rates = \WC_Tax::get_rates($_product->get_tax_class());
+              if (!empty($tax_rates)) {
+                  $tax_rate = reset($tax_rates);
+                  $tax_p = sprintf(_x('%.2f', '', 'wptheme.foundation'), $tax_rate['rate']);
+              }
+              $this->log('l.312 public/class-cg-woo-grid-public-rest-api.php: Tax: '.$tax_p);
+
+              $prices_include_tax = get_option( 'woocommerce_prices_include_tax' ) === 'yes';
+              if ( $prices_include_tax ) {
+                  $taxes    = $price * $tax_p / (100 + $tax_p);
+                  $priceTax = $price;
+              } else {
+                  $taxes    = $price * $tax_p / 100;
+                  $priceTax = $price + $taxes;
+              }
+          } 
+          
+          $unitPrice    = $price / $numberofprods;
+          $unitPriceTax = $priceTax / $numberofprods;
+
+          $return = new \stdClass();
+          $return->numberofprods     = $numberofprods;
+          $return->istaxenabled      = $is_tax_enabled;
+          $return->pricesincludetax  = $prices_include_tax;
+          $return->unitpricetax      = strip_tags(html_entity_decode(wc_price($unitPriceTax)));
+          $return->unitprice         = strip_tags(html_entity_decode(wc_price($unitPrice)));
+          $return->subtotal          = $price;
+
+          $return->subtotalformatted = wc_price($price);
+
+          $return->istaxenabled      = $is_tax_enabled;
+          $return->priceincludetax   = $prices_include_tax;
+          $return->taxesformatted    = wc_price($taxes);
+          $return->totalformatted    = wc_price($priceTax);
+          $return->description       = $description;
+          $return->html              = $html;
+          $return->addurl            = $addurl;
+
+          return $return;
+
+      } else {
+
+          return new \WP_Error( 
+              'wrong_products_quantity', 
+              esc_html__( 'Something went wrong', 'cg-woo-grid' ), 
+              array( 'status' => 500 ) 
+          );
+
+      }       
+
+      //wp_die();
     }
 
     /**
@@ -353,10 +364,7 @@ class Rest_Api {
      */
     public function update_total_box($request_data) {
 
-        //error_log('get_product_matrix');
-
         $parameters = $request_data->get_params();
-        //error_log(print_r($parameters,true));
         $args = array();
         
         if( isset($parameters['product_id']) ) {
@@ -402,9 +410,6 @@ class Rest_Api {
      * @return array || \WP_Error
      */
     public function build_product_matrix($args) {
-
-        //error_log('build_product_matrix ');
-        //error_log(print_r($args,true));
 
         // OLD:
         //$args['taxonomy_y'] = 'pa_color';
@@ -459,12 +464,12 @@ class Rest_Api {
             $product->get_id(),
             array('profit' => true)
         );
-        //error_log('global stock_minimum -> '.$stock['minimum']);
-        //error_log('custom stock_minimum -> '.$stock_minimum);
+        $this->log('l.468 public/class-cg-woo-grid-public-rest-api.php: global stock_minimum -> '.$stock['minimum']);
+        $this->log('l.469 public/class-cg-woo-grid-public-rest-api.php: custom stock_minimum -> '.$stock_minimum);
         if($stock_minimum == -1) {
             $stock_minimum  = $stock['minimum'];
         }
-        //error_log('stock_minimum -> '.$stock_minimum);
+        $this->log('l.473 public/class-cg-woo-grid-public-rest-api.php: stock_minimum -> '.$stock_minimum);
 
         $_children  = $product->get_children();
         $matrix     = array();
@@ -500,7 +505,6 @@ class Rest_Api {
             $valueX->messageStock = str_replace("%",$valueX->stock,$stock['message_threshold']);
 
             $matrix[$currentKey]['x'][] = $valueX;
-            //error_log(print_r($matrix[$currentKey], true));
         }
 
         return $matrix;
@@ -515,10 +519,7 @@ class Rest_Api {
      */
     public function get_product_matrix($request_data) {
 
-        //error_log('get_product_matrix');
-
         $parameters = $request_data->get_params();
-        //error_log(print_r($parameters,true));
         $args = array();
         
         if( isset($parameters['product_id']) ) {
@@ -549,9 +550,6 @@ class Rest_Api {
         if( isset($parameters['taxonomy_x']) ) {
             $args['taxonomy_x'] = $parameters['taxonomy_x'];
         }
-
-        //error_log('get_product_matrix');
-        //error_log(print_r($args,true));
 
         return rest_ensure_response(
             $this->build_product_matrix($args)

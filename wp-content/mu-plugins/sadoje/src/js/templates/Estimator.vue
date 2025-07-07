@@ -94,6 +94,18 @@
 </template>
 
 <script>  
+/* 
+
+Cada vez que se anhaaden valores a una fila 'cdg_table_estimator_row' (tamanho, ubicacion, etc...) se actualiza la cookie "cgWooGrid"
+Dicha cookie se lee en public/customisations-for-cg-woo-grid-public.php para actualizar el carrito
+
+Se usa la funcion get_prices() de public/class-cg-woo-grid-public-rest-api.php para recalcular los precios
+
+El precio unitario de cada variacion se fitlra a través del hook 'cg-woo-grid_get_regular_price' (sadoje/customisations-for-cg-woo-grid.php l.217) que le añade las variaciones del presupuestador. 
+
+El hook 'cg-woo-grid_get_regular_price' llama a la función cdg_alter_regular_price() definida en public/customisations-for-cg-woo-grid-public.php.l.284
+
+*/
 //console.log('customisations-for-cg-woo-grid: VUE Estimator loaded')
 import { emitter } from '../vue-customisations-for-cg-woo-grid.js';
 
@@ -414,21 +426,21 @@ export default {
             let self      = this
             let cookieObj = {}
 
-            //console.log("Current saved rows before updating cookie");
-            //console.log(self.rows);
+            console.log("Current saved rows before updating cookie");
+            console.log(self.rows);
             if(typeof self.columns[0] !== 'undefined') {
                 let slugs = self.columns[0].map(a => a.slug);
-                //console.log('addOn new changeCookie')
-                //console.log('slugs:')
-                //console.log(slugs);
+                console.log('addOn new changeCookie')
+                console.log('slugs:')
+                console.log(slugs);
                 cookieObj.stamping = [];
                 self.rows.forEach(function(row){
                     let rowkeys = Object.keys(row);
                     let rowvalues = Object.values(row);
-                    //console.log('rowkeys:')
-                    //console.log(rowkeys)
-                    //console.log('rowvalues:')
-                    //console.log(rowvalues)
+                    console.log('rowkeys:')
+                    console.log(rowkeys)
+                    console.log('rowvalues:')
+                    console.log(rowvalues)
                     let stamping = {};
                     rowkeys.forEach(function(key){
                         //console.log('slug: '+ slugs[key])

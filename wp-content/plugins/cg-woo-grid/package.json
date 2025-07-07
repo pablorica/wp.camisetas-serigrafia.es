@@ -1,6 +1,6 @@
 {
   "name": "cg-woo-grid",
-  "version": "0.1.4",
+  "version": "1.0.1",
   "description": "Adds a matrix of Woocommerce Products variations",
   "scripts": {
     "test": "cleancss -o public/css/cg-woo-grid.min.css public/css/cg-woo-grid.css",
