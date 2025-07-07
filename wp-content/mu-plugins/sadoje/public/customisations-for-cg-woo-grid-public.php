@@ -953,17 +953,18 @@ class Customisations_For_Cg_Woo_Grid_Public extends Customisations_For_Cg_Woo_Gr
         $product 
     ) {
 
-      //$this->log('cdg_get_minimum_price: $product -> '.$product->id);
+      //$this->log('cdg_get_minimum_price: $product -> '.$product_id);
       //$this->log('cdg_get_minimum_price: $minprice '.print_r($this->min_prices,true));
+      $product_id = $product->get_id();
 
       
-      if (isset( $this->min_prices[$product->id]) ) {
+      if (isset( $this->min_prices[$product_id]) ) {
 
-        //$this->log('cdg_get_minimum_price: $product -> '.$product->id);
+        //$this->log('cdg_get_minimum_price: $product -> '.$product_id);
         //$this->log('cdg_get_minimum_price: $price -> '.$price);
-        //$this->log('cdg_get_minimum_price: $HTMLminprice -> '. strip_tags(html_entity_decode(wc_price($this->min_prices[$product->id]))) );
+        //$this->log('cdg_get_minimum_price: $HTMLminprice -> '. strip_tags(html_entity_decode(wc_price($this->min_prices[$product_id]))) );
           
-        return esc_html( 'Desde', 'sadoje' ).'&nbsp;'.strip_tags(html_entity_decode(wc_price($this->min_prices[$product->id])));
+        return esc_html( 'Desde', 'sadoje' ).'&nbsp;'.strip_tags(html_entity_decode(wc_price($this->min_prices[$product_id])));
       }
 
       return $price;
