@@ -31,6 +31,9 @@
 .min-h-0 {
   min-height: 0 !important;
 }
+.h-full {
+  height: 100% !important;
+}
 
 .mt-0 {
   margin-top: 0 !important;
@@ -45,6 +48,10 @@
 .my-auto {
   margin-top: auto !important;
   margin-bottom: auto !important;
+}
+
+.gap-0 {
+  gap: 0 !important;
 }
 
 /*  Global block Styles */
@@ -62,6 +69,13 @@
   left: 50%;
   height:100%;
   position: absolute;
+}
+
+.block-full {
+  width: 100vw;
+  margin-left: calc(-100vw / 2);
+  left: 50%;
+  position: relative;
 }
 
 
