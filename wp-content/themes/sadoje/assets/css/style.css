@@ -1,4 +1,15 @@
 /*  General Style */
+@font-face {
+  font-family: 'Namaku';
+  src: url('../fonts/Namaku.eot');
+  src: url('../fonts/Namaku.eot?#iefix') format('embedded-opentype'),
+      url('../fonts/Namaku.woff2') format('woff2'),
+      url('../fonts/Namaku.woff') format('woff'),
+      url('../fonts/Namaku.svg#Namaku') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 
 
 
@@ -52,6 +63,13 @@
 
 .gap-0 {
   gap: 0 !important;
+}
+
+.font-namaku {
+  font-family: 'Namaku', sans-serif !important;
+}
+.uppercase {
+  text-transform: uppercase !important;
 }
 
 /*  Global block Styles */

@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Updated
 
+- [New Font Namaku](https://app.asana.com/1/355454733208534/project/1211704400399240/task/1211703380586135)
+
 - [New Home Content](https://app.asana.com/1/355454733208534/project/1211704400399240/task/1211703380586135)
 
 
