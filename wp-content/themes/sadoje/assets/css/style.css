@@ -1,16 +1,24 @@
 /*  General Style */
 
 /*  Global block Styles */
+.wp-block-cover.block-background-full {
+  overflow: visible;
+}
 .wp-block-cover.block-background-full .wp-block-cover__background {
   overflow: visible;
 }
 .wp-block-cover.block-background-full .wp-block-cover__background::before {
 	content:'';
-  background-color: currentColor;
+  background-color: inherit;
   width: 100vw;
   margin-left: calc(-100vw/2);
   left: 50%;
   height:100%;
+  prosition: absolute;
+}
+
+.mb-0 {
+  margin-bottom: 0 !important;
 }
 
 
