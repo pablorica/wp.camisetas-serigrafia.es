@@ -13,6 +13,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 
+## [1.0.3] - 2025-07-07
+
+
+### Updates
+
+- Remove debug elements
+
+
 
 ## [1.0.2] - 2025-07-07
 

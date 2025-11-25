@@ -439,10 +439,12 @@
                 action="options.php"
                 data-apiurl="<?php echo $urlspace; ?>"
                 class="hide-form-table">
-                <?php
-                settings_fields('customisations-for-cg-woo-grid_budgeteer_imprint');
-                do_settings_sections('customisations-for-cg-woo-grid_budgeteer_imprint');
-                ?>
+                <div style="display:none">
+                  <?php
+                  settings_fields('customisations-for-cg-woo-grid_budgeteer_imprint');
+                  do_settings_sections('customisations-for-cg-woo-grid_budgeteer_imprint');
+                  ?>
+                </div>
 
                 <table id="tableImprint"
                   class="widefat">
@@ -529,10 +531,12 @@
                 action="options.php"
                 data-apiurl="<?php echo $urlspace; ?>"
                 class="hide-form-table">
-                <?php
-                settings_fields('customisations-for-cg-woo-grid_budgeteer_prices');
-                do_settings_sections('customisations-for-cg-woo-grid_budgeteer_prices');
-                ?>
+                <div style="display:none">
+                  <?php
+                  settings_fields('customisations-for-cg-woo-grid_budgeteer_prices');
+                  do_settings_sections('customisations-for-cg-woo-grid_budgeteer_prices');
+                  ?>
+                </div>
 
                 <table id="tablePrices"
                   class="widefat">
