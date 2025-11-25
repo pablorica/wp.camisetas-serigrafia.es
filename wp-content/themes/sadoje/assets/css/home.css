@@ -20,3 +20,10 @@ body.home .entry-content {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
+
+
+
+body.home .border-filigree.left::before,
+body.home .border-filigree.right::after {
+  border-color: #c4a672;
+}

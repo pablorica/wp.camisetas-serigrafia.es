@@ -96,6 +96,32 @@
   position: relative;
 }
 
+.wp-block-columns.block-full .wp-block-column {
+  padding: 3rem 5rem;
+}
+
+.border-filigree {
+  position: relative;
+}
+.border-filigree.left::before {
+  content:'';
+  width: 3px;
+  border: 1px solid #c4a672;
+  left: 0;
+  top:0;
+  height:100%;
+  position: absolute;
+}
+.border-filigree.right::after{
+  content:'';
+  width: 3px;
+  border: 1px solid #c4a672;
+  right: 0;
+  top:0;
+  height:100%;
+  position: absolute;
+}
+
 
 
 /*  Category Menu */
