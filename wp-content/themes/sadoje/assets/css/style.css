@@ -1,5 +1,40 @@
 /*  General Style */
 
+
+
+/*  Tailwind Styles */
+.w-25 {
+  width: 25% !important;
+}
+.w-50 {
+  width: 50% !important;
+}
+.w-75 {
+  width: 75% !important;
+}
+.w-full {
+  width: 100% !important;
+}
+.max-w-25 {
+  max-width: 25% !important;
+}
+.max-w-50 {
+  max-width: 50% !important;
+}
+.max-w-75 {
+  max-width: 75% !important;
+}
+.max-w-full {
+  max-width: 100% !important;
+}
+
+.mt-0 {
+  margin-top: 0 !important;
+}
+.mb-0 {
+  margin-bottom: 0 !important;
+}
+
 /*  Global block Styles */
 .wp-block-cover.block-background-full {
   overflow: visible;
@@ -14,12 +49,9 @@
   margin-left: calc(-100vw/2);
   left: 50%;
   height:100%;
-  prosition: absolute;
+  position: absolute;
 }
 
-.mb-0 {
-  margin-bottom: 0 !important;
-}
 
 
 /*  Category Menu */
