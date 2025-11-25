@@ -73,6 +73,10 @@
   padding-left: 1rem !important;
   padding-right: 1rem !important;
 }
+.px-8 {
+  padding-left: 2rem !important;
+  padding-right: 2rem !important;
+}
 
 
 .gap-0 {
