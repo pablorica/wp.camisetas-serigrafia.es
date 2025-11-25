@@ -63,6 +63,13 @@
 .p-0 {
   padding: 0 !important;
 }
+.pt-4 {
+  padding-top: 1rem !important;
+}
+.pb-4 {
+  padding-bottom: 1rem !important;
+}
+
 
 .gap-0 {
   gap: 0 !important;
@@ -70,6 +77,10 @@
 
 .font-namaku {
   font-family: 'Namaku', sans-serif !important;
+  letter-spacing: 0.4px;
+}
+.font-namaku b, 
+.font-namaku strong {
   letter-spacing: 0.4px;
 }
 .uppercase {

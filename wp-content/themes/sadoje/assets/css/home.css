@@ -18,6 +18,7 @@
 
 
 body.home {
+  --cartify_font_size_body: 18px;
   --wp--preset--font-size--medium: 24px;
 }
 
