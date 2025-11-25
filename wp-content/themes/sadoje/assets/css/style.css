@@ -1,5 +1,24 @@
 /*  General Style */
 
+/*  Global block Styles */
+.block-background-full {
+  position: relative;
+}
+.block-background-full::before {
+	content:'';
+  background-color: currentColor;
+  width: 100vw;
+  margin-left: calc(-100vw/2);
+  left: 50%;
+}
+.block-background-full::after {
+	content:'';
+  background-color: currentColor;
+  width: 100vw;
+  margin-left: calc(100vw/2);
+  left: 50%;
+}
+
 
 /*  Category Menu */
 .site-header-menu-additional > li .agni-menu-item-text span {
