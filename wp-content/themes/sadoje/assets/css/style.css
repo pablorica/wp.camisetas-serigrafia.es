@@ -12,7 +12,6 @@
 }
 
 
-
 /*  Tailwind Styles */
 .w-25 {
   width: 25% !important;
@@ -71,6 +70,7 @@
 
 .font-namaku {
   font-family: 'Namaku', sans-serif !important;
+  letter-spacing: 0.4px;
 }
 .uppercase {
   text-transform: uppercase !important;

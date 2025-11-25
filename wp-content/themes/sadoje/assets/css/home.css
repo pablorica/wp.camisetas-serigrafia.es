@@ -16,6 +16,12 @@
 	height:100%;
 }
 
+
+body.home {
+  --wp--preset--font-size--medium: 24px;
+}
+
+
 body.home .entry-content {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
