@@ -1,22 +1,17 @@
 /*  General Style */
 
 /*  Global block Styles */
-.block-background-full {
+.wp-block-cover.block-background-full {
   position: relative;
+  overflow: visible;
 }
-.block-background-full::before {
+.wp-block-cover.block-background-full .wp-block-cover__background::before {
 	content:'';
   background-color: currentColor;
   width: 100vw;
   margin-left: calc(-100vw/2);
   left: 50%;
-}
-.block-background-full::after {
-	content:'';
-  background-color: currentColor;
-  width: 100vw;
-  margin-left: calc(100vw/2);
-  left: 50%;
+  height:100%;
 }
 
 
