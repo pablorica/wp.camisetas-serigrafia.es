@@ -228,6 +228,12 @@ add_action('pre_get_terms', 'sort_color_code_column');
 function sort_color_code_column($query) {
     if (!is_admin()) return;
 
+    //Check if get_current_screen() function exists 
+
+    if (!function_exists('get_current_screen')) {
+        return;
+    }
+
     $screen = get_current_screen();
     if (!$screen || $screen->taxonomy !== 'pa_color') return;
 

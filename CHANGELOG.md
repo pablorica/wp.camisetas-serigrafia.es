@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [1.0.3] - 2026-02-18
+
+### Fixed
+
+- Fatal error due `get_current_screen()` fucntion
+
+
 
 ## [1.0.2] - 2025-11-25
 
