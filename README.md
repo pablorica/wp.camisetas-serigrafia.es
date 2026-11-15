@@ -1,7 +1,7 @@
 # Camisetas Serigrafía (Wordpress)
 
 
-[![version](https://img.shields.io/badge/version-1.0.3-blue.svg)](https://semver.org)
+[![version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://semver.org)
 
 
 ## Live Site
@@ -120,7 +120,8 @@ WordPress prefers to load translation files from `wp-content/languages/themes/` 
 
 Custom plugin that adds a matrix of Woocommerce Products variations
 
-[Read More](https://github.com/pablorica/wp.camisetas-serigrafia.es/tree/main/wp-content/plugins/cg-woo-grid#readme)
+[Read More](docs/CodigoWooGrid.md)
+
 
 ### Codigo Woo Grid add-on
 

@@ -1,25 +1,7 @@
-# ignore everything in the root except the "wp-content" directory and the outher no-wordpress folders.
+# .gitignore template for WordPress + Sage projects (gitignore.wordpress.example): new-wp-sage.sh replaces codigo with the theme folder name.
+
+# ignore everything in the root except the  files and folders specified below
 /*
-!wp-content/
-
-
-# ignore everything in the "wp-content" directory, except:
-# mu-plugins, plugins, languages and themes directories
-wp-content/*
-!wp-content/mu-plugins/
-!wp-content/plugins/
-!wp-content/themes/
-!wp-content/languages/
-
-
-# ignore all mu-plugins, plugins, languages and themes
-# unless explicitly whitelisted at the end of this file
-wp-content/mu-plugins/*
-wp-content/plugins/*
-wp-content/themes/*
-wp-content/languages/*
-!wp-content/languages/themes/
-wp-content/languages/themes/*
 
 # ignore all files starting with . or ~
 .*
@@ -80,7 +62,68 @@ Thumbs.db
 
 # Ignore potentially dangerous files (dependabot alerts)
 yarn.lock
-package-lock.json
+#package-lock.json
+
+
+# Ignore builder files and folders
+/node_modules
+/vendor
+/public/*
+/.env
+/.budfiles
+/npm-debug.log
+/yarn-error.log
+/yarn.lock
+#/package-lock.json
+/composer.lock
+#/theme.json
+
+
+# -------------------------
+# SSL
+# -------------------------
+
+# Ignore SSL certificates
+/certs
+/certs/*
+*.pem
+
+
+# -------------------------
+# Logs
+# -------------------------
+
+# Ignore logs
+/logs
+/logs/*
+*.log
+
+# -------------------------
+# Wordpress
+# -------------------------
+
+# Track the "wordpress" directory and the outher no-wordpress folders.
+!wordpress
+
+# ignore everything in the "wordpress" directory, except "wp-content"
+wordpress/*
+!wordpress/wp-content/
+
+
+# ignore everything in the "wp-content" directory, except:
+# mu-plugins, plugins, and themes directories
+wordpress/wp-content/*
+!wordpress/wp-content/mu-plugins/
+!wordpress/wp-content/plugins/
+!wordpress/wp-content/themes/
+
+# ignore all mu-plugins, plugins, and themes
+# unless explicitly whitelisted at the end of this file
+wordpress/wp-content/mu-plugins/*
+wordpress/wp-content/plugins/*
+wordpress/wp-content/themes/*
+
+
 
 # -------------------------
 # BEGIN Whitelisted Files
@@ -90,11 +133,23 @@ package-lock.json
 !.gitignore
 !.editorconfig
 !.phpcs.xml.dist
+!composer.json
+!theme.json
+# Migration file
+!*.sql.gz
+
+# Markdown files
 !README.md
 !CHANGELOG.md
-!composer.json
-# Migration file
-#!*.sql.gz
+
+# Docs
+!docs/
+
+# track example files, if they exist
+!*.example
+
+# track staging files, if they exist
+!*.staging
 
 # track favicon files, if they exist
 !android-chrome-*.png
@@ -107,48 +162,75 @@ package-lock.json
 !safari-pinned-tab.svg
 !site.webmanifest
 
+# Docker
+!docker-compose.yml
+!docker-compose.remote.yml
+!Caddyfile
+!docker
+!nginx.conf.production
+!uploads.ini
+
+# Wordpress: track these mu-plugins, plugins, and themes
+!wp-config.php
+
+# WPML Plugin: These files were updated to prevent fatal errors caused by incompatibilities between the WPML plugin and SAGE
+#!wordpress/wp-content/plugins/wpml-string-translation/
 
 # track these mu-plugins and/or plugins
-!wp-content/mu-plugins/index.php
-!wp-content/mu-plugins/sadoje
 
-!wp-content/plugins/cg-woo-grid
-!wp-content/plugins/sadoje-template
-!wp-content/plugins/woo-color-importer
+!wordpress/wp-content/plugins/sadoje
+!wordpress/wp-content/plugins/cg-woo-grid
+!wordpress/wp-content/plugins/sadoje-template
+!wordpress/wp-content/plugins/woo-color-importer
 
 # Ignore build folders of plugin
-wp-content/mu-plugins/sadoje/.babelrc
-wp-content/mu-plugins/sadoje/node_modules/
-wp-content/mu-plugins/sadoje/dist
-wp-content/mu-plugins/sadoje/dist-product
-wp-content/mu-plugins/sadoje/npm-debug.log
-wp-content/mu-plugins/sadoje/vendor
+wordpress/wp-content/plugins/sadoje/.babelrc
+wordpress/wp-content/plugins/sadoje/node_modules/
+wordpress/wp-content/plugins/sadoje/dist
+wordpress/wp-content/plugins/sadoje/dist-product
+wordpress/wp-content/plugins/sadoje/npm-debug.log
+wordpress/wp-content/plugins/sadoje/vendor
 
-wp-content/plugins/cg-woo-grid/.babelrc
-wp-content/plugins/cg-woo-grid/node_modules/
-wp-content/plugins/cg-woo-grid/dist
-wp-content/plugins/cg-woo-grid/dist-product
-wp-content/plugins/cg-woo-grid/npm-debug.log
-wp-content/plugins/cg-woo-grid/vendor
+wordpress/wp-content/plugins/cg-woo-grid/.babelrc
+wordpress/wp-content/plugins/cg-woo-grid/node_modules/
+wordpress/wp-content/plugins/cg-woo-grid/dist
+wordpress/wp-content/plugins/cg-woo-grid/dist-product
+wordpress/wp-content/plugins/cg-woo-grid/npm-debug.log
+wordpress/wp-content/plugins/cg-woo-grid/vendor
 
 # Ignore compiled files
-wp-content/mu-plugins/sadoje/admin/js/sadoje.*
-wp-content/mu-plugins/sadoje/admin/css/sadoje.*
-wp-content/mu-plugins/sadoje/public/js/sadoje.*
-wp-content/mu-plugins/sadoje/public/css/sadoje.*
+wordpress/wp-content/plugins/sadoje/admin/js/sadoje.*
+wordpress/wp-content/plugins/sadoje/admin/css/sadoje.*
+wordpress/wp-content/plugins/sadoje/public/js/sadoje.*
+wordpress/wp-content/plugins/sadoje/public/css/sadoje.*
 
-wp-content/plugins/cg-woo-grid/admin/js/cg-woo-grid-admin.*
-wp-content/plugins/cg-woo-grid/admin/css/cg-woo-grid-admin.*
-wp-content/plugins/cg-woo-grid/public/js/cg-woo-grid.*
-wp-content/plugins/cg-woo-grid/public/css/cg-woo-grid.*
+wordpress/wp-content/plugins/cg-woo-grid/admin/js/cg-woo-grid-admin.*
+wordpress/wp-content/plugins/cg-woo-grid/admin/css/cg-woo-grid-admin.*
+wordpress/wp-content/plugins/cg-woo-grid/public/js/cg-woo-grid.*
+wordpress/wp-content/plugins/cg-woo-grid/public/css/cg-woo-grid.*
 
 # Ignore potentially dangerous files (dependabot alerts)
-wp-content/plugins/cg-woo-grid/yarn.lock
+wordpress/wp-content/plugins/cg-woo-grid/yarn.lock
 
 # track these translations
-!wp-content/languages/themes/cartify-es_ES.mo
-!wp-content/languages/themes/cartify-es_ES.po
+!wordpress/wp-content/languages/themes/cartify-es_ES.mo
+!wordpress/wp-content/languages/themes/cartify-es_ES.po
 
-# track these themes
-!wp-content/themes/sadoje/
+
+# Theme
+!wordpress/wp-content/themes/sadoje/
+
+# Ignore dist folder of theme
+wordpress/wp-content/themes/sadoje/dist
+# Ignore development Files
+wordpress/wp-content/themes/sadoje/node_modules
+wordpress/wp-content/themes/sadoje/vendor
+wordpress/wp-content/themes/sadoje/.env
+wordpress/wp-content/themes/sadoje/.budfiles
+wordpress/wp-content/themes/sadoje/npm-debug.log
+wordpress/wp-content/themes/sadoje/yarn-error.log
+wordpress/wp-content/themes/sadoje/yarn.lock
+#wordpress/wp-content/themes/sadoje/package-lock.json
+#wordpress/wp-content/themes/sadoje/composer.lock
+#wordpress/wp-content/themes/sadoje/theme.json
 

@@ -1,0 +1,75 @@
+# Sadoje
+# /etc/nginx/sites-available/wordpress.conf
+#
+server {
+
+    server_name camisetasparatodos.es;
+
+    # Block unwanted product comparison requests
+    if ($arg_add_to_compare != "") {
+        return 403;
+    }
+
+    root /srv/docker/wordpress;
+
+    ## This should be in your http block and if it is, it's not needed here.
+    error_log '/var/log/nginx/sadoje.log';
+
+    # Block access to logs
+    location ^~ /logs/ { return 404; }
+
+    location / {
+        proxy_pass http://127.0.0.1:8090;
+        proxy_http_version 1.1;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # Redirect /phpmyadmin (no trailing slash) to /phpmyadmin/
+    location = /phpmyadmin {
+        return 301 /phpmyadmin/;
+    }
+
+    # phpMyAdmin
+    location /phpmyadmin/ {
+	auth_basic "Restricted Area";
+	auth_basic_user_file /srv/docker/wordpress/.pma_pass;
+
+        proxy_pass http://127.0.0.1:8091/;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    client_max_body_size 512M;
+
+    listen [::]:443 ssl ipv6only=on; # managed by Certbot
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/camisetasparatodos.es/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/camisetasparatodos.es/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+
+}
+
+
+server {
+    if ($host = camisetasparatodos.es) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    listen 80;
+    listen [::]:80;
+
+    server_name camisetasparatodos.es;
+    return 404; # managed by Certbot
+
+
+}

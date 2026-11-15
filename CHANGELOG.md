@@ -6,6 +6,58 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [1.1.0] - 2026-11-15
+
+
+Local and production now run the same Docker configuration. Only `.env` differs per machine.
+See `MIGRATION.md` for the production switch-over and the local database rebuild.
+
+### Added
+- Single `docker-compose.yml` shared by local and production, driven by `.env`:
+  - `PROJECT_NAME` names every container, volume and network (`camisetasparatodos_mysql`, `camisetasparatodos_mysql_data`, …).
+  - Profiles: `local` (Caddy), `node` (asset watcher, folder set with `NODE_WORKDIR`), `tools` (`wpcli`, `composer`, run on demand).
+- Single `wp-config.php` for both environments, mounted read-only. All settings come from `.env`
+  (`APP_ENV` → `WP_ENVIRONMENT_TYPE`, `WORDPRESS_CACHE` → `WP_CACHE`, `WORDPRESS_DEBUG`, salts, ACF licence).
+- `env.local.example` and `env.production.example`.
+- MySQL healthcheck: WordPress, phpMyAdmin and WP-CLI wait until the database is ready.
+- CPU limits in the compose file (WordPress 3.0, MySQL 1.5), previously set by hand on the server.
+- `docker/wpcli/Dockerfile` (PHP 8.3, with `mariadb-connector-c` for `wp db` commands against MySQL 8).
+- `MIGRATION.md`: runbook for the production switch-over and the local database refresh.
+- Theme: `assets/css/order-items.css`, loaded on My Account and the order-received page (versioned with `filemtime`).
+
+### Changed
+- PHP 8.3 everywhere (local was 8.5). Composer image now uses PHP 8.3 too, so dependencies resolve for production's PHP.
+- MySQL pinned to `8.0.44` (the version production runs); phpMyAdmin pinned to `5.2`.
+- Database service renamed `db` → `mysql`; host is `mysql:3306` on both machines.
+- Production WordPress files folder renamed `wp_data` → `wordpress` (inside `/srv/docker/wordpress`, as locally).
+- WordPress and phpMyAdmin ports bound to `127.0.0.1` only.
+- PHP and WordPress logs moved to `/var/log/wordpress` (host `./logs`), outside the web root.
+- Single-file mounts (`wp-config.php`, `uploads.ini`, `Caddyfile`) use the long bind syntax: Docker now refuses to start if the file is missing, instead of creating an empty folder.
+- `WP_DEBUG` is off unless `WORDPRESS_DEBUG=true`.
+- Theme: order line-item details (size, colour, print) are shown as an aligned label/value list, like the admin order view.
+
+### Fixed
+- Theme: fatal error `Call to undefined function get_current_screen()` in `inc/sadoje-setup.php` on production (the guarded version is now deployed).
+- Theme: fatal `ArgumentCountError` in `wp_kses()` on the order-received page when the order has a customer note.
+  Override: `woocommerce/order/order-details.php` (uses `wp_kses_post()`).
+- Theme: order item details were printed as raw HTML (`<p>XL</p>`, `<a href=…>`) in My Account and on the order-received page.
+  Override: `woocommerce/order/order-details-item.php`.
+
+### Removed
+- `mysql-lowmem.cnf` (it was never actually applied locally; both machines now run MySQL defaults).
+- `mysql_native_password` server flag (the default `caching_sha2_password` is used, as in production).
+- phpMyAdmin auto-login.
+- Per-service container-name variables, `MYSQL_HOST`, `WORDPRESS_THEMENAME` and the Sage-only `VITE_PATH`.
+- `WORDPRESS_CONFIG_EXTRA` / `eval()` hook from the old image-generated `wp-config.php`.
+
+### Security
+- `DISALLOW_FILE_EDIT`: no theme or plugin code editor in wp-admin.
+- `no-new-privileges` on all services.
+- Logs and the git repository are no longer inside the web root.
+- New WordPress salts and MySQL passwords in production as part of the migration (values live only in `.env`, which is not committed).
+
+
+
 ## [1.0.3] - 2026-02-18
 
 ### Fixed
