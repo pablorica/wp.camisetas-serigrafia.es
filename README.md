@@ -1,4 +1,4 @@
-# Camisetas Serigrafía (Wordpress)
+# Camisetas Para Todos
 
 
 [![version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://semver.org)
@@ -6,7 +6,7 @@
 
 ## Live Site
 
-[https://camisetas-serigrafia.es](https://camisetas-serigrafia.es)
+[https://camisetasparatodos.es/](https://camisetasparatodos.es)
 
   
 ## Staging Site
