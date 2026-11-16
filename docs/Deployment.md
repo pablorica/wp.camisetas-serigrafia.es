@@ -126,7 +126,9 @@ bin/deploy.sh v1.2.0 cpt-easy       # only some components of the release
 What happens:
 
 1. **Local check**: the SHA-256 of every zip matches `manifest.tsv`.
-2. **Server check**: `wp-content/plugins` and `wp-content/themes` exist, `unzip` (or `python3`) is there.
+2. **Server check**: `wp-content/plugins` and `wp-content/themes` exist, `unzip` (or `python3`) is there, and
+   WP-CLI already loads WordPress **before** anything changes (otherwise the problem is the server, not the release:
+   the deploy stops without touching the site).
 3. **Upload** (scp) to `/srv/docker/wordpress/releases/<version>/` — outside the web root.
 4. **Install** (`deploy-remote.sh install`):
    - checks the SHA-256 again and unzips **all** components first; if one fails, nothing has changed yet;
@@ -282,7 +284,8 @@ Check `bin/*.sh` with `shellcheck -S warning bin/*.sh` after changing them.
 | `would ship development files` | Something like `tests/` or `.env` is in the component: add it to its `.distignore` (or remove it from git). |
 | `Checksum mismatch` | The zip changed after the release (or the upload broke): delete `releases/<v>/` and rebuild. |
 | `Install unzip on the server` | `apt install unzip` on the server. |
-| Health check: `WP-CLI could not load WordPress` | A PHP fatal error, usually in the new code. Roll back, then run the same command locally. |
+| `WP-CLI can't load WordPress on the server even BEFORE deploying` | The server, not the release. `Allowed memory size of 134217728 bytes exhausted` = WP-CLI has PHP's default 128M: the server's `docker-compose.yml` must mount `uploads.ini` in the `wpcli` service (copy the repo's one). Check with `docker compose run --rm -T wpcli eval 'echo ini_get("memory_limit");'` → `1024M`. |
+| Health check: `WP-CLI could not load WordPress` | After the deploy only: a PHP fatal error, usually in the new code. Roll back, then run the same command locally. |
 | Health check: `Home page: HTTP 000` | The site didn't answer in 20 s, or the URL is wrong (`DEPLOY_URL`). |
 | A new plugin doesn't show up active | New components are only copied: `docker compose run --rm wpcli plugin activate <name>`. |
 

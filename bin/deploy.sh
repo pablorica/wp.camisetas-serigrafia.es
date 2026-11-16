@@ -73,11 +73,15 @@ confirm() {
 	case "$answer" in y|Y|s|S|yes|si|sí) return 0 ;; *) return 1 ;; esac
 }
 
+wp_loads() { # WP-CLI boots WordPress with every active plugin and the theme
+	remote "cd $(q "$DEPLOY_ROOT") && docker compose run --rm -T wpcli eval 'echo \"WP OK \" . get_bloginfo(\"version\") . \" · memory_limit \" . ini_get(\"memory_limit\") . PHP_EOL;'"
+}
+
 health_check() {
 	[ -n "$SKIP_HEALTH" ] && { info "Health check skipped (SKIP_HEALTH)"; return 0; }
 	local ok=0
 	info "Health check: WordPress loads with every plugin (WP-CLI)…"
-	if remote "cd $(q "$DEPLOY_ROOT") && docker compose run --rm -T wpcli eval 'echo \"WP OK \" . get_bloginfo(\"version\") . PHP_EOL;'" ; then
+	if wp_loads; then
 		remote "cd $(q "$DEPLOY_ROOT") && docker compose run --rm -T wpcli plugin list --status=active --fields=name,version --format=table" || true
 	else
 		echo "  ✗ WP-CLI could not load WordPress (fatal error?)"
@@ -166,6 +170,13 @@ info "Checking the server…"
 remote "test -d $(q "$DEPLOY_WPC/plugins") && test -d $(q "$DEPLOY_WPC/themes")" || die "$DEPLOY_WPC is not wp-content on $DEPLOY_HOST"
 remote "command -v unzip >/dev/null || command -v python3 >/dev/null" || die "Install unzip on the server (apt install unzip)"
 
+# Same WP-CLI check BEFORE touching anything: if it already fails, the problem is the
+# server (e.g. memory_limit, docker-compose.yml), not this release.
+if [ -z "$SKIP_HEALTH" ]; then
+	info "WP-CLI on the server before deploying…"
+	wp_loads || die "WP-CLI can't load WordPress on the server even BEFORE deploying (see above).\n  Nothing was changed. Fix the server first (docs/Deployment.md → Troubleshooting),\n  or deploy anyway with SKIP_HEALTH=1."
+fi
+
 if [ -n "$DRY" ]; then
 	info "Dry run: nothing uploaded or changed."
 	exit 0
@@ -173,7 +184,7 @@ fi
 confirm "Deploy $VERSION to $DEPLOY_HOST?" || exit 1
 
 REMOTE_DIR="$REMOTE_RELEASES/$VERSION"
-info "Uploading to $REMOTE_DIR…"
+info "Uploading to ${REMOTE_DIR}…"
 remote "mkdir -p $(q "$REMOTE_DIR")"
 upload "${FILES[@]}" "$REMOTE_DIR"
 push_remote_script
