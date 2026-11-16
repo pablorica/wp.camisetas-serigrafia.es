@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [1.1.7] - 2026-11-16
+
+### Fixed
+- Theme: the "Pay for order" page (CPT Easy orders, payment links from the admin) showed no payment methods,
+  because Cartify's multi-step checkout hides `#payment` and that page has no steps. The child theme removes
+  `has-multistep-navigation` from the body there.
+
+
 ## [1.1.6] - 2026-11-16
 
 ### Changed

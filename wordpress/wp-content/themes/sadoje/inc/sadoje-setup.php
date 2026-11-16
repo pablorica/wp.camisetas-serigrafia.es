@@ -341,3 +341,19 @@ function inject_color_code_filter_dropdown() {
 remove_action( 'woocommerce_after_single_product_summary', 'woocommerce_output_product_data_tabs', 11 );
 
 add_action( 'woocommerce_share', 'woocommerce_output_product_data_tabs', 10 );
+
+/**
+ * Cartify multi-step checkout: show the payment methods on the "Pay for order" page.
+ *
+ * With the multi-step checkout on, Cartify adds the body class `has-multistep-navigation`
+ * and its CSS hides `#payment` until the "4. Pago" tab is clicked. It adds the class on the
+ * order-pay page too (CPT Easy orders, payment links sent from the admin), where there are
+ * no tabs, so the payment methods and the "Pay" button never show up.
+ */
+function sdjthm_order_pay_without_multistep( $classes ) {
+	if ( function_exists( 'is_checkout_pay_page' ) && is_checkout_pay_page() ) {
+		$classes = array_values( array_diff( $classes, array( 'has-multistep-navigation' ) ) );
+	}
+	return $classes;
+}
+add_filter( 'body_class', 'sdjthm_order_pay_without_multistep', PHP_INT_MAX );
