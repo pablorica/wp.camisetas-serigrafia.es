@@ -74,6 +74,10 @@ The shortcodes still work in any page:
 
 On the payment page of a CPT Easy order, cash on delivery and cheque are hidden (`cpt_easy_excluded_gateways`).
 
+**Logged-in customers**: the billing and shipping fields come pre-filled from their WooCommerce account
+(if the shipping address differs, "same as billing" is unticked). Their CPT Easy order saves the addresses
+and the NIF (user meta `billing_nif`) back to the account. Filter: `cpt_easy_prefill`.
+
 ## Landing page hooks (optional)
 
 - `window.cptEasy.prices` has the full matrix and `window.cptEasy.unitPrice(calidad, impresion, qty)` the unit price,
@@ -101,4 +105,5 @@ Contact Form 7 → Integration (skipped if none).
 | `cpt_easy_allowed_mimes` | File types. |
 | `cpt_easy_send_invoice_email` | `false` to not email the payment link. |
 | `cpt_easy_redirect_url` | Where to send the customer after the order is created. |
+| `cpt_easy_prefill` | Change the values pre-filled for logged-in customers (`$values, $customer`). |
 | `cpt_easy_order_created` | Runs after the order is created (`$order, $data, $files`). |

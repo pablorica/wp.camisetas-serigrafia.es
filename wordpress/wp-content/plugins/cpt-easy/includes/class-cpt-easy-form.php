@@ -98,6 +98,8 @@ class CPT_Easy_Form {
 			'Premium' => __( 'Gramaje alto y algodón orgánico', 'cpt-easy' ),
 		);
 
+		$p = self::prefill();
+
 		ob_start();
 		?>
 		<form class="cpt-form cpt-easy-form" method="post" enctype="multipart/form-data" novalidate data-cpt-easy>
@@ -141,13 +143,13 @@ class CPT_Easy_Form {
 				<summary><?php esc_html_e( 'Datos de facturación', 'cpt-easy' ); ?></summary>
 				<div class="cpt-f-grid">
 					<?php
-					self::field( 'fac_nombre', __( 'Nombre o razón social', 'cpt-easy' ), 'text', array( 'required' => true, 'autocomplete' => 'organization' ) );
-					self::field( 'fac_nif', __( 'NIF / CIF', 'cpt-easy' ), 'text', array( 'required' => true ) );
-					self::field( 'email', __( 'Email', 'cpt-easy' ), 'email', array( 'required' => true, 'autocomplete' => 'email' ) );
-					self::field( 'telefono', __( 'Teléfono', 'cpt-easy' ), 'tel', array( 'required' => true, 'autocomplete' => 'tel' ) );
-					self::field( 'fac_direccion', __( 'Dirección', 'cpt-easy' ), 'text', array( 'required' => true, 'autocomplete' => 'street-address', 'wide' => true ) );
-					self::field( 'fac_cp', __( 'Código postal', 'cpt-easy' ), 'text', array( 'required' => true, 'autocomplete' => 'postal-code', 'inputmode' => 'numeric', 'maxlength' => 5 ) );
-					self::field( 'fac_poblacion', __( 'Población y provincia', 'cpt-easy' ), 'text', array( 'required' => true, 'autocomplete' => 'address-level2' ) );
+					self::field( 'fac_nombre', __( 'Nombre o razón social', 'cpt-easy' ), 'text', array( 'required' => true, 'autocomplete' => 'organization', 'value' => $p['fac_nombre'] ) );
+					self::field( 'fac_nif', __( 'NIF / CIF', 'cpt-easy' ), 'text', array( 'required' => true, 'value' => $p['fac_nif'] ) );
+					self::field( 'email', __( 'Email', 'cpt-easy' ), 'email', array( 'required' => true, 'autocomplete' => 'email', 'value' => $p['email'] ) );
+					self::field( 'telefono', __( 'Teléfono', 'cpt-easy' ), 'tel', array( 'required' => true, 'autocomplete' => 'tel', 'value' => $p['telefono'] ) );
+					self::field( 'fac_direccion', __( 'Dirección', 'cpt-easy' ), 'text', array( 'required' => true, 'autocomplete' => 'street-address', 'wide' => true, 'value' => $p['fac_direccion'] ) );
+					self::field( 'fac_cp', __( 'Código postal', 'cpt-easy' ), 'text', array( 'required' => true, 'autocomplete' => 'postal-code', 'inputmode' => 'numeric', 'maxlength' => 5, 'value' => $p['fac_cp'] ) );
+					self::field( 'fac_poblacion', __( 'Población y provincia', 'cpt-easy' ), 'text', array( 'required' => true, 'autocomplete' => 'address-level2', 'value' => $p['fac_poblacion'] ) );
 					?>
 				</div>
 			</details>
@@ -156,15 +158,15 @@ class CPT_Easy_Form {
 				<summary><?php esc_html_e( 'Datos de envío', 'cpt-easy' ); ?></summary>
 				<div class="cpt-f-grid">
 					<div class="cpt-f-field cpt-f-wide">
-						<label><input type="checkbox" name="envio_igual" value="1" checked> <span><?php esc_html_e( 'La dirección de envío es la misma que la de facturación', 'cpt-easy' ); ?></span></label>
+						<label><input type="checkbox" name="envio_igual" value="1" <?php checked( $p['envio_igual'] ); ?>> <span><?php esc_html_e( 'La dirección de envío es la misma que la de facturación', 'cpt-easy' ); ?></span></label>
 					</div>
 					<?php
-					$ship = array( 'hidden' => true, 'data-cpt-ship' => true );
-					self::field( 'env_nombre', __( 'Persona de contacto', 'cpt-easy' ), 'text', $ship );
-					self::field( 'env_telefono', __( 'Teléfono de entrega', 'cpt-easy' ), 'tel', $ship );
-					self::field( 'env_direccion', __( 'Dirección de envío', 'cpt-easy' ), 'text', $ship + array( 'wide' => true ) );
-					self::field( 'env_cp', __( 'Código postal', 'cpt-easy' ), 'text', $ship + array( 'inputmode' => 'numeric', 'maxlength' => 5 ) );
-					self::field( 'env_poblacion', __( 'Población y provincia', 'cpt-easy' ), 'text', $ship );
+					$ship = array( 'hidden' => $p['envio_igual'], 'data-cpt-ship' => true );
+					self::field( 'env_nombre', __( 'Persona de contacto', 'cpt-easy' ), 'text', $ship + array( 'value' => $p['env_nombre'] ) );
+					self::field( 'env_telefono', __( 'Teléfono de entrega', 'cpt-easy' ), 'tel', $ship + array( 'value' => $p['env_telefono'] ) );
+					self::field( 'env_direccion', __( 'Dirección de envío', 'cpt-easy' ), 'text', $ship + array( 'wide' => true, 'value' => $p['env_direccion'] ) );
+					self::field( 'env_cp', __( 'Código postal', 'cpt-easy' ), 'text', $ship + array( 'inputmode' => 'numeric', 'maxlength' => 5, 'value' => $p['env_cp'] ) );
+					self::field( 'env_poblacion', __( 'Población y provincia', 'cpt-easy' ), 'text', $ship + array( 'value' => $p['env_poblacion'] ) );
 					?>
 				</div>
 			</details>
@@ -196,6 +198,45 @@ class CPT_Easy_Form {
 		</form>
 		<?php
 		return (string) ob_get_clean();
+	}
+
+	/**
+	 * Billing and shipping values for a logged-in customer, from their WooCommerce account
+	 * (the addresses of their last order) and the NIF saved by their last CPT Easy order.
+	 */
+	public static function prefill(): array {
+		$keys = array( 'fac_nombre', 'fac_nif', 'email', 'telefono', 'fac_direccion', 'fac_cp', 'fac_poblacion', 'env_nombre', 'env_telefono', 'env_direccion', 'env_cp', 'env_poblacion' );
+		$p    = array_fill_keys( $keys, '' ) + array( 'envio_igual' => true );
+
+		if ( ! is_user_logged_in() ) {
+			return $p;
+		}
+
+		$user_id = get_current_user_id();
+		$user    = wp_get_current_user();
+		$c       = new WC_Customer( $user_id );
+		$join    = static fn( ...$parts ) => trim( implode( ' ', array_filter( array_map( 'trim', $parts ) ) ) );
+
+		$p['fac_nombre']    = $c->get_billing_company() ?: $join( $c->get_billing_first_name(), $c->get_billing_last_name() ) ?: $join( $user->first_name, $user->last_name );
+		$p['fac_nif']       = (string) get_user_meta( $user_id, CPT_Easy_Order::USER_NIF, true );
+		$p['email']         = $c->get_billing_email() ?: $user->user_email;
+		$p['telefono']      = $c->get_billing_phone();
+		$p['fac_direccion'] = $join( $c->get_billing_address_1(), $c->get_billing_address_2() );
+		$p['fac_cp']        = $c->get_billing_postcode();
+		$p['fac_poblacion'] = $c->get_billing_city();
+
+		// A different shipping address: untick "same as billing" and fill it in.
+		$ship_street = $join( $c->get_shipping_address_1(), $c->get_shipping_address_2() );
+		if ( $ship_street && ( $ship_street !== $p['fac_direccion'] || $c->get_shipping_postcode() !== $p['fac_cp'] ) ) {
+			$p['envio_igual']   = false;
+			$p['env_nombre']    = $join( $c->get_shipping_first_name(), $c->get_shipping_last_name() ) ?: $c->get_shipping_company();
+			$p['env_telefono']  = $c->get_shipping_phone();
+			$p['env_direccion'] = $ship_street;
+			$p['env_cp']        = $c->get_shipping_postcode();
+			$p['env_poblacion'] = $c->get_shipping_city();
+		}
+
+		return (array) apply_filters( 'cpt_easy_prefill', $p, $c );
 	}
 
 	private static function field( string $name, string $label, string $type, array $args = array() ): void {

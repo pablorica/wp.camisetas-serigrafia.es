@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       CPT Easy
  * Description:       Pedido rápido de camisetas: un producto variable (Calidad × Impresión) con precio por tramos de cantidad y un formulario que crea el pedido y lleva al pago.
- * Version:           0.3.0
+ * Version:           0.3.1
  * Requires PHP:      8.1
  * Requires Plugins:  woocommerce
  * Author:            Pablo Rica <pablo@codigo.co.uk>
@@ -15,7 +15,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'CPT_EASY_VERSION', '0.3.0' );
+define( 'CPT_EASY_VERSION', '0.3.1' );
 define( 'CPT_EASY_FILE', __FILE__ );
 define( 'CPT_EASY_PATH', plugin_dir_path( __FILE__ ) );
 define( 'CPT_EASY_URL', plugin_dir_url( __FILE__ ) );

@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [1.1.4] - 2026-11-16
+
+### Added
+- CPT Easy form: billing and shipping pre-filled for logged-in customers.
+
+
 ## [1.1.3] - 2026-11-16
 
 ### Added

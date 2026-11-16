@@ -11,6 +11,7 @@ defined( 'ABSPATH' ) || exit;
 class CPT_Easy_Order {
 
 	const META_NIF      = '_billing_nif';
+	const USER_NIF      = 'billing_nif';
 	const META_FLAG     = '_cpt_easy';
 	const CREATED_VIA   = 'cpt-easy';
 	const ITEM_COLOR    = 'Color';
@@ -93,6 +94,10 @@ class CPT_Easy_Order {
 			$order->set_address( $shipping, 'shipping' );
 
 			$order->update_meta_data( self::META_NIF, $data['fac_nif'] );
+
+			if ( $order->get_customer_id() ) {
+				self::save_to_customer( $order, $data['fac_nif'] );
+			}
 			$order->update_meta_data( self::META_FLAG, CPT_EASY_VERSION );
 
 			// Addresses first: WooCommerce works out the VAT from them.
@@ -122,6 +127,24 @@ class CPT_Easy_Order {
 			}
 			return new WP_Error( 'cpt_easy_order', __( 'No hemos podido crear el pedido. Inténtalo de nuevo o escríbenos.', 'cpt-easy' ) );
 		}
+	}
+
+	/**
+	 * Logged-in customer: keep the addresses and NIF in their account, so the next
+	 * CPT Easy form (and the normal checkout) comes pre-filled.
+	 */
+	private static function save_to_customer( WC_Order $order, string $nif ): void {
+		$customer = new WC_Customer( $order->get_customer_id() );
+		foreach ( array( 'billing', 'shipping' ) as $type ) {
+			foreach ( $order->get_address( $type ) as $key => $value ) {
+				$setter = "set_{$type}_{$key}";
+				if ( is_callable( array( $customer, $setter ) ) ) {
+					$customer->{$setter}( $value );
+				}
+			}
+		}
+		$customer->save();
+		update_user_meta( $order->get_customer_id(), self::USER_NIF, $nif );
 	}
 
 	/**

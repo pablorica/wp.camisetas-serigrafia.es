@@ -1,5 +1,11 @@
 # Change Log
 
+## [0.3.1] - 2026-11-16
+
+### Added
+- Logged-in customers get the billing and shipping fields pre-filled from their account (`cpt_easy_prefill` filter).
+- CPT Easy orders of logged-in customers save the addresses and the NIF (`billing_nif` user meta) to the account.
+
 ## [0.3.0] - 2026-11-16
 
 ### Added
