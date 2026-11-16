@@ -1,5 +1,12 @@
 # Change Log
 
+## [0.3.2] - 2026-11-16
+
+### Added
+- Works with "WC – APG NIF/CIF/NIE Field": same NIF keys (order `_billing_nif`, user `billing_nif`), the form reads the
+  customer's NIF from the classic checkout/My Account or the Checkout block (`_wc_billing/apg/nif`), and CPT Easy no
+  longer prints the NIF itself in the admin and emails when APG is active (APG adds it to the address).
+
 ## [0.3.1] - 2026-11-16
 
 ### Added

@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [1.1.5] - 2026-11-16
+
+### Added
+- CPT Easy works with the "WC – APG NIF/CIF/NIE Field" plugin (shared NIF field). See `docs/CPTEasy.md`.
+
+
 ## [1.1.4] - 2026-11-16
 
 ### Added

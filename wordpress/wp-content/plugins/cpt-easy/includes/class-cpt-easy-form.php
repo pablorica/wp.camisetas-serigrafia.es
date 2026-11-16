@@ -218,7 +218,7 @@ class CPT_Easy_Form {
 		$join    = static fn( ...$parts ) => trim( implode( ' ', array_filter( array_map( 'trim', $parts ) ) ) );
 
 		$p['fac_nombre']    = $c->get_billing_company() ?: $join( $c->get_billing_first_name(), $c->get_billing_last_name() ) ?: $join( $user->first_name, $user->last_name );
-		$p['fac_nif']       = (string) get_user_meta( $user_id, CPT_Easy_Order::USER_NIF, true );
+		$p['fac_nif']       = CPT_Easy_Order::customer_nif( $user_id );
 		$p['email']         = $c->get_billing_email() ?: $user->user_email;
 		$p['telefono']      = $c->get_billing_phone();
 		$p['fac_direccion'] = $join( $c->get_billing_address_1(), $c->get_billing_address_2() );

@@ -78,6 +78,12 @@ On the payment page of a CPT Easy order, cash on delivery and cheque are hidden 
 (if the shipping address differs, "same as billing" is unticked). Their CPT Easy order saves the addresses
 and the NIF (user meta `billing_nif`) back to the account. Filter: `cpt_easy_prefill`.
 
+**NIF in the rest of the shop**: install [WC – APG NIF/CIF/NIE Field](https://wordpress.org/plugins/wc-apg-nifcifnie-field/)
+(`wc-apg-nifcifnie-field`). It adds the NIF to the WooCommerce checkout (classic and blocks), My Account, the
+admin and the emails. It uses the same keys as CPT Easy (order meta `_billing_nif`, user meta `billing_nif`), so:
+a NIF entered in the shop pre-fills the CPT Easy form, and a CPT Easy order fills it in for the shop. With APG
+active, CPT Easy doesn't print the NIF itself (APG shows it in the billing address).
+
 ## Landing page hooks (optional)
 
 - `window.cptEasy.prices` has the full matrix and `window.cptEasy.unitPrice(calidad, impresion, qty)` the unit price,

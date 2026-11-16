@@ -55,7 +55,7 @@ class CPT_Easy_Admin {
 
 	public static function show_nif_in_admin( $order ): void {
 		$nif = $order->get_meta( CPT_Easy_Order::META_NIF );
-		if ( $nif ) {
+		if ( $nif && ! CPT_Easy_Order::apg_active() ) {
 			printf( '<p><strong>%s:</strong> %s</p>', esc_html__( 'NIF / CIF', 'cpt-easy' ), esc_html( $nif ) );
 		}
 	}

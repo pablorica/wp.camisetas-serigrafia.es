@@ -19,6 +19,26 @@ class CPT_Easy_Order {
 	const ITEM_DESIGN   = 'Diseño';
 	const ITEM_MOCKUP   = 'Mockup';
 
+	/**
+	 * True when "WC – APG NIF/CIF/NIE Field" is active. It adds the NIF to the checkout, My Account
+	 * and the formatted addresses (admin, emails), so CPT Easy doesn't print it a second time.
+	 * Both plugins use the same keys: order meta _billing_nif, user meta billing_nif.
+	 */
+	public static function apg_active(): bool {
+		return class_exists( 'APG_Campo_NIF_en_Direcciones' );
+	}
+
+	/** Customer NIF: classic checkout / My Account (billing_nif) or Checkout block (_wc_billing/apg/nif). */
+	public static function customer_nif( int $user_id ): string {
+		foreach ( array( self::USER_NIF, '_' . self::USER_NIF, '_wc_billing/apg/nif' ) as $key ) {
+			$nif = (string) get_user_meta( $user_id, $key, true );
+			if ( '' !== $nif ) {
+				return $nif;
+			}
+		}
+		return '';
+	}
+
 	public static function init(): void {
 		add_filter( 'woocommerce_order_item_display_meta_value', array( __CLASS__, 'link_files' ), 10, 2 );
 		add_action( 'woocommerce_email_after_order_table', array( __CLASS__, 'email_nif' ), 10, 3 );
@@ -145,6 +165,10 @@ class CPT_Easy_Order {
 		}
 		$customer->save();
 		update_user_meta( $order->get_customer_id(), self::USER_NIF, $nif );
+		// Keep the Checkout block copy in sync if the customer has one.
+		if ( metadata_exists( 'user', $order->get_customer_id(), '_wc_billing/apg/nif' ) ) {
+			update_user_meta( $order->get_customer_id(), '_wc_billing/apg/nif', $nif );
+		}
 	}
 
 	/**
@@ -197,7 +221,7 @@ class CPT_Easy_Order {
 
 	public static function email_nif( $order, $sent_to_admin, $plain_text ): void {
 		$nif = $order->get_meta( self::META_NIF );
-		if ( ! $nif ) {
+		if ( ! $nif || self::apg_active() ) {
 			return;
 		}
 		if ( $plain_text ) {
