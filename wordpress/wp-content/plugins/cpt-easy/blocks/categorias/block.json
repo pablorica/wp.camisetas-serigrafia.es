@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "cpt-easy/categorias",
+	"title": "CPT Easy · Categorías",
+	"category": "cpt-easy",
+	"icon": "grid-view",
+	"description": "Rejilla de categorías de la tienda.",
+	"textdomain": "cpt-easy",
+	"supports": {
+		"html": false,
+		"customClassName": false,
+		"anchor": false,
+		"align": false,
+		"mode": false,
+		"multiple": true
+	},
+	"style": [
+		"cpt-easy-landing"
+	],
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php"
+	}
+}

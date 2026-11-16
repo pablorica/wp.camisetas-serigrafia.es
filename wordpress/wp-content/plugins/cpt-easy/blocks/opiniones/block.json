@@ -1,0 +1,28 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "cpt-easy/opiniones",
+	"title": "CPT Easy · Opiniones",
+	"category": "cpt-easy",
+	"icon": "format-quote",
+	"description": "Carrusel de reseñas de Google.",
+	"textdomain": "cpt-easy",
+	"supports": {
+		"html": false,
+		"customClassName": false,
+		"anchor": false,
+		"align": false,
+		"mode": false,
+		"multiple": true
+	},
+	"style": [
+		"cpt-easy-landing"
+	],
+	"viewScript": [
+		"cpt-easy-landing"
+	],
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php"
+	}
+}

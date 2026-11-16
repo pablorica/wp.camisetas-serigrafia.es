@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "cpt-easy/hero",
+	"title": "CPT Easy · Hero",
+	"category": "cpt-easy",
+	"icon": "cover-image",
+	"description": "Cabecera con título, pasos y ventajas incluidas.",
+	"textdomain": "cpt-easy",
+	"supports": {
+		"html": false,
+		"customClassName": false,
+		"anchor": false,
+		"align": false,
+		"mode": false,
+		"multiple": true
+	},
+	"style": [
+		"cpt-easy-landing"
+	],
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php"
+	}
+}

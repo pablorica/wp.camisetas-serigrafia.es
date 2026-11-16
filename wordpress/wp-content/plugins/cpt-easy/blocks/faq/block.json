@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "cpt-easy/faq",
+	"title": "CPT Easy · Preguntas frecuentes",
+	"category": "cpt-easy",
+	"icon": "editor-help",
+	"description": "Preguntas y respuestas desplegables.",
+	"textdomain": "cpt-easy",
+	"supports": {
+		"html": false,
+		"customClassName": false,
+		"anchor": false,
+		"align": false,
+		"mode": false,
+		"multiple": true
+	},
+	"style": [
+		"cpt-easy-landing"
+	],
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php"
+	}
+}

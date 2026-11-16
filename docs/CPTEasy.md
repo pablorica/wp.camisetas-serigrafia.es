@@ -36,12 +36,39 @@ docker compose run --rm wpcli cpt-easy install --reset-prices   # overwrite tier
 
 Then on the landing page replace the CF7 shortcode with `[cpt_easy_form]`.
 
-## Landing page
+## Landing page (blocks)
 
-The landing lives in the page content (Custom HTML blocks). Dynamic pieces:
+The landing is built with **ACF PRO blocks**, one per section, in the **CPT Easy** block category:
 
-- `[cpt_easy_precios calidad="Basic"]` — the `<ul class="cpt-rows">` of a price card (`.c1` = 1 cara, `.c2` = 2 caras),
-  built from the variation tiers, so changing a price in the product changes the landing.
+| Block | Section | Editable in the sidebar |
+|---|---|---|
+| `cpt-easy/hero` | Hero | Title (`\|` = line break) + highlighted text, image, band, steps, "todo incluido" title/text and chips |
+| `cpt-easy/precios` | Prices | Title, subtitle, note, and per quality: description, tag (e.g. "Más vendido"), button text. **Prices come from the product.** |
+| `cpt-easy/opiniones` | Google reviews carousel | Title, rating, number of reviews, Google link, reviews (text, author, date, stars) |
+| `cpt-easy/pedido` | Order form | Title, subtitle, form title, info text. The form itself is `[cpt_easy_form]`. |
+| `cpt-easy/categorias` | Shop categories grid | Title, subtitle, show product count, categories (category, image, optional text) |
+| `cpt-easy/faq` | FAQ | Title, questions and answers |
+
+The design lives in the plugin and is versioned in git, so editors can change texts, images and lists but not the layout:
+
+- `blocks/<name>/block.json` + `render.php` — registration and markup.
+- `CPT_Easy_Blocks::schema()` — the ACF fields (registered in PHP, no field groups in the database).
+- `assets/landing.css` / `assets/landing.js` — styles (prefix `.cpt-s`) and the 1/2 caras switch + carousel.
+  Loaded only on pages that use the blocks, and in the editor. Fonts: `/wp-content/uploads/fonts/`.
+- `includes/landing-defaults.php` — the texts of the prototype.
+
+Build (or rebuild) a page with all the blocks and the default texts:
+
+```bash
+docker compose run --rm wpcli cpt-easy landing <page-id>            # asks before replacing; old content stays in revisions
+docker compose run --rm wpcli cpt-easy landing <page-id> --dry-run  # print the block markup only
+```
+
+Images and categories are matched by upload path and category slug; any that is not found is reported and left empty, to pick in the editor.
+
+The shortcodes still work in any page:
+
+- `[cpt_easy_precios calidad="Basic"]` — the `<ul class="cpt-rows">` of a price card (`.c1` = 1 cara, `.c2` = 2 caras).
 - `[cpt_easy_minimo]` — minimum quantity.
 - `[cpt_easy_form]` — the order form.
 

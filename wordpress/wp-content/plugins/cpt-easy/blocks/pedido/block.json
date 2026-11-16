@@ -1,0 +1,25 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "cpt-easy/pedido",
+	"title": "CPT Easy · Pedido",
+	"category": "cpt-easy",
+	"icon": "cart",
+	"description": "Formulario de pedido CPT Easy.",
+	"textdomain": "cpt-easy",
+	"supports": {
+		"html": false,
+		"customClassName": false,
+		"anchor": false,
+		"align": false,
+		"mode": false,
+		"multiple": false
+	},
+	"style": [
+		"cpt-easy-landing"
+	],
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php"
+	}
+}

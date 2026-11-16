@@ -115,6 +115,77 @@ class CPT_Easy_CLI {
 	}
 
 	/**
+	 * Replaces the content of a page with the CPT Easy landing blocks, filled with the
+	 * texts in includes/landing-defaults.php. The old content stays in the page revisions.
+	 *
+	 * ## OPTIONS
+	 *
+	 * <page-id>
+	 * : Page to build.
+	 *
+	 * [--dry-run]
+	 * : Print the block markup instead of saving it.
+	 *
+	 * [--yes]
+	 * : Don't ask for confirmation.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     wp cpt-easy landing 160733
+	 */
+	public function landing( $args, $assoc ) {
+		if ( ! function_exists( 'acf_register_block_type' ) ) {
+			WP_CLI::error( 'ACF PRO is not active.' );
+		}
+		$page = get_post( (int) $args[0] );
+		if ( ! $page || 'page' !== $page->post_type ) {
+			WP_CLI::error( "Page {$args[0]} not found." );
+		}
+
+		$sections = require CPT_EASY_PATH . 'includes/landing-defaults.php';
+
+		// Upload paths → attachment IDs, category slugs → term IDs.
+		$image = static function ( string $path ) {
+			$id = attachment_url_to_postid( home_url( $path ) ) ?: attachment_url_to_postid( site_url( $path ) );
+			if ( ! $id ) {
+				WP_CLI::warning( "Image not in the media library: {$path} (leave it empty and pick it in the editor)." );
+			}
+			return $id ?: '';
+		};
+		$sections['hero']['imagen'] = $image( $sections['hero']['imagen'] );
+		foreach ( $sections['categorias']['categorias'] as &$row ) {
+			$term = get_term_by( 'slug', $row['categoria'], 'product_cat' );
+			if ( ! $term ) {
+				WP_CLI::warning( "Product category not found: {$row['categoria']}" );
+			}
+			$row['categoria'] = $term ? $term->term_id : '';
+			$row['imagen']    = $image( $row['imagen'] );
+		}
+		unset( $row );
+
+		$content = CPT_Easy_Blocks::page_content( $sections );
+
+		if ( ! empty( $assoc['dry-run'] ) ) {
+			WP_CLI::log( $content );
+			return;
+		}
+
+		WP_CLI::confirm( "Replace the content of \"{$page->post_title}\" (#{$page->ID}) with the CPT Easy blocks?", $assoc );
+
+		$result = wp_update_post(
+			array(
+				'ID'           => $page->ID,
+				'post_content' => wp_slash( $content ),
+			),
+			true
+		);
+		if ( is_wp_error( $result ) ) {
+			WP_CLI::error( $result );
+		}
+		WP_CLI::success( "Page #{$page->ID} rebuilt with " . count( $sections ) . ' blocks. The previous content is in its revisions.' );
+	}
+
+	/**
 	 * Prints the price matrix (per unit, without VAT).
 	 */
 	public function prices() {

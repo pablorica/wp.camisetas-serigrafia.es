@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [1.1.3] - 2026-11-16
+
+### Added
+- CPT Easy landing as ACF blocks (`cpt-easy/hero`, `precios`, `opiniones`, `pedido`, `categorias`, `faq`) and `wp cpt-easy landing <page-id>`. See `docs/CPTEasy.md`.
+
+
 ## [1.1.2] - 2026-11-16
 
 ### Added

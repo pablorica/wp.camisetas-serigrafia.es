@@ -1,0 +1,201 @@
+/* ==========================================================================
+   CPT Easy · Landing blocks (diseño home-camisetas-para-todos_4)
+   Prefijo .cpt-s. Fuentes locales: /wp-content/uploads/fonts/
+   Loaded only on pages that use a cpt-easy/* block, and in the editor.
+   ========================================================================== */
+@font-face{font-family:"CPT Namaku";src:url(/wp-content/uploads/fonts/cpt-namaku.woff) format("woff");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"CPT DejaVu Sans";src:url(/wp-content/uploads/fonts/cpt-dejavu-sans-book.woff2) format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"CPT DejaVu Sans";src:url(/wp-content/uploads/fonts/cpt-dejavu-sans-bold.woff2) format("woff2");font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:"CPT Liberation Sans";src:url(/wp-content/uploads/fonts/cpt-liberation-sans-italic.woff2) format("woff2");font-weight:400;font-style:italic;font-display:swap}
+:root{--cpt-tan:#BD965C;--cpt-tan-l:#D8B787;--cpt-dark:#212322;--cpt-ink:#12141C;--cpt-grey:#5A6072;--cpt-line:#DDE0E8;--cpt-soft:#F7F8FA;--cpt-yellow:#F1C925;--cpt-star:#ECD13D;--cpt-blue:#0096D6;--cpt-pink:#E6007E;--cpt-gold:#B1945F;--cpt-cats:#262727}
+body{overflow-x:clip}
+.cpt-s{position:relative;left:50%;width:100vw;margin:0 0 0 -50vw !important;padding:0;font-family:"CPT DejaVu Sans","DejaVu Sans",Verdana,sans-serif;color:var(--cpt-ink);line-height:1.45;font-size:15px;box-sizing:border-box}
+.cpt-s *,.cpt-s *::before,.cpt-s *::after{box-sizing:border-box}
+.cpt-s h1,.cpt-s h2,.cpt-s h3,.cpt-s p,.cpt-s ul,.cpt-s figure,.cpt-s blockquote{margin:0;padding:0;font-family:inherit;letter-spacing:0;text-transform:none}
+.cpt-s h2,.cpt-s h3{font-weight:700;color:inherit}
+.cpt-s a{text-decoration:none}
+.cpt-s img{display:block;max-width:100%;height:auto}
+/* Mismos márgenes laterales que la cabecera y el pie del tema (Cartify) */
+.cpt-in{--g:var(--cartify_gap_device_container,20px);width:100%;max-width:calc(100% - var(--g) * 2);margin:0 auto}
+@media (min-width:667px){.cpt-in{max-width:calc(var(--cartify_width_device_container_sm,667) * 1px - var(--g) * 2)}}
+@media (min-width:1024px){.cpt-in{max-width:calc(var(--cartify_width_device_container_md,1024) * 1px - var(--g) * 2)}}
+@media (min-width:1200px){.cpt-in{max-width:calc(var(--cartify_width_device_container_lg,1200) * 1px - var(--g) * 2)}}
+@media (min-width:1440px){.cpt-in{max-width:calc(var(--cartify_width_device_container_xl,1440) * 1px - var(--g) * 2)}}
+.cpt-s :focus-visible{outline:3px solid var(--cpt-pink);outline-offset:2px}
+.cpt-h2{font-size:clamp(26px,3.4vw,35px);line-height:1.15}
+.cpt-sub{font-size:15px;max-width:430px;margin-top:8px}
+
+/* 1 · HERO ------------------------------------------------ */
+.cpt-s.cpt-hero{background:var(--cpt-tan);overflow:hidden;padding:64px 0 44px}
+.cpt-hero .cpt-dog{position:absolute;right:0;top:48px;width:272px;height:auto;z-index:1;pointer-events:none}
+.cpt-h1{font-family:"CPT Namaku","CPT DejaVu Sans",sans-serif !important;font-weight:400 !important;font-size:clamp(28px,3.8vw,42px);line-height:1.22;color:var(--cpt-dark);text-align:center;margin:0 230px 30px 0 !important}
+.cpt-h1 mark{background:linear-gradient(transparent 52%,var(--cpt-yellow) 52%);color:inherit;padding:0 2px}
+.cpt-band{background:var(--cpt-tan-l);position:relative;z-index:0}
+.cpt-band h2{color:#fff;font-size:clamp(20px,2.7vw,29px);line-height:1.2;padding:12px 0}
+.cpt-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;list-style:none;margin:30px 290px 0 0 !important;padding:0;position:relative;z-index:2}
+.cpt-steps li{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto 1fr;grid-template-areas:"n t" "n d";column-gap:12px;align-items:start;margin:0}
+.cpt-num{grid-area:n;font-size:34px;font-weight:700;line-height:1;color:var(--cpt-cats)}
+.cpt-steps h3{grid-area:t;font-size:15px;line-height:1.25;color:var(--cpt-cats);margin-top:2px}
+.cpt-steps p{grid-area:d;font-size:13px;color:var(--cpt-cats);margin-top:4px}
+.cpt-incl{position:relative;z-index:2;margin:44px 290px 0 0}
+.cpt-incl h2{font-size:clamp(20px,2.4vw,25px);color:var(--cpt-ink);line-height:1.2}
+.cpt-incl>p{font-size:13px;margin-top:6px}
+.cpt-chips{display:flex;flex-wrap:wrap;gap:9px;list-style:none;margin:16px 0 0 !important;padding:0}
+.cpt-chips li{background:var(--cpt-yellow);border:1.5px solid #fff;border-radius:7px;padding:9px 12px 10px;flex:1 1 130px;max-width:170px;margin:0}
+.cpt-chips h3{font-size:14.5px;line-height:1.2;color:var(--cpt-ink)}
+.cpt-chips p{font-size:12px;line-height:1.35;margin-top:5px}
+
+/* 2 · PRECIOS --------------------------------------------- */
+.cpt-precios{background:var(--cpt-dark);color:#F7F8FA;padding:74px 0 64px}
+.cpt-precios .cpt-sub{color:#C9CCD4}
+.cpt-toggle{display:inline-flex;border:1.5px solid #F7F8FA;border-radius:7px;margin-top:30px;overflow:hidden}
+.cpt-toggle button{appearance:none;border:0;background:transparent;color:#F7F8FA;font:700 13.5px/1 "CPT DejaVu Sans",sans-serif;padding:11px 16px;cursor:pointer;border-radius:0;min-height:40px}
+.cpt-toggle button[aria-pressed="true"]{background:#F7F8FA;color:var(--cpt-ink)}
+.cpt-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-top:34px;align-items:start}
+.cpt-card{background:#fff;color:var(--cpt-ink);border-radius:11px;border-top:7px solid var(--c);padding:22px 20px 24px;position:relative}
+.cpt-card--b{--c:var(--cpt-blue)}.cpt-card--m{--c:var(--cpt-pink);border:4px solid var(--c);border-top-width:7px;margin-top:-8px}.cpt-card--p{--c:var(--cpt-gold)}
+.cpt-tag{position:absolute;top:-19px;right:10px;background:var(--cpt-pink);color:#fff;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:5px 5px 0 0}
+.cpt-card h3{font-size:23px;line-height:1.1}
+.cpt-card>p{font-size:13px;color:var(--cpt-grey);margin-top:6px;min-height:38px}
+.cpt-rows{list-style:none;margin:20px 0 0 !important;padding:0;border-top:1px solid var(--cpt-line)}
+.cpt-rows li{display:flex;justify-content:space-between;font-size:14px;padding:8px 0;border-bottom:1px solid var(--cpt-line);margin:0}
+.cpt-rows b{font-weight:700}
+.cpt-rows .c2,.cpt-precios.is-2 .cpt-rows .c1{display:none}.cpt-precios.is-2 .cpt-rows .c2{display:inline}
+.cpt-btn{display:block;text-align:center;background:var(--c);color:var(--cpt-dark) !important;font-weight:700;font-size:14.5px;padding:12px 10px;border-radius:7px;margin-top:22px;min-height:44px}
+.cpt-btn:hover{filter:brightness(1.08)}
+.cpt-note{font-size:12.5px;color:#C9CCD4;margin-top:20px !important}
+
+/* 3 · OPINIONES ------------------------------------------- */
+.cpt-opi{background:var(--cpt-tan);padding:46px 0 40px;text-align:center}
+.cpt-opi .cpt-h2s{color:#fff;font-size:clamp(19px,2.2vw,22px)}
+.cpt-slider{position:relative;margin-top:26px;padding:0 70px}
+.cpt-s .cpt-quote{font:italic 400 clamp(16px,1.9vw,19.5px)/1.4 "CPT Liberation Sans","Liberation Sans",Arial,sans-serif;color:#000;max-width:640px;margin:0 auto;text-align:center;border:0;background:none;padding:0;quotes:none;display:block !important}
+.cpt-s .cpt-quote::before,.cpt-s .cpt-quote::after{content:none;display:none}
+.cpt-s .cpt-quote span{display:inline}
+.cpt-qm{font:700 56px/0 "CPT DejaVu Sans",sans-serif;font-style:normal;position:relative;top:20px;color:#000}
+.cpt-qm--o{margin-right:6px}.cpt-qm--c{margin-left:6px}
+.cpt-stars{color:var(--cpt-star);font-style:normal;letter-spacing:2px;margin-right:6px}
+.cpt-who{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:22px;font-size:15px;color:var(--cpt-dark)}
+.cpt-ava{width:58px;height:58px;border-radius:50%;background:var(--cpt-star);color:#fff;font-weight:700;font-size:24px;display:grid;place-items:center}
+.cpt-arr{position:absolute;top:40%;width:42px;height:42px;border-radius:50%;border:0;background:#fff;cursor:pointer;display:grid;place-items:center;padding:0}
+.cpt-arr::before{content:"";border:7px solid transparent;border-left:11px solid var(--cpt-dark);margin-left:8px}
+.cpt-arr--prev{left:0}.cpt-arr--prev::before{transform:rotate(180deg);margin-left:-8px}.cpt-arr--next{right:0}
+.cpt-arr[hidden]{display:none}
+/* Carrusel: las reseñas van en fila y la pista se desliza */
+.cpt-view{overflow:hidden;transition:height .6s cubic-bezier(.22,.61,.36,1)}
+.cpt-track{display:flex;align-items:flex-start;transition:transform .6s cubic-bezier(.22,.61,.36,1);will-change:transform}
+.cpt-slide{flex:0 0 100%;display:flex;flex-direction:column;justify-content:center;padding:0 4px}
+.cpt-quote--long{font-size:clamp(15px,1.5vw,17px) !important}
+.cpt-g{width:20px;height:20px;flex:none}
+.cpt-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.cpt-gbadge{display:inline-flex;align-items:center;gap:8px;background:#fff;color:var(--cpt-dark) !important;border-radius:999px;padding:6px 14px 6px 10px;font-size:14px;margin-top:14px}
+.cpt-gbadge .cpt-stars{margin:0;letter-spacing:1px}
+.cpt-dots{display:flex;justify-content:center;gap:8px;margin-top:18px}
+.cpt-dot{width:9px;height:9px;min-height:0;border-radius:50%;border:0;padding:0;background:rgba(255,255,255,.55);cursor:pointer}
+.cpt-dot[aria-current="true"]{background:#fff}
+.cpt-gnote{font-size:13.5px;margin-top:14px !important}.cpt-gnote a{color:var(--cpt-dark);text-decoration:underline}
+
+/* 4 · PEDIDO ---------------------------------------------- */
+.cpt-pedido{background:#fff;padding:60px 0 56px}
+.cpt-pedido .cpt-sub{color:var(--cpt-grey)}
+.cpt-formbox{border:1.5px solid var(--cpt-ink);border-radius:13px;padding:24px 22px 30px;margin-top:30px}
+.cpt-formbox h3{font-size:19px;margin-bottom:14px}
+.cpt-s .cpt-form br{display:none}
+.cpt-f-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cpt-f-card{border:1.5px solid var(--cpt-line);border-radius:9px;padding:10px 12px;cursor:pointer;display:grid;grid-template-columns:auto 1fr;column-gap:6px;align-items:center;font-size:14px;margin:0}
+.cpt-f-card input{margin:0;accent-color:var(--cpt-pink)}
+.cpt-f-card-t{font-weight:700}.cpt-f-card-d{grid-column:1/-1;font-size:13.5px}
+.cpt-f-card:has(input:checked){border-color:var(--cpt-pink);box-shadow:inset 0 0 0 .5px var(--cpt-pink)}
+.cpt-f-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 10px;margin-top:16px}
+.cpt-f-field{display:block;margin:0}.cpt-f-wide{grid-column:1/-1}
+.cpt-f-label{display:block;font-size:13px;color:var(--cpt-grey);margin-bottom:5px}
+.cpt-s .cpt-form input[type=text],.cpt-s .cpt-form input[type=email],.cpt-s .cpt-form input[type=tel],.cpt-s .cpt-form input[type=number],.cpt-s .cpt-form select{width:100%;height:42px;background:var(--cpt-soft);border:1px solid var(--cpt-line);border-radius:7px;padding:0 11px;font:400 14.5px "CPT DejaVu Sans",sans-serif;color:var(--cpt-ink);margin:0;box-shadow:none}
+.cpt-s .cpt-form select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%2312141C' stroke-width='2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:34px}
+.cpt-s .cpt-form input::placeholder{color:#767676}
+.cpt-f-filebox{display:flex;align-items:center;gap:10px;height:42px;background:var(--cpt-soft);border:1px solid var(--cpt-line);border-radius:7px;padding:0 8px;position:relative;cursor:pointer;margin:0}
+.cpt-f-filebtn{font:400 13.5px "Liberation Sans",Arial,sans-serif;background:#EFEFEF;border:1px solid #767676;border-radius:3px;padding:3px 8px;white-space:nowrap}
+.cpt-f-filename{font-size:12.5px;color:var(--cpt-grey);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cpt-f-filebox input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
+.cpt-f-filebox:focus-within{outline:3px solid var(--cpt-pink);outline-offset:2px}
+.cpt-f-more{border:1px solid var(--cpt-line);border-radius:9px;padding:0 16px;margin-top:14px}
+.cpt-f-more summary{font-weight:700;font-size:14.5px;padding:12px 0;cursor:pointer;list-style:none}
+.cpt-f-more summary::-webkit-details-marker{display:none}
+.cpt-f-more summary::before{content:"";display:inline-block;border:5px solid transparent;border-left:7px solid currentColor;margin-right:8px;transition:transform .15s}
+.cpt-f-more[open] summary::before{transform:rotate(90deg) translate(2px,-2px)}
+.cpt-f-more[open]{padding-bottom:16px}.cpt-f-more .cpt-f-grid{margin-top:4px}
+.cpt-f-legal{font-size:13px;color:var(--cpt-grey);margin-top:16px}.cpt-f-legal a{color:var(--cpt-ink);text-decoration:underline}
+.cpt-f-submit{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;margin-top:16px}
+.cpt-s .cpt-form [type=submit]{background:var(--cpt-yellow);color:var(--cpt-ink);border:0;border-radius:7px;font:700 14.5px "CPT DejaVu Sans",sans-serif;padding:0 20px;height:46px;cursor:pointer;text-transform:none;letter-spacing:0;margin:0}
+.cpt-s .cpt-form [type=submit]:hover{filter:brightness(1.05)}
+.cpt-f-total{font-weight:700;font-size:15px;margin:0}.cpt-f-total strong{color:#C9A400;font-size:19px}
+.cpt-info{background:var(--cpt-soft);border:1px solid #EEF0F4;border-radius:9px;padding:13px 15px;font-size:13px;color:var(--cpt-grey);margin-top:22px !important}
+
+/* 5 · CATEGORÍAS ------------------------------------------ */
+.cpt-cats{background:var(--cpt-cats);color:#fff;padding:56px 0 60px}
+.cpt-cats .cpt-sub{color:#fff;max-width:none}
+.cpt-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;list-style:none;margin:22px 0 0 !important;padding:0}
+.cpt-grid li{margin:0;display:flex}
+.cpt-grid a{display:flex;flex-direction:column;width:100%;background:#F2F2F2;color:var(--cpt-ink);border-radius:2px;overflow:hidden}
+.cpt-grid img{width:100%;aspect-ratio:1;object-fit:cover;transition:transform .3s}
+.cpt-grid a:hover img{transform:scale(1.03)}
+.cpt-grid span{display:flex;flex:1;align-items:center;justify-content:center;text-align:center;font-size:13px;padding:9px 6px 10px;line-height:1.3}
+
+/* 6 · FAQ ------------------------------------------------- */
+.cpt-faq{background:#fff;padding:60px 0 64px}
+.cpt-faq-list{margin-top:14px}
+.cpt-faq details{border-bottom:1px solid var(--cpt-line)}
+.cpt-faq summary{cursor:pointer;list-style:none;padding:12px 0 11px}
+.cpt-faq summary::-webkit-details-marker{display:none}
+.cpt-faq summary h3{display:inline;font-size:15.5px;line-height:1.35}
+.cpt-faq summary::before{content:"";display:inline-block;border:5px solid transparent;border-left:7px solid currentColor;margin-right:9px;transition:transform .15s}
+.cpt-faq details[open] summary::before{transform:rotate(90deg) translate(2px,-2px)}
+.cpt-faq details p{font-size:15px;color:#333845;padding:0 0 16px 20px;max-width:none}
+
+/* PIE DEL TEMA alineado con los márgenes laterales (pendiente de pasar al CSS global) */
+.site-footer .agni-block-columns > .agni-block-columns__contents{margin-right:0 !important}
+.site-footer .agni-block-1770799199656 > .agni-block-columns__contents{justify-content:space-between}
+.site-footer .agni-block-columns:not(.agni-block-1770799199656) > .agni-block-columns__contents > :last-child{flex-grow:1}
+
+/* RESPONSIVE ---------------------------------------------- */
+@media (max-width:1180px){.cpt-hero .cpt-dog{width:230px;top:52px}.cpt-h1{margin:0 240px 26px 0 !important}.cpt-steps,.cpt-incl{margin-right:240px !important}}
+@media (max-width:960px){
+ .cpt-hero .cpt-dog{width:170px;top:auto;bottom:0}
+ .cpt-h1{margin:0 0 24px !important}
+ .cpt-s.cpt-hero{padding-top:48px}
+ .cpt-steps{grid-template-columns:1fr;gap:16px;margin-right:180px !important}
+ .cpt-incl{margin-right:0 !important}
+ .cpt-chips{margin-right:170px !important}
+ .cpt-cards{grid-template-columns:1fr;max-width:460px}
+ .cpt-card--m{margin-top:14px}
+ .cpt-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media (max-width:640px){
+ .cpt-s{font-size:14.5px}
+ .cpt-h1{text-align:left;font-size:27px}
+ .cpt-band h2{font-size:19px;padding:11px 100px 11px 0}
+ .cpt-steps{margin-right:0 !important}
+ .cpt-chips{margin-right:0 !important;display:grid;grid-template-columns:1fr 1fr}
+ .cpt-chips li{max-width:none}
+ .cpt-chips li:last-child{grid-column:1/-1}
+ .cpt-s.cpt-hero{padding:40px 0 28px}
+ .cpt-hero .cpt-dog{width:104px;top:34px;bottom:auto}
+ .cpt-h1{margin-right:92px !important}
+ .cpt-precios,.cpt-pedido,.cpt-cats,.cpt-faq{padding:46px 0}
+ .cpt-toggle{display:flex}.cpt-toggle button{flex:1}
+ .cpt-slider{padding:0 0 60px}
+ .cpt-arr{top:auto;bottom:0}.cpt-arr--prev{left:calc(50% - 52px)}.cpt-arr--next{right:calc(50% - 52px)}
+ .cpt-who{flex-wrap:wrap}
+ .cpt-quote--long{font-size:14px !important}
+ .cpt-formbox{padding:18px 14px 22px;border-radius:11px}
+ .cpt-f-cards,.cpt-f-grid{grid-template-columns:1fr}
+ .cpt-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .cpt-faq details p{padding-left:0}
+}
+@media (prefers-reduced-motion:reduce){.cpt-s *{transition:none !important}}
+
+/* EDITOR --------------------------------------------------
+   In the block editor the sections are not full-bleed, the carousel shows the first review
+   and the form is a non-interactive preview. */
+.editor-styles-wrapper .cpt-s{left:auto;width:auto;margin:0 !important}
+.editor-styles-wrapper .cpt-slide:not(:first-child),
+.editor-styles-wrapper .cpt-arr{display:none}

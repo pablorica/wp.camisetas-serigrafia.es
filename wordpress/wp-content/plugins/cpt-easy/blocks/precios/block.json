@@ -1,0 +1,28 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "cpt-easy/precios",
+	"title": "CPT Easy · Precios",
+	"category": "cpt-easy",
+	"icon": "money-alt",
+	"description": "Tarjetas Basic, Medium y Premium con los precios del producto CPT Easy.",
+	"textdomain": "cpt-easy",
+	"supports": {
+		"html": false,
+		"customClassName": false,
+		"anchor": false,
+		"align": false,
+		"mode": false,
+		"multiple": true
+	},
+	"style": [
+		"cpt-easy-landing"
+	],
+	"viewScript": [
+		"cpt-easy-landing"
+	],
+	"acf": {
+		"mode": "preview",
+		"renderTemplate": "render.php"
+	}
+}

@@ -1,5 +1,12 @@
 # Change Log
 
+## [0.3.0] - 2026-11-16
+
+### Added
+- ACF PRO blocks for the landing: Hero, Precios, Opiniones, Pedido, Categorías and FAQ (category "CPT Easy").
+- `assets/landing.css` and `assets/landing.js` (moved from the HTML prototype into the plugin).
+- `wp cpt-easy landing <page-id>`: builds a page with the blocks and the prototype texts.
+
 ## [0.2.0] - 2026-11-16
 
 ### Added
