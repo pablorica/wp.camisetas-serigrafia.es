@@ -1,5 +1,15 @@
 # Change Log
 
+## [0.3.4] - 2026-11-16
+
+### Added
+- PHPUnit tests: unit (pricing maths) and integration (real orders on the local site, rolled back). See `docs/CPTEasy.md`.
+- `CPT_Easy_Pricing::price_at()` and `CPT_Easy_Pricing::totals()`: the pricing maths as pure functions.
+
+### Fixed
+- The order returned by `CPT_Easy_Order::create()` now has the Color / Tallas / Diseño line meta in memory
+  (it was only saved in the database).
+
 ## [0.3.3] - 2026-11-16
 
 ### Removed

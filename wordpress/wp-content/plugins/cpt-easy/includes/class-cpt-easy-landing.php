@@ -31,15 +31,6 @@ class CPT_Easy_Landing {
 			return '';
 		}
 
-		$price_at = static function ( array $tiers, int $qty ): ?float {
-			$price = null;
-			foreach ( $tiers as $t ) {
-				if ( $qty >= $t['min'] ) {
-					$price = $t['price'];
-				}
-			}
-			return $price;
-		};
 		$fmt = static fn( ?float $p ) => null === $p ? '—' : number_format( $p, 2, ',', '.' ) . ' €';
 
 		$html = '<ul class="cpt-rows">';
@@ -50,8 +41,8 @@ class CPT_Easy_Landing {
 			$html .= sprintf(
 				'<li><span>%s</span><b><span class="c1">%s</span><span class="c2">%s</span></b></li>',
 				esc_html( $label ),
-				esc_html( $fmt( $price_at( $one, $min ) ) ),
-				esc_html( $fmt( $price_at( $two, $min ) ) )
+				esc_html( $fmt( CPT_Easy_Pricing::price_at( $one, $min ) ) ),
+				esc_html( $fmt( CPT_Easy_Pricing::price_at( $two, $min ) ) )
 			);
 		}
 		return $html . '</ul>';

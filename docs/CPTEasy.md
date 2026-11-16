@@ -92,6 +92,35 @@ active, CPT Easy doesn't print the NIF itself (APG shows it in the billing addre
   (use it on the "Elegir Basic" buttons).
 - The existing `data-caras="1|2"` buttons also switch the form's *Impresión*.
 
+## Tests
+
+PHPUnit, in two suites (`wordpress/wp-content/plugins/cpt-easy/tests/`):
+
+| Suite | What it checks | Needs |
+|---|---|---|
+| **Unit** (`tests/Unit`) | Tier lookup at every boundary (9/10, 24/25, 49/50, 99/100…), install prices = landing prices, parsing of the variation box, VAT rounding (e.g. 297,50 € → 62,48 € → 359,98 €), net + VAT = total for 10–1000 units | PHP only |
+| **Integration** (`tests/Integration`) | Real CPT Easy orders for every Calidad × Impresión at 10, 24, 25, 49, 50, 99, 100 and 250 units: variation, quantity, line total, VAT and order total match the product tiers and the totals the form shows; order data (colour, sizes, NIF, province); the form and the landing use the product prices; quantities outside 10–5000 are rejected | The local site (WooCommerce + all plugins) |
+
+The integration suite runs inside a database transaction that is rolled back, so it leaves no orders,
+sends no emails, and refuses to run with `APP_ENV=production`.
+
+```bash
+# once (and after composer.json changes)
+docker compose run --rm -w /var/www/html/wp-content/plugins/cpt-easy composer install
+
+# unit tests
+docker compose run --rm -w /var/www/html/wp-content/plugins/cpt-easy composer test
+
+# integration tests (wpcli container: it has the database and the .env)
+docker compose run --rm -w /var/www/html/wp-content/plugins/cpt-easy --entrypoint php wpcli vendor/bin/phpunit -c phpunit-integration.xml.dist
+```
+
+The pricing maths lives in two pure functions, `CPT_Easy_Pricing::price_at()` and `CPT_Easy_Pricing::totals()`;
+`assets/cpt-easy.js` repeats `totals()` for the live total of the form, so change both together.
+
+**Deploy**: `vendor/`, `tests/`, `composer.*` and `phpunit*.xml.dist` are development files; don't copy them to production
+(e.g. `rsync --exclude 'wp-content/plugins/cpt-easy/vendor' --exclude 'wp-content/plugins/cpt-easy/tests' …`).
+
 ## Files
 
 Uploads go to `wp-content/uploads/cpt-easy/YYYY/MM/` with a random prefix.

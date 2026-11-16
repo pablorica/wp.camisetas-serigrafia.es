@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Integration tests against the local WordPress (WooCommerce + every active plugin).
+	Each test runs inside a database transaction that is rolled back, so no orders are left behind.
+	Run inside the wpcli container (see docs/CPTEasy.md). NEVER run it against production.
+-->
+<phpunit bootstrap="tests/bootstrap-integration.php" colors="true" failOnWarning="true">
+	<testsuites>
+		<testsuite name="integration">
+			<directory>tests/Integration</directory>
+		</testsuite>
+	</testsuites>
+</phpunit>

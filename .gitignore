@@ -198,6 +198,10 @@ wordpress/wp-content/plugins/cg-woo-grid/dist
 wordpress/wp-content/plugins/cg-woo-grid/dist-product
 wordpress/wp-content/plugins/cg-woo-grid/npm-debug.log
 wordpress/wp-content/plugins/cg-woo-grid/vendor
+wordpress/wp-content/plugins/cpt-easy/vendor
+wordpress/wp-content/plugins/cpt-easy/composer.lock
+wordpress/wp-content/plugins/cpt-easy/.phpunit.cache
+wordpress/wp-content/plugins/cpt-easy/.phpunit.result.cache
 
 # Ignore compiled files
 wordpress/wp-content/plugins/sadoje/admin/js/sadoje.*

@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [1.1.9] - 2026-11-16
+
+### Added
+- CPT Easy: PHPUnit tests (unit + integration) for the order prices. See `docs/CPTEasy.md`.
+
+
 ## [1.1.8] - 2026-11-16
 
 ### Changed

@@ -110,13 +110,40 @@ class CPT_Easy_Pricing {
 
 	/** Unit price for a quantity, or null if below the minimum / no tiers. */
 	public static function unit_price( int $variation_id, int $qty ): ?float {
+		return self::price_at( self::get_tiers( $variation_id ), $qty );
+	}
+
+	/**
+	 * Unit price of the highest tier whose minimum is <= $qty; null below the first tier.
+	 * Pure function (no WordPress), covered by tests/Unit.
+	 *
+	 * @param array<int, array{min:int, price:float}> $tiers
+	 */
+	public static function price_at( array $tiers, int $qty ): ?float {
 		$price = null;
-		foreach ( self::get_tiers( $variation_id ) as $tier ) {
+		foreach ( self::normalise( $tiers ) as $tier ) {
 			if ( $qty >= $tier['min'] ) {
 				$price = $tier['price'];
 			}
 		}
 		return $price;
+	}
+
+	/**
+	 * Order totals for a unit price, quantity and VAT rate (%), rounded to cents the way
+	 * WooCommerce rounds a single line: net = unit × qty, VAT = net × rate. The form shows
+	 * the same numbers (assets/cpt-easy.js). Pure function, covered by tests/Unit.
+	 *
+	 * @return array{net: float, vat: float, total: float}
+	 */
+	public static function totals( float $unit, int $qty, float $vat_rate ): array {
+		$net = round( $unit * $qty, 2 );
+		$vat = round( $net * $vat_rate / 100, 2 );
+		return array(
+			'net'   => $net,
+			'vat'   => $vat,
+			'total' => round( $net + $vat, 2 ),
+		);
 	}
 
 	/** Lowest minimum quantity across all variations (10 by default). */
@@ -194,7 +221,8 @@ class CPT_Easy_Pricing {
 		);
 	}
 
-	private static function normalise( array $tiers ): array {
+	/** Valid tiers only (min > 0, price > 0), one per minimum, sorted by minimum. */
+	public static function normalise( array $tiers ): array {
 		$clean = array();
 		foreach ( $tiers as $tier ) {
 			$min   = (int) ( $tier['min'] ?? 0 );

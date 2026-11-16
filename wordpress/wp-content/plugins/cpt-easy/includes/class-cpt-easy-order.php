@@ -69,7 +69,7 @@ class CPT_Easy_Order {
 				return $order;
 			}
 
-			$line_total = round( $unit * $data['cantidad'], wc_get_price_decimals() );
+			$line_total = CPT_Easy_Pricing::totals( $unit, $data['cantidad'], 0 )['net'];
 			$item_id    = $order->add_product(
 				$variation,
 				$data['cantidad'],
@@ -78,7 +78,8 @@ class CPT_Easy_Order {
 					'total'    => $line_total,
 				)
 			);
-			$item = $order->get_item( $item_id );
+			// The order's own item object (get_item() would load a separate copy from the database).
+			$item = $order->get_items()[ $item_id ] ?? $order->get_item( $item_id );
 			$item->add_meta_data( self::ITEM_COLOR, $data['color'], true );
 			$item->add_meta_data( self::ITEM_SIZES, $data['tallas'], true );
 			$item->add_meta_data( self::ITEM_DESIGN, $files['diseno'], true );
