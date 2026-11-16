@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [1.1.10] - 2026-11-16
+
+### Added
+- `docs/PHPUnit.md`: how our plugins are tested (unit + integration suites), templates and pitfalls, to reuse in other plugins.
+
+
 ## [1.1.9] - 2026-11-16
 
 ### Added

@@ -94,7 +94,7 @@ active, CPT Easy doesn't print the NIF itself (APG shows it in the billing addre
 
 ## Tests
 
-PHPUnit, in two suites (`wordpress/wp-content/plugins/cpt-easy/tests/`):
+PHPUnit, in two suites (`wordpress/wp-content/plugins/cpt-easy/tests/`). How it works and how to reuse it in other plugins: [PHPUnit.md](PHPUnit.md).
 
 | Suite | What it checks | Needs |
 |---|---|---|
