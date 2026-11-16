@@ -94,6 +94,16 @@ function sdjthm_child_enqueue_scripts() {
       );
     }
 
+    // "Pay for order" page: payment methods styled like the "4. Pago" step of the checkout
+    if ( function_exists( 'is_checkout_pay_page' ) && is_checkout_pay_page() ) {
+      wp_enqueue_style(
+          'sadoje-order-pay-style',
+          get_stylesheet_directory_uri() . '/assets/css/order-pay.css',
+          array(),
+          filemtime( get_stylesheet_directory() . '/assets/css/order-pay.css' ),
+      );
+    }
+
 
 }
 add_action( 'wp_enqueue_scripts', 'sdjthm_child_enqueue_scripts', 9 );

@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [1.1.8] - 2026-11-16
+
+### Changed
+- Theme: "Pay for order" page styled like the "4. Pago" checkout step (`assets/css/order-pay.css`):
+  centred column, radio + method name, no gateway logos, full-width dark button.
+
+
 ## [1.1.7] - 2026-11-16
 
 ### Fixed
