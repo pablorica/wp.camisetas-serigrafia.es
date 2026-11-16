@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [1.2.0] - 2026-11-16
+
+### Added
+- Deployment scripts: `bin/release.sh` (build + zip the custom theme and plugins from a git tag, in Docker),
+  `bin/deploy.sh` and `bin/deploy-remote.sh` (upload, backup, swap, health check, rollback, list, prune),
+  `bin/components.conf` (what gets released). See `docs/Deployment.md`.
+
+
 ## [1.1.10] - 2026-11-16
 
 ### Added

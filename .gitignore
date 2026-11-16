@@ -145,6 +145,8 @@ wordpress/wp-content/themes/*
 # Docs
 !docs/
 
+# per-component exclusions for bin/release.sh
+!.distignore
 # track example files, if they exist
 !*.example
 
@@ -164,6 +166,10 @@ wordpress/wp-content/themes/*
 
 # Docker
 !docker-compose.yml
+# Deployment scripts (bin/*.sh would be ignored by *.sh above)
+!bin/
+!bin/*.sh
+bin/deploy.env
 !docker-compose.remote.yml
 !Caddyfile
 !docker

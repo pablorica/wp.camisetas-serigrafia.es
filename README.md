@@ -129,6 +129,20 @@ This is an extension of the previous plugins, with specific customizations for t
 
 [Read More](https://github.com/pablorica/wp.camisetas-serigrafia.es/tree/main/wp-content/mu-plugins/sadoje#readme)
 
+### CPT Easy
+
+Quick-order system: one variable product (Calidad × Impresión) with quantity price tiers, an order form that goes straight to payment, and the landing page as ACF blocks.
+
+[Read More](docs/CPTEasy.md) · [Tests](docs/PHPUnit.md)
+
+
+# Deployment
+
+The custom theme and plugins are built and zipped from a git tag with `bin/release.sh`, and installed in production with `bin/deploy.sh` (backup, swap, health check, rollback).
+
+[Read More](docs/Deployment.md)
+
+
 ## Basic Features
 
 Codigo Woo Grid allows your users to add multiple variations of a product to their cart from single form.
