@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [1.1.6] - 2026-11-16
+
+### Changed
+- CPT Easy orders accept every enabled payment method (cash on delivery and cheque were hidden).
+
+
 ## [1.1.5] - 2026-11-16
 
 ### Added

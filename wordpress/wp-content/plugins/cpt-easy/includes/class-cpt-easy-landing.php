@@ -1,6 +1,6 @@
 <?php
 /**
- * Landing helpers: price lists rendered from the product, and payment methods for CPT Easy orders.
+ * Landing helpers: price lists rendered from the product.
  *
  *   [cpt_easy_precios calidad="Basic"]  → <ul class="cpt-rows"> with the 1-cara (.c1) and 2-caras (.c2) price per tier.
  *   [cpt_easy_minimo]                   → minimum quantity (10).
@@ -15,7 +15,6 @@ class CPT_Easy_Landing {
 	public static function init(): void {
 		add_shortcode( 'cpt_easy_precios', array( __CLASS__, 'price_rows' ) );
 		add_shortcode( 'cpt_easy_minimo', static fn() => (string) CPT_Easy_Pricing::min_qty() );
-		add_filter( 'woocommerce_available_payment_gateways', array( __CLASS__, 'payment_gateways' ) );
 	}
 
 	public static function price_rows( $atts ): string {
@@ -56,23 +55,5 @@ class CPT_Easy_Landing {
 			);
 		}
 		return $html . '</ul>';
-	}
-
-	/**
-	 * On the payment page of a CPT Easy order, hide methods that make no sense for a
-	 * custom-printed order (cash on delivery, cheque). Change the list with `cpt_easy_excluded_gateways`.
-	 */
-	public static function payment_gateways( $gateways ) {
-		if ( is_admin() || ! is_array( $gateways ) || ! function_exists( 'is_wc_endpoint_url' ) || ! is_wc_endpoint_url( 'order-pay' ) ) {
-			return $gateways;
-		}
-		$order = wc_get_order( absint( get_query_var( 'order-pay' ) ) );
-		if ( ! $order || CPT_Easy_Order::CREATED_VIA !== $order->get_created_via() ) {
-			return $gateways;
-		}
-		foreach ( (array) apply_filters( 'cpt_easy_excluded_gateways', array( 'cod', 'cheque' ), $order ) as $id ) {
-			unset( $gateways[ $id ] );
-		}
-		return $gateways;
 	}
 }

@@ -72,7 +72,7 @@ The shortcodes still work in any page:
 - `[cpt_easy_minimo]` — minimum quantity.
 - `[cpt_easy_form]` — the order form.
 
-On the payment page of a CPT Easy order, cash on delivery and cheque are hidden (`cpt_easy_excluded_gateways`).
+The payment page of a CPT Easy order offers every payment method enabled in WooCommerce → Settings → Payments.
 
 **Logged-in customers**: the billing and shipping fields come pre-filled from their WooCommerce account
 (if the shipping address differs, "same as billing" is unticked). Their CPT Easy order saves the addresses

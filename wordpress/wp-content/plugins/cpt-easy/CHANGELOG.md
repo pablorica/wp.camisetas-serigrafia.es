@@ -1,5 +1,11 @@
 # Change Log
 
+## [0.3.3] - 2026-11-16
+
+### Removed
+- CPT Easy no longer hides cash on delivery and cheque on the payment page: CPT Easy orders offer every payment
+  method enabled in WooCommerce.
+
 ## [0.3.2] - 2026-11-16
 
 ### Added
