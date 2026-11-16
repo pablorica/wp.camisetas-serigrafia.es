@@ -36,3 +36,9 @@
 	opacity: 0.6;
 	cursor: progress;
 }
+
+.cpt-easy-form [type="submit"]:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+	filter: none;
+}

@@ -1,5 +1,12 @@
 # Change Log
 
+## [0.2.0] - 2026-11-16
+
+### Added
+- `[cpt_easy_precios calidad="…"]`: landing price rows (1 and 2 caras) rendered from the variations.
+- `[cpt_easy_minimo]`: minimum quantity.
+- Cash on delivery and cheque are hidden on the payment page of CPT Easy orders (`cpt_easy_excluded_gateways`).
+
 ## [0.1.0] - 2026-11-16
 
 ### Added
