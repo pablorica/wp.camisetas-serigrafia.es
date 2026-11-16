@@ -182,6 +182,7 @@ wordpress/wp-content/themes/*
 !wordpress/wp-content/plugins/cg-woo-grid
 !wordpress/wp-content/plugins/sadoje-template
 !wordpress/wp-content/plugins/woo-color-importer
+!wordpress/wp-content/plugins/cpt-easy
 
 # Ignore build folders of plugin
 wordpress/wp-content/plugins/sadoje/.babelrc

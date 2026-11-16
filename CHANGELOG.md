@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [1.1.1] - 2026-11-15
+
+### Added
+- `cpt-easy` plugin: CPT Easy quick-order product, `[cpt_easy_form]` form and `wp cpt-easy` commands. See `wordpress/wp-content/plugins/cpt-easy/README.md`.
+
+
 ## [1.1.0] - 2026-11-15
 
 

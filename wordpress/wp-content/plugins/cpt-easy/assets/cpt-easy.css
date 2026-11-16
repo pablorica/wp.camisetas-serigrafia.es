@@ -1,0 +1,38 @@
+/* CPT Easy — only what the prototype styles (.cpt-f-*) don't already cover. */
+.cpt-easy-form .cpt-f-hp {
+	position: absolute !important;
+	left: -9999px;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
+
+.cpt-easy-form .cpt-f-msg {
+	display: block;
+	font-size: 0.85em;
+	color: #c62828;
+	min-height: 0;
+}
+
+.cpt-easy-form .cpt-f-msg:empty {
+	display: none;
+}
+
+.cpt-easy-form .cpt-f-invalid input,
+.cpt-easy-form .cpt-f-invalid select,
+.cpt-easy-form .cpt-f-invalid .cpt-f-filebox {
+	border-color: #c62828;
+}
+
+.cpt-easy-form .cpt-f-response {
+	margin-top: 1rem;
+	padding: 0.75rem 1rem;
+	border-radius: 6px;
+	background: #fdecea;
+	color: #8e1c1c;
+}
+
+.cpt-easy-form.is-sending button[type="submit"] {
+	opacity: 0.6;
+	cursor: progress;
+}

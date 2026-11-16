@@ -1,7 +1,7 @@
 # Camisetas Para Todos
 
 
-[![version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://semver.org)
+[![version](https://img.shields.io/badge/version-1.1.1-blue.svg)](https://semver.org)
 
 
 ## Live Site

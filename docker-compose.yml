@@ -130,6 +130,10 @@ services:
         source: ./wp-config.php
         target: /var/www/html/wp-config.php
         read_only: true
+      - type: bind
+        source: ./uploads.ini
+        target: /usr/local/etc/php/conf.d/uploads.ini
+        read_only: true
       - ./logs:/var/log/wordpress
     entrypoint: ["wp"]
 
